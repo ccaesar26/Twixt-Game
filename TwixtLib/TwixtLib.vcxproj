@@ -128,6 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\EColor.h" />
+    <ClInclude Include="include\EGameResult.h" />
+    <ClInclude Include="include\EGameState.h" />
+    <ClInclude Include="include\IBoard.h" />
+    <ClInclude Include="include\IPiece.h" />
+    <ClInclude Include="include\Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
