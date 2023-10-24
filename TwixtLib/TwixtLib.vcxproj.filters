@@ -27,7 +27,7 @@
     <ClInclude Include="include\EGameState.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="include\IBoard.h">
+    <ClInclude Include="include\IBoard.cppm">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="include\IPiece.h">
@@ -36,5 +36,13 @@
     <ClInclude Include="include\Position.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

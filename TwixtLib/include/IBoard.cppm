@@ -1,4 +1,4 @@
-export module iboard;
+export module iBoard;
 
 import <memory>;
 
