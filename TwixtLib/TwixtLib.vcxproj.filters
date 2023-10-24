@@ -36,6 +36,14 @@
     <ClInclude Include="include\Position.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="Peg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Peg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp">
