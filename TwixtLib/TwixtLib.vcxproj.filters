@@ -27,7 +27,7 @@
     <ClInclude Include="include\EGameState.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="include\IBoard.cppm">
+    <ClInclude Include="include\iBoard.cppm">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="include\IPiece.h">
@@ -43,6 +43,9 @@
   <ItemGroup>
     <ClCompile Include="Peg.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\gameException.cppm">
+      <Filter>Header Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
