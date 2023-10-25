@@ -12,5 +12,9 @@ public:
 	virtual void PlacePiece(const Position& pos) const = 0;
 	virtual EColor GetCurrentPlayer() const = 0;
 	virtual IPiecePtr GetPiecePtr(const Position& pos) const = 0;
-	
+	virtual bool IsGameOver() const = 0;
+	virtual bool IsDraw() const = 0;
+	virtual bool IsWon() const = 0;
+	virtual void LoadFromFile(const std::string& fileName) const = 0;
+	virtual void SaveToFile(const std::string& fileName) const = 0;
 }
