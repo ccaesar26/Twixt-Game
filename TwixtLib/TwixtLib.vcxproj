@@ -135,12 +135,13 @@
     <ClInclude Include="include\EColor.h" />
     <ClInclude Include="include\EGameResult.h" />
     <ClInclude Include="include\EGameState.h" />
-    <ClInclude Include="include\IBoard.cppm" />
+    <ClInclude Include="include\iBoard.cppm" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="include\Position.h" />
     <ClInclude Include="Peg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\gameException.cppm" />
     <ClCompile Include="Peg.cpp" />
   </ItemGroup>
   <ItemGroup>

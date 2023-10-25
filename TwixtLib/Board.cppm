@@ -1,6 +1,13 @@
+module board;
+
+#include "EColor.h"
+#include "IPiece.h"
+// #include "IBoard.cppm"
+#include "Position.h"
+
 export module board;
 
-import <vector>;
+import std;
 import iBoard;
 
 class Board :
