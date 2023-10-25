@@ -1,17 +1,16 @@
-module board;
+module;
 
 #include "EColor.h"
 #include "IPiece.h"
-// #include "IBoard.cppm"
 #include "Position.h"
 
 export module board;
 
 import std;
-import iBoard;
+import iBoard; 
 
 class Board :
-    public twixt::IBoard
+	public twixt::IBoard
 {
 public:
 	Board(int size = 24);

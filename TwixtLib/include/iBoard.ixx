@@ -1,8 +1,13 @@
+module;
+
+#include "IPiece.h"
+#include "Position.h"
+
 export module iBoard;
 
-import <memory>;
+import std;
 
-namespace twixt 
+namespace twixt
 {
 	export using IBoardPtr = std::shared_ptr<class IBoard>;
 
