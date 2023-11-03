@@ -1,5 +1,12 @@
 #pragma once
 
+#include "Position.h"
+#include "EGameResult.h"
+
+#include <memory>
+
+using IGameListenerPtr = std::shared_ptr<class IGameListener>;
+
 class IGameListener {
 public:
 	virtual void OnPiecePlaced(const Position& pos) = 0;
