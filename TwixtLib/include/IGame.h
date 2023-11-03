@@ -1,5 +1,13 @@
 #pragma once
 
+#include "Position.h"
+#include "EColor.h"
+#include "IPiece.h"
+
+#include <memory>
+
+using IGamePtr = std::shared_ptr<class IGame>;
+
 class IGame
 {
 public:
