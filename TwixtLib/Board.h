@@ -1,16 +1,14 @@
-module;
+#pragma once
 
+#include <IBoard.h>
 #include "EColor.h"
 #include "IPiece.h"
 #include "Position.h"
 
-export module board;
-
-import std;
-import iBoard; 
+#include <vector>
 
 class Board :
-	public twixt::IBoard
+	public IBoard
 {
 public:
 	Board(int size = 24);
