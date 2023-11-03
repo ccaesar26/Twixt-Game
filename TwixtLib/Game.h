@@ -4,6 +4,7 @@
 #include "IGameListener.h"
 #include "EColor.h"
 #include "EGameState.h"
+#include "GameException.h"
 
 #include <vector>
 #include <string>
@@ -33,4 +34,7 @@ public:
 	void Reset() override;
 	void Restore(const std::string& config) const override;
 	void SaveToFile(const std::string& fileName) const override;
+	void NotifyPiecePlaced() const override;
+	void NotifyGameOver(EGameResult gameResult) const override;
+	void NotifyGameRestarted() const override;
 };
