@@ -15,8 +15,8 @@ private:
 	std::vector<IPiecePtr> m_neighbours;
 
 public:
+	Peg(EColor color);
 	bool isNorthLinked() const override;
 	bool isSouthLinked() const override;
 	EColor GetColor() const override;
 };
-
