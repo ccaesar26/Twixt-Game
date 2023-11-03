@@ -1,5 +1,10 @@
 #include "Game.h"
 
+IGamePtr IGame::CreateGame()
+{
+	return std::make_shared<Game>();
+}
+
 void Game::PlacePiece(const Position& pos) const
 {
 	if (m_state != EGameState::Playing)
@@ -22,4 +27,3 @@ bool Game::IsGameOver() const
 {
 	return IsDraw() || IsWon();
 }
-
