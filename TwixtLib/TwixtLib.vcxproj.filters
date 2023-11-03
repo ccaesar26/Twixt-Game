@@ -36,19 +36,31 @@
     <ClInclude Include="Peg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\IGame.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IGameListener.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Peg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\gameException.cppm">
+    <ClCompile Include="include\GameException.h">
       <Filter>Header Files\API</Filter>
     </ClCompile>
-    <ClCompile Include="board.ixx">
+    <ClCompile Include="Board.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\iBoard.ixx">
+    <ClCompile Include="include\IBoard.h">
       <Filter>Header Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

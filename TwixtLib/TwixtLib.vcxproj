@@ -132,20 +132,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
     <ClInclude Include="include\EColor.h" />
     <ClInclude Include="include\EGameResult.h" />
     <ClInclude Include="include\EGameState.h" />
+    <ClInclude Include="include\IGame.h" />
+    <ClInclude Include="include\IGameListener.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="include\Position.h" />
     <ClInclude Include="Peg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="board.ixx" />
-    <ClCompile Include="include\gameException.cppm">
+    <ClCompile Include="Board.h" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="include\GameException.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModule</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
-    <ClCompile Include="include\iBoard.ixx" />
+    <ClCompile Include="include\IBoard.h" />
     <ClCompile Include="Peg.cpp" />
   </ItemGroup>
   <ItemGroup>
