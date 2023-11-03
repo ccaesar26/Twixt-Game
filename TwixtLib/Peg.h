@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include<memory>
+#include <memory>
 
 #include "IPiece.h"
 
@@ -13,10 +13,10 @@ private:
     bool m_isNorthLinked;
     bool m_isSouthLinked;
 	std::vector<IPiecePtr> m_neighbours;
+
 public:
 	bool isNorthLinked() const override;
 	bool isSouthLinked() const override;
 	EColor GetColor() const override;
-
 };
 
