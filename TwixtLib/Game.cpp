@@ -7,3 +7,19 @@ void Game::PlacePiece(const Position& pos) const
 		throw GameException("Game is not playing");
 	}
 }
+
+bool Game::IsDraw() const
+{
+	return m_state == EGameState::Draw;
+}
+
+bool Game::IsWon() const
+{
+	return m_state == EGameState::WonByBlack || m_state == EGameState::WonByRed;
+}
+
+bool Game::IsGameOver() const
+{
+	return IsDraw() || IsWon();
+}
+
