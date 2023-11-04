@@ -8,5 +8,6 @@
 
 export class GameException : public std::logic_error
 {
-
+public:
+	GameException(const std::string& message) : std::logic_error(message) {}
 };
