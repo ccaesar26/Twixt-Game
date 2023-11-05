@@ -60,3 +60,13 @@ void Game::NotifyGameOver(EGameResult gameResult) const
 		
 }
 
+void Game::NotifyGameRestarted() const 
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnGameRestarted();
+		}
+	}
+}
