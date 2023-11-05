@@ -47,3 +47,16 @@ bool Game::IsGameOver() const
 {
 	return IsDraw() || IsWon();
 }
+
+void Game::NotifyGameOver(EGameResult gameResult) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnGameOver(gameResult);
+		}
+	}
+		
+}
+
