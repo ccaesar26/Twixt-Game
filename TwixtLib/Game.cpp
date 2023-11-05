@@ -70,3 +70,14 @@ void Game::NotifyGameRestarted() const
 		}
 	}
 }
+
+void Game::NotifyPiecePlaced(Position &pos) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnPiecePlaced(pos);
+		}
+	}
+}

@@ -6,7 +6,7 @@
 #include <memory>
 
 using IGameListenerPtr = std::shared_ptr<class IGameListener>;
-using IGameListenerWeakPtr = std::shared_ptr<class IGameListener>;
+using IGameListenerWeakPtr = std::weak_ptr<class IGameListener>;
 
 class IGameListener {
 public:
