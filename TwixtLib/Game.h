@@ -36,7 +36,7 @@ public:
 	void Reset() override;
 	void Restore(const std::string& config) const override;
 	void SaveToFile(const std::string& fileName) const override;
-	void NotifyPiecePlaced(Position& pos) const override;
+	void NotifyPiecePlaced(const Position& pos) const override;
 	void NotifyGameOver(EGameResult gameResult) const override;
 	void NotifyGameRestarted() const override;
 };

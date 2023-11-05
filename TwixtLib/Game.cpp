@@ -13,7 +13,7 @@ void Game::PlacePiece(const Position& pos)
 	}
 
 	m_board.PlacePiece(pos, m_turn);
-	NotifyPiecePlaced();
+	NotifyPiecePlaced(pos);
 
 	if (m_board.CheckIfWinningPlacement(pos, m_turn))
 	{
@@ -71,7 +71,7 @@ void Game::NotifyGameRestarted() const
 	}
 }
 
-void Game::NotifyPiecePlaced(Position &pos) const
+void Game::NotifyPiecePlaced(const Position &pos) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
