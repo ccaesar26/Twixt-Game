@@ -6,7 +6,18 @@
 // OutOfBoundsException -> GameException
 // InvalidMoveException -> GameException
 
-export class GameException : public std::logic_error
+class GameException : public std::logic_error
 {
+public:
+	GameException();
+	GameException(const std::string& message);
 
 };
+
+inline GameException::GameException() : std::logic_error("Unknown error")
+{
+}
+
+inline GameException::GameException(const std::string& message) : std::logic_error(message)
+{
+}
