@@ -11,7 +11,6 @@ class GameException : public std::logic_error
 public:
 	GameException();
 	GameException(const std::string& message);
-
 };
 
 inline GameException::GameException() : std::logic_error("Unknown error")

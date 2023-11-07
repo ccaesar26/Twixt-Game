@@ -5,6 +5,7 @@
 #include "EColor.h"
 #include "EGameState.h"
 #include "GameException.h"
+#include "Board.h"
 
 #include <vector>
 #include <string>
@@ -13,6 +14,7 @@ class Game
 	: public IGame
 {
 private:
+	Board m_board;
 	EColor m_turn;
 	EGameState m_state;
 	std::vector<IGameListenerWeakPtr> m_listeners;
@@ -29,12 +31,12 @@ public:
 	bool IsDraw() const override;
 	bool IsWon() const override;
 	void LoadFromFile(const std::string& fileName) const override;
-	void PlacePiece(const Position& pos) const override;
+	void PlacePiece(const Position& pos) override;
 	void RemoveListener(IGameListenerPtr listener) const override;
 	void Reset() override;
 	void Restore(const std::string& config) const override;
 	void SaveToFile(const std::string& fileName) const override;
-	void NotifyPiecePlaced() const override;
+	void NotifyPiecePlaced(const Position& pos) const override;
 	void NotifyGameOver(EGameResult gameResult) const override;
 	void NotifyGameRestarted() const override;
 };
