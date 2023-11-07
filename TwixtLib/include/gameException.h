@@ -35,3 +35,18 @@ inline OutOfBoundsException::OutOfBoundsException() : GameException("Out of boun
 inline OutOfBoundsException::OutOfBoundsException(const std::string& message) : GameException(message)
 {
 }
+
+class InvalidMoveException : public GameException
+{
+public:
+	InvalidMoveException();
+	InvalidMoveException(const std::string& message);
+};
+
+inline InvalidMoveException::InvalidMoveException() : GameException("Invalid move")
+{
+}
+
+inline InvalidMoveException::InvalidMoveException(const std::string& message) : GameException(message)
+{
+}
