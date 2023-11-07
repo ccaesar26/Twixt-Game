@@ -7,3 +7,5 @@ public:
 	bool operator==(const Position& pos) const;
 	bool operator!=(const Position& pos) const;
 };
+
+// TODO: 'inline' implementation of Position's methods

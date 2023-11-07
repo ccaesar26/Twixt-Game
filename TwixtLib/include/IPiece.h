@@ -12,5 +12,4 @@ public:
 	virtual EColor GetColor() const = 0;
 	virtual bool isNorthLinked() const = 0;
 	virtual bool isSouthLinked() const = 0;
-
 };
