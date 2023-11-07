@@ -15,7 +15,7 @@ public:
 
 	virtual void PlacePiece(Position pos, EColor color) override;
 
-	virtual IPiecePtr at(Position pos) const override;
+	virtual IPiecePtr At(Position pos) const override;
 
 	virtual bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const override;
 

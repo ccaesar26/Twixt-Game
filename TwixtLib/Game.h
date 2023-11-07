@@ -20,11 +20,12 @@ private:
 	std::vector<IGameListenerWeakPtr> m_listeners;
 	
 	void InitializeGame();
-	void InitializeGamr(const std::string& config, EColor turn = EColor::Black);
+	void InitializeGame(const std::string& config, EColor turn = EColor::Black);
 	void SwitchTurn();
 	
 public:
 	void AddListener(IGameListenerPtr listener) const override;
+	void RemoveListener(IGameListenerPtr listener) const override;
 	EColor GetCurrentPlayer() const override;
 	IPiecePtr GetPiecePtr(const Position& pos) const override;
 	bool IsGameOver() const override;
@@ -32,7 +33,6 @@ public:
 	bool IsWon() const override;
 	void LoadFromFile(const std::string& fileName) const override;
 	void PlacePiece(const Position& pos) override;
-	void RemoveListener(IGameListenerPtr listener) const override;
 	void Reset() override;
 	void Restore(const std::string& config) const override;
 	void SaveToFile(const std::string& fileName) const override;
