@@ -2,10 +2,6 @@
 
 #include <stdexcept>;
 
-// GameException -> logic_error
-// OutOfBoundsException -> GameException
-// InvalidMoveException -> GameException
-
 class GameException : public std::logic_error
 {
 public:
@@ -48,5 +44,20 @@ inline InvalidMoveException::InvalidMoveException() : GameException("Invalid mov
 }
 
 inline InvalidMoveException::InvalidMoveException(const std::string& message) : GameException(message)
+{
+}
+
+class InvalidStateException : public GameException
+{
+public:
+	InvalidStateException();
+	InvalidStateException(const std::string& message);
+};
+
+inline InvalidStateException::InvalidStateException() : GameException("Invalid state")
+{
+}
+
+inline InvalidStateException::InvalidStateException(const std::string& message) : GameException(message)
 {
 }
