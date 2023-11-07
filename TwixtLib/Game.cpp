@@ -9,7 +9,7 @@ void Game::PlacePiece(const Position& pos)
 {
 	if (m_state != EGameState::Playing)
 	{
-		throw GameException("Game is not playing");
+		throw InvalidStateException("Game is not playing");
 	}
 
 	m_board.PlacePiece(pos, m_turn);
@@ -17,7 +17,6 @@ void Game::PlacePiece(const Position& pos)
 
 	if (m_board.CheckIfWinningPlacement(pos, m_turn))
 	{
-		//if won by black
 		if (m_turn == EColor::Black)
 		{
 			NotifyGameOver(EGameResult::BlackWinner);
