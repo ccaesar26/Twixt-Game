@@ -88,3 +88,15 @@ void Game::RemoveListener(IGameListenerPtr listener)
 
 }
 
+void Game::AddListener(IGameListener* listener)
+{
+	auto f = [listener](IGameListenerWeakPtr& weak)
+	{
+		auto sp = weak.lock();
+		return !sp || sp.get() == listener;
+	};
+
+	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
+
+}
+
