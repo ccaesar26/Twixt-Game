@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameException.h"
 
 IGamePtr IGame::CreateGame()
 {
@@ -86,6 +87,11 @@ void Game::RemoveListener(IGameListenerPtr listener)
 	m_listeners.push_back(listener);
 
 
+}
+
+void Game::SwitchTurn()
+{
+	m_turn = m_turn == EColor::Black ? EColor::Red : EColor::Black;
 }
 
 void Game::AddListener(IGameListener* listener)
