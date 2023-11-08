@@ -80,3 +80,11 @@ void Game::NotifyPiecePlaced(const Position &pos) const
 		}
 	}
 }
+
+void Game::RemoveListener(IGameListenerPtr listener)
+{
+	m_listeners.push_back(listener);
+
+
+}
+
