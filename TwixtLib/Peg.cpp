@@ -12,3 +12,17 @@ Peg::Peg(EColor color)
 	m_isSouthLinked = false;
 }
 
+bool Peg::isNorthLinked() const
+{
+	return m_isNorthLinked;
+}
+
+bool Peg::isSouthLinked() const
+{
+	return m_isSouthLinked;
+}
+
+EColor Peg::GetColor() const
+{
+	return m_color;
+}
