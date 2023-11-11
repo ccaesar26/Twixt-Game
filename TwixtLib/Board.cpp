@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "GameException.h"
 
 IBoardPtr IBoard::CreateBoard()
 {
@@ -15,4 +16,14 @@ Board::Board(int size) : m_size(size) {
 			m_board[i][j] = nullptr;
 		}
 	}
+}
+
+void Board::PlacePiece(Position pos, EColor color) {
+	if (pos.m_row < 0 || pos.m_row >= m_size || pos.m_col < 0 || pos.m_col >= m_size) {
+		throw GameException("Invalid position");
+	}
+	if (m_board[pos.m_row][pos.m_col] != nullptr) {
+		throw GameException("Position is already occupied");
+	}
+	m_board[pos.m_row][pos.m_col] = IPiece::Produce(color);
 }
