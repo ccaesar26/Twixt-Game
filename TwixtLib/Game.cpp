@@ -94,6 +94,11 @@ void Game::SwitchTurn()
 	m_turn = m_turn == EColor::Black ? EColor::Red : EColor::Black;
 }
 
+Game::Game()
+{
+	InitializeGame();
+}
+
 void Game::AddListener(IGameListener* listener)
 {
 	auto f = [listener](IGameListenerWeakPtr& weak)

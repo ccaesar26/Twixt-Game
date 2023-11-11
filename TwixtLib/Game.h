@@ -24,6 +24,7 @@ private:
 	void SwitchTurn();
 	
 public:
+	Game();
 	void AddListener(IGameListener* listener) override;
 	void RemoveListener(IGameListenerPtr listener) override;
 	EColor GetCurrentPlayer() const override;
