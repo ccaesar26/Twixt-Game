@@ -27,3 +27,10 @@ void Board::PlacePiece(Position pos, EColor color) {
 	}
 	m_board[pos.m_row][pos.m_col] = IPiece::Produce(color);
 }
+
+IPiecePtr Board::At(Position pos) const {
+	if (pos.m_row < 0 || pos.m_row >= m_size || pos.m_col < 0 || pos.m_col >= m_size) {
+		throw GameException("Invalid position");
+	}
+	return m_board[pos.m_row][pos.m_col];
+}
