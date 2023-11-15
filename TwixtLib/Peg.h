@@ -5,18 +5,18 @@
 
 #include "IPiece.h"
 
-class Peg :
+class Peg final :
     public IPiece
 {
 private:
     EColor m_color;
     bool m_isNorthLinked;
     bool m_isSouthLinked;
-	std::vector<IPiecePtr> m_neighbours;
+	std::vector<IPiecePtr> m_neighbors;
 
 public:
-	Peg(EColor color);
-	bool isNorthLinked() const override;
-	bool isSouthLinked() const override;
-	EColor GetColor() const override;
+    explicit Peg(EColor color);
+    [[nodiscard]] bool IsNorthLinked() const override;
+    [[nodiscard]] bool IsSouthLinked() const override;
+    [[nodiscard]] EColor GetColor() const override;
 };
