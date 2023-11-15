@@ -11,7 +11,7 @@ class IPiece
 public:
 	static IPiecePtr Produce(EColor color);
 	virtual ~IPiece() = default;
-	virtual EColor GetColor() const = 0;
-	virtual bool isNorthLinked() const = 0;
-	virtual bool isSouthLinked() const = 0;
+	[[nodiscard]] virtual EColor GetColor() const = 0;
+	[[nodiscard]] virtual bool IsNorthLinked() const = 0;
+	[[nodiscard]] virtual bool IsSouthLinked() const = 0;
 };
