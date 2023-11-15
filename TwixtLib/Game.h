@@ -4,13 +4,12 @@
 #include "IGameListener.h"
 #include "EColor.h"
 #include "EGameState.h"
-#include "GameException.h"
 #include "Board.h"
 
 #include <vector>
 #include <string>
 
-class Game
+class Game final
 	: public IGame
 {
 private:
@@ -27,11 +26,11 @@ public:
 	Game();
 	void AddListener(IGameListener* listener) override;
 	void RemoveListener(IGameListenerPtr listener) override;
-	EColor GetCurrentPlayer() const override;
-	IPiecePtr GetPiecePtr(const Position& pos) const override;
-	bool IsGameOver() const override;
-	bool IsDraw() const override;
-	bool IsWon() const override;
+	[[nodiscard]] EColor GetCurrentPlayer() const override;
+	[[nodiscard]] IPiecePtr GetPiecePtr(const Position& pos) const override;
+	[[nodiscard]] bool IsGameOver() const override;
+	[[nodiscard]] bool IsDraw() const override;
+	[[nodiscard]] bool IsWon() const override;
 	void LoadFromFile(const std::string& fileName) const override;
 	void PlacePiece(const Position& pos) override;
 	void Reset() override;
