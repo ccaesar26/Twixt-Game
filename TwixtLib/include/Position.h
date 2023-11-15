@@ -1,9 +1,11 @@
+#pragma once
+
 class Position {
 public:
-	int m_row;
-	int m_col;
+	int row;
+	int col;
 
-	Position(int r = 0, int c = 0);
+	explicit Position(int r = 0, int c = 0);
 	bool operator==(const Position& pos) const;
 	bool operator!=(const Position& pos) const;
 };
