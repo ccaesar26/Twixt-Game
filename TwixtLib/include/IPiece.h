@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "EColor.h"
 
 using IPiecePtr = std::shared_ptr<class IPiece>;
