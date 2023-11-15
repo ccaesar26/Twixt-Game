@@ -1,12 +1,12 @@
 #pragma once
 
-#include <stdexcept>;
+#include <stdexcept>
 
 class GameException : public std::logic_error
 {
 public:
 	GameException();
-	GameException(const std::string& message);
+	explicit GameException(const std::string& message);
 };
 
 inline GameException::GameException() : std::logic_error("Unknown error")
@@ -17,11 +17,11 @@ inline GameException::GameException(const std::string& message) : std::logic_err
 {
 }
 
-class OutOfBoundsException : public GameException
+class OutOfBoundsException final : public GameException
 {
 public:
 	OutOfBoundsException();
-	OutOfBoundsException(const std::string& message);
+	explicit OutOfBoundsException(const std::string& message);
 };
 
 inline OutOfBoundsException::OutOfBoundsException() : GameException("Out of bounds")
@@ -32,11 +32,11 @@ inline OutOfBoundsException::OutOfBoundsException(const std::string& message) : 
 {
 }
 
-class InvalidMoveException : public GameException
+class InvalidMoveException final : public GameException
 {
 public:
 	InvalidMoveException();
-	InvalidMoveException(const std::string& message);
+	explicit InvalidMoveException(const std::string& message);
 };
 
 inline InvalidMoveException::InvalidMoveException() : GameException("Invalid move")
@@ -47,11 +47,11 @@ inline InvalidMoveException::InvalidMoveException(const std::string& message) : 
 {
 }
 
-class InvalidStateException : public GameException
+class InvalidStateException final : public GameException
 {
 public:
 	InvalidStateException();
-	InvalidStateException(const std::string& message);
+	explicit InvalidStateException(const std::string& message);
 };
 
 inline InvalidStateException::InvalidStateException() : GameException("Invalid state")
