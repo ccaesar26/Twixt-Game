@@ -50,30 +50,29 @@ bool Game::IsGameOver() const
 
 void Game::NotifyGameOver(EGameResult gameResult) const
 {
-	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (auto sp = it->lock())
+		if (const auto sp = it->lock())
 		{
 			sp->OnGameOver(gameResult);
 		}
 	}
-		
 }
 
-void Game::NotifyGameRestarted() const 
+void Game::NotifyGameRestarted() const
 {
-	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (auto sp = it->lock())
+		if (const auto sp = it->lock())
 		{
 			sp->OnGameRestarted();
 		}
 	}
 }
 
-void Game::NotifyPiecePlaced(const Position &pos) const
+void Game::NotifyPiecePlaced(const Position& pos) const
 {
-	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
 		if (auto sp = it->lock())
 		{
@@ -82,11 +81,9 @@ void Game::NotifyPiecePlaced(const Position &pos) const
 	}
 }
 
-void Game::RemoveListener(IGameListenerPtr listener)
+void Game::RemoveListener(const IGameListenerPtr listener)
 {
 	m_listeners.push_back(listener);
-
-
 }
 
 void Game::SwitchTurn()
@@ -101,13 +98,12 @@ Game::Game()
 
 void Game::AddListener(IGameListener* listener)
 {
-	auto f = [listener](IGameListenerWeakPtr& weak)
+	auto f = [listener](const IGameListenerWeakPtr& weak)
 	{
-		auto sp = weak.lock();
+		const auto sp = weak.lock();
 		return !sp || sp.get() == listener;
 	};
 
-	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
-
+	//m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
+	std::erase_if(m_listeners, f);
 }
-
