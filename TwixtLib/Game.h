@@ -17,11 +17,11 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	std::vector<IGameListenerWeakPtr> m_listeners;
-	
+
 	void InitializeGame();
 	void InitializeGame(const std::string& config, EColor turn = EColor::Black);
 	void SwitchTurn();
-	
+
 public:
 	Game();
 	void AddListener(IGameListener* listener) override;
