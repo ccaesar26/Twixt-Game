@@ -114,3 +114,13 @@ void Game::AddListener(IGameListener* listener)
 	//m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 	std::erase_if(m_listeners, f);
 }
+
+EColor Game::GetCurrentPlayer() const
+{
+	return m_turn;
+}
+
+IPiecePtr Game::GetPiecePtr(const Position& pos) const
+{
+	return m_board.At(pos);
+}
