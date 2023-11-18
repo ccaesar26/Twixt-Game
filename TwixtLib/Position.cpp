@@ -17,3 +17,22 @@ Position::operator std::pair<int, int>() const
 	return std::make_pair(row, col);
 }
 
+bool Position::operator==(const Position& other) const
+{
+	return row == other.row && col == other.col;
+}
+
+bool Position::operator!=(const Position& other) const
+{
+	return !(*this == other);
+}
+
+bool operator==(const std::pair<int, int>& p, const Position& pos)
+{
+	return p.first == pos.row && p.second == pos.col;
+}
+
+bool operator!=(const std::pair<int, int>& p, const Position& pos)
+{
+	return !(p == pos);
+}
