@@ -91,6 +91,13 @@ void Game::SwitchTurn()
 	m_turn = m_turn == EColor::Black ? EColor::Red : EColor::Black;
 }
 
+void Game::InitializeGame()
+{
+	m_board = Board();
+	m_turn = EColor::Black;
+	m_state = EGameState::Playing;
+}
+
 Game::Game()
 {
 	InitializeGame();
