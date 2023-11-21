@@ -81,11 +81,6 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 	}
 }
 
-void Game::RemoveListener(const IGameListenerPtr listener)
-{
-	m_listeners.push_back(listener);
-}
-
 void Game::SwitchTurn()
 {
 	m_turn = m_turn == EColor::Black ? EColor::Red : EColor::Black;
@@ -103,7 +98,12 @@ Game::Game()
 	InitializeGame();
 }
 
-void Game::AddListener(IGameListenerWeakPtr listener)
+void Game::AddListener(IGameListenerPtr listener)
+{
+	m_listeners.push_back(listener);
+}
+
+void Game::RemoveListener(IGameListener* listener)
 {
 	auto f = [listener](const IGameListenerWeakPtr& weak)
 	{

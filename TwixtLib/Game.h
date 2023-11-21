@@ -24,8 +24,8 @@ private:
 
 public:
 	Game();
-	void AddListener(IGameListenerWeakPtr listener) override;
-	void RemoveListener(IGameListenerPtr listener) override;
+	void AddListener(IGameListenerPtr listener) override;
+	void RemoveListener(IGameListener* listener) override;
 	[[nodiscard]] EColor GetCurrentPlayer() const override;
 	[[nodiscard]] IPiecePtr GetPiecePtr(const Position& pos) const override;
 	[[nodiscard]] bool IsGameOver() const override;

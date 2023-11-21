@@ -15,8 +15,8 @@ class IGame
 public:
 	static IGamePtr CreateGame();
 	virtual ~IGame() = default;
-	virtual void AddListener(IGameListenerWeakPtr listener) = 0;
-	virtual void RemoveListener(IGameListenerPtr listener) = 0;
+	virtual void AddListener(IGameListenerPtr listener) = 0;
+	virtual void RemoveListener(IGameListener* listener) = 0;
 	virtual void Reset() = 0;
 	virtual void Restore(const std::string& config) const = 0;
 	virtual void PlacePiece(const Position& pos) = 0;
