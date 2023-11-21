@@ -103,7 +103,7 @@ Game::Game()
 	InitializeGame();
 }
 
-void Game::AddListener(IGameListener* listener)
+void Game::AddListener(IGameListenerWeakPtr listener)
 {
 	auto f = [listener](const IGameListenerWeakPtr& weak)
 	{
