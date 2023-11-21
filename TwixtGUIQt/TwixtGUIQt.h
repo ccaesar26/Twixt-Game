@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_TwixtGUIQt.h"
 #include "IGameListener.h"
+#include "IGame.h"
 
 class TwixtGUIQt : public QMainWindow, public IGameListener
 {
