@@ -3,6 +3,8 @@
 
 class TwixtConsole : public IGameListener
 {
+public:
+	TwixtConsole();
 
 
 };
