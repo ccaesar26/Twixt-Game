@@ -80,9 +80,9 @@ void Game::SaveToFile(const std::string& fileName) const
 		throw std::runtime_error("Failed to open file");
 	}
 
-	file << m_board.ToString() << std::endl;
-	file << static_cast<char>(m_turn) << std::endl;
-	file << static_cast<char>(m_state) << std::endl;
+	file << m_board.ToString();
+	file << static_cast<char>(m_turn) << "\n";
+	file << static_cast<char>(m_state) << "\n";
 }
 
 void Game::NotifyPiecePlaced(const Position& pos) const
@@ -106,6 +106,35 @@ void Game::InitializeGame()
 	m_board = Board();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
+}
+
+void Game::InitializeGame(const std::string& config, EColor turn)
+{
+	std::string boardString;
+	std::string turnString;
+	std::string stateString;
+	int i = 0;
+	while (config[i] != '\n')
+	{
+		boardString += config[i];
+		i++;
+	}
+	i++;
+	while (config[i] != '\n')
+	{
+		turnString += config[i];
+		i++;
+	}
+	i++;
+	while (config[i] != '\n')
+	{
+		stateString += config[i];
+		i++;
+	}
+	
+	m_board = Board(boardString);
+	m_turn = static_cast<EColor>(turnString[0]);
+	m_state = static_cast<EGameState>(stateString[0]);
 }
 
 Game::Game()
