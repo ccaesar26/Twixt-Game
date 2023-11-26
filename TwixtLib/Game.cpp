@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "GameException.h"
 
+#include <fstream>
+
 IGamePtr IGame::CreateGame()
 {
 	return std::make_shared<Game>();
@@ -68,6 +70,19 @@ void Game::NotifyGameRestarted() const
 			sp->OnGameRestarted();
 		}
 	}
+}
+
+void Game::SaveToFile(const std::string& fileName) const
+{
+	std::ofstream file(fileName);
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Failed to open file");
+	}
+
+	file << m_board.ToString() << std::endl;
+	file << static_cast<char>(m_turn) << std::endl;
+	file << static_cast<char>(m_state) << std::endl;
 }
 
 void Game::NotifyPiecePlaced(const Position& pos) const
