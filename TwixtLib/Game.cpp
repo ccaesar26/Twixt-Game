@@ -45,6 +45,19 @@ bool Game::IsWon() const
 	return m_state == EGameState::WonByBlack || m_state == EGameState::WonByRed;
 }
 
+void Game::LoadFromFile(const std::string& fileName)
+{
+	std::ifstream file(fileName);
+	if (!file.is_open())
+	{
+		throw GameException("Could not open file");
+	}
+
+	std::string config;
+	std::getline(file, config);
+	InitializeGame(config);
+}
+
 bool Game::IsGameOver() const
 {
 	return IsDraw() || IsWon();

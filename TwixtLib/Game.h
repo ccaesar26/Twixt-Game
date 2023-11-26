@@ -31,7 +31,7 @@ public:
 	[[nodiscard]] bool IsGameOver() const override;
 	[[nodiscard]] bool IsDraw() const override;
 	[[nodiscard]] bool IsWon() const override;
-	void LoadFromFile(const std::string& fileName) const override;
+	void LoadFromFile(const std::string& fileName) override;
 	void PlacePiece(const Position& pos) override;
 	void Reset() override;
 	void Restore(const std::string& config) const override;
