@@ -5,12 +5,17 @@
 #include "IPiece.h"
 
 #include <vector>
+#include <string>
 
 class Board final :
 	public IBoard
 {
 public:
 	explicit Board(int size = 24);
+
+	[[nodiscard]] int GetSize() const override;
+	
+	[[nodiscard]] std::string ToString() const override;
 
 	void PlacePiece(Position pos, EColor color) override;
 

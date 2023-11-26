@@ -19,6 +19,11 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
+int Board::GetSize() const
+{
+	return m_size;
+}
+
 void Board::PlacePiece(const Position pos, const EColor color)
 {
 	if (pos.row < 0 || pos.row >= m_size || pos.col < 0 || pos.col >= m_size)
