@@ -24,6 +24,31 @@ int Board::GetSize() const
 	return m_size;
 }
 
+std::string Board::ToString() const
+{
+	std::string result;
+	for (int i = 0; i < m_size; i++)
+	{
+		for (int j = 0; j < m_size; j++)
+		{
+			if (m_board[i][j] == nullptr)
+			{
+				result += " ";
+			}
+			else if (m_board[i][j]->GetColor() == EColor::Black)
+			{
+				result += "B";
+			}
+			else if (m_board[i][j]->GetColor() == EColor::Red)
+			{
+				result += "R";
+			}
+		}
+		result += "\n";
+	}
+	return result;
+}
+
 void Board::PlacePiece(const Position pos, const EColor color)
 {
 	if (pos.row < 0 || pos.row >= m_size || pos.col < 0 || pos.col >= m_size)

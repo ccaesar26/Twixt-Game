@@ -13,15 +13,15 @@ class Board final :
 public:
 	explicit Board(int size = 24);
 
-	[[nodiscard]] int GetSize() const override;
-	
-	[[nodiscard]] std::string ToString() const override;
-
 	void PlacePiece(Position pos, EColor color) override;
 
 	[[nodiscard]] IPiecePtr At(Position pos) const override;
 
 	[[nodiscard]] bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const override;
+
+	[[nodiscard]] int GetSize() const;
+
+	[[nodiscard]] std::string ToString() const;
 
 private:
 	int m_size;
