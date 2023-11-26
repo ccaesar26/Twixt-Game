@@ -3,6 +3,7 @@
 #include "IBoard.h"
 #include "EColor.h"
 #include "IPiece.h"
+#include "Peg.h"
 
 #include <vector>
 #include <string>
@@ -12,6 +13,8 @@ class Board final :
 {
 public:
 	explicit Board(int size = 24);
+
+	Board(const std::string& boardString);
 
 	void PlacePiece(Position pos, EColor color) override;
 

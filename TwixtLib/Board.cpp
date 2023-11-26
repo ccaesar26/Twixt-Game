@@ -19,6 +19,24 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
+Board::Board(const std::string& boardString)
+{
+	size_t pos = 0;
+	while (boardString[pos] != '\n')
+	{
+		if (boardString[pos] == ' ')
+		{
+			m_board[pos / m_size].push_back(nullptr);
+		}
+		else if (boardString[pos] == '0' || boardString[pos] == '1')
+		{
+			m_board[pos / m_size].push_back(std::make_shared<Peg>(static_cast<EColor>(boardString[pos] - '0')));
+		}
+		pos++;
+	}
+	m_size = static_cast<int>(m_board.size());
+}
+
 int Board::GetSize() const
 {
 	return m_size;
@@ -37,11 +55,11 @@ std::string Board::ToString() const
 			}
 			else if (m_board[i][j]->GetColor() == EColor::Black)
 			{
-				result += "B";
+				result += static_cast<int>(EColor::Black) + '0';
 			}
 			else if (m_board[i][j]->GetColor() == EColor::Red)
 			{
-				result += "R";
+				result += static_cast<int>(EColor::Red) + '0';
 			}
 		}
 		result += "\n";

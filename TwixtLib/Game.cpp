@@ -81,8 +81,8 @@ void Game::SaveToFile(const std::string& fileName) const
 	}
 
 	file << m_board.ToString();
-	file << static_cast<char>(m_turn) << "\n";
-	file << static_cast<char>(m_state) << "\n";
+	file << static_cast<int>(m_turn) << "\n";
+	file << static_cast<int>(m_state) << "\n";
 }
 
 void Game::NotifyPiecePlaced(const Position& pos) const
@@ -111,30 +111,17 @@ void Game::InitializeGame()
 void Game::InitializeGame(const std::string& config, EColor turn)
 {
 	std::string boardString;
-	std::string turnString;
-	std::string stateString;
-	int i = 0;
-	while (config[i] != '\n')
+	size_t pos = 0;
+	while (config[pos] != '\n')
 	{
-		boardString += config[i];
-		i++;
+		boardString += config[pos];
+		pos++;
 	}
-	i++;
-	while (config[i] != '\n')
-	{
-		turnString += config[i];
-		i++;
-	}
-	i++;
-	while (config[i] != '\n')
-	{
-		stateString += config[i];
-		i++;
-	}
-	
+	pos++;
 	m_board = Board(boardString);
-	m_turn = static_cast<EColor>(turnString[0]);
-	m_state = static_cast<EGameState>(stateString[0]);
+	m_turn = static_cast<EColor>(config[pos] - '0');
+	pos += 2;
+	m_state = static_cast<EGameState>(config[pos] - '0');
 }
 
 Game::Game()
