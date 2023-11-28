@@ -37,6 +37,10 @@ void TwixtConsole::printHelperMenu()
 
 void TwixtConsole::OnPiecePlaced(const Position& pos)
 {
+	printBoard();
+	std::cout << "Piesa a fost pusa cu succes!"<<std::endl;
+	printHelperMenu();
+
 }
 
 void TwixtConsole::OnGameOver(const EGameResult& result)
@@ -44,5 +48,9 @@ void TwixtConsole::OnGameOver(const EGameResult& result)
 }
 
 void TwixtConsole::OnGameRestarted()
+{
+}
+
+void TwixtConsole::printBoard()
 {
 }

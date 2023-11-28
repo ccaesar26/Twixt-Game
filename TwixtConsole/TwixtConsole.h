@@ -14,6 +14,7 @@ public:
 	virtual void OnPiecePlaced(const Position& pos) override;
 	virtual void OnGameOver(const EGameResult& result) override;
 	virtual void OnGameRestarted() override;
+	void printBoard();
 
 private:
 	IGamePtr m_game;
