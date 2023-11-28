@@ -88,3 +88,8 @@ IPiecePtr Board::At(const Position pos) const
 	}
 	return m_board[pos.row][pos.col];
 }
+
+bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const
+{
+	return false;
+}

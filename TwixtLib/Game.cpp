@@ -35,6 +35,14 @@ void Game::PlacePiece(const Position& pos)
 	}
 }
 
+void Game::Reset()
+{
+}
+
+void Game::Restore(const std::string& config) const
+{
+}
+
 bool Game::IsDraw() const
 {
 	return m_state == EGameState::Draw;
