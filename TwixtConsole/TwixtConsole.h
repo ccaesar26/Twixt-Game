@@ -10,6 +10,8 @@ public:
 	TwixtConsole();
 	void setGame(IGamePtr game);
 	void printCurrentPlayer();
+	void printHelperMenu();
+
 private:
 	IGamePtr m_game;
 	

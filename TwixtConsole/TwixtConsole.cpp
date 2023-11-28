@@ -23,3 +23,14 @@ void TwixtConsole::printCurrentPlayer()
 	}
 	std::cout<<" player"<<std::endl;
 }
+
+void TwixtConsole::printHelperMenu()
+{
+	std::cout << ">  Optiuni Disponibile <"<<std::endl;
+	std::cout << "Tasta 1 -> Plasare Pod "<<std::endl;
+	std::cout << "Tasta 2 -> Eliminare Pod " << std::endl;
+	std::cout << "Tasta 3 -> Incarca Joc Din Fisier " << std::endl;
+	std::cout << "Tasta 4 -> Salvare Joc In Fisier " << std::endl;
+	std::cout << "Tasta 5 -> Solicita Remiza " << std::endl;
+	std::cout << "Tasta 6 -> Termina Tura " << std::endl;
+}
