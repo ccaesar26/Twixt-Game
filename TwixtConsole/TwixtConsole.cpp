@@ -34,3 +34,15 @@ void TwixtConsole::printHelperMenu()
 	std::cout << "Tasta 5 -> Solicita Remiza " << std::endl;
 	std::cout << "Tasta 6 -> Termina Tura " << std::endl;
 }
+
+void TwixtConsole::OnPiecePlaced(const Position& pos)
+{
+}
+
+void TwixtConsole::OnGameOver(const EGameResult& result)
+{
+}
+
+void TwixtConsole::OnGameRestarted()
+{
+}
