@@ -35,3 +35,16 @@ void Player::AddLink(IPiecePtr peg1, IPiecePtr peg2)
 {
 	m_links.emplace_back(peg1, peg2);
 }
+
+void Player::RemoveLink(IPiecePtr peg1, IPiecePtr peg2)
+{
+	auto it = std::find_if(m_links.begin(), m_links.end(), [peg1, peg2](const Links& link)
+		{
+			return (link.first == peg1 && link.second == peg2) || (link.first == peg2 && link.second == peg1);
+		});
+
+	if (it != m_links.end())
+	{
+		m_links.erase(it);
+	}
+}
