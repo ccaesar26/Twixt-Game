@@ -9,12 +9,6 @@ using Links = std::pair<IPiecePtr, IPiecePtr>;
 
 class IPlayer
 {
-private:
-	std::vector<IPiecePtr> m_pegs;
-	std::vector<Links> m_links;
-	EColor m_color;
-	std::string m_name;
-	
 public:
 	virtual ~IPlayer() = default;
 	static IPlayerPtr CreatePlayer();
