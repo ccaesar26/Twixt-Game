@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Start</string>
+     <string>Restart</string>
     </property>
    </widget>
   </widget>
@@ -33,7 +33,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>572</width>
+     <width>1200</width>
      <height>22</height>
     </rect>
    </property>
@@ -75,6 +75,9 @@
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
