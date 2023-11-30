@@ -11,7 +11,7 @@ class TwixtGUIQt : public QMainWindow, public IGameListener
 
 public:
     TwixtGUIQt(QWidget *parent = nullptr);
-    ~TwixtGUIQt();
+    ~TwixtGUIQt() override;
 
     void OnPiecePlaced(const Position& pos) override;
     void OnGameOver(const EGameResult& result) override;
