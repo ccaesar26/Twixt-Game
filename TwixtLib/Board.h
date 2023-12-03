@@ -16,6 +16,21 @@ public:
 
 	Board(const std::string& boardString);
 
+	// Rule of 5: Destructor
+	~Board() override = default;
+
+	// Rule of 5: Copy constructor
+	Board(const Board& other);
+
+	// Rule of 5: Copy assignment operator
+	Board& operator=(const Board& other);
+
+	// Rule of 5: Move constructor
+	Board(Board&& other) noexcept;
+
+	// Rule of 5: Move assignment operator
+	Board& operator=(Board&& other) noexcept;
+
 	void PlacePiece(Position pos, EColor color) override;
 
 	[[nodiscard]] IPiecePtr At(Position pos) const override;
