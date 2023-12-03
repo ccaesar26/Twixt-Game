@@ -88,6 +88,12 @@ std::string Board::ToString() const
 	return result;
 }
 
+Board::Board(Board&& other) noexcept
+{
+	m_size = other.m_size;
+	m_board = std::move(other.m_board);
+}
+
 void Board::PlacePiece(const Position pos, const EColor color)
 {
 	if (pos.row < 0 || pos.row >= m_size || pos.col < 0 || pos.col >= m_size)
