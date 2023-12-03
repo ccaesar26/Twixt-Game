@@ -37,6 +37,27 @@ Board::Board(const std::string& boardString)
 	m_size = static_cast<int>(m_board.size());
 }
 
+Board::Board(const Board& other)
+{
+	m_size = other.m_size;
+	m_board.resize(m_size);
+	for (int i = 0; i < m_size; i++)
+	{
+		m_board[i].resize(m_size);
+		for (int j = 0; j < m_size; j++)
+		{
+			if (other.m_board[i][j] == nullptr)
+			{
+				m_board[i][j] = nullptr;
+			}
+			else
+			{
+				m_board[i][j] = std::make_shared<Peg>(other.m_board[i][j]->GetColor());
+			}
+		}
+	}
+}
+
 int Board::GetSize() const
 {
 	return m_size;
