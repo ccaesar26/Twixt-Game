@@ -18,5 +18,4 @@ public:
     void OnGameRestarted() override;
 
 private:
-    Ui::TwixtGUIQtClass ui;
 };
