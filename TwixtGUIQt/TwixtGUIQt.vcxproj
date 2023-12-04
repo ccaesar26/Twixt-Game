@@ -107,8 +107,12 @@
     <QtRcc Include="TwixtGUIQt.qrc" />
     <QtUic Include="TwixtGUIQt.ui" />
     <QtMoc Include="TwixtGUIQt.h" />
+    <ClCompile Include="HoleButton.cpp" />
     <ClCompile Include="TwixtGUIQt.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HoleButton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
