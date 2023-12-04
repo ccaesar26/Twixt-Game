@@ -10,7 +10,7 @@ class HoleButton :
     Q_OBJECT
 public:
     HoleButton(const Position& position, QWidget* parent = nullptr);
-
+    HoleButton(const Position& position, EColor color, QWidget* parent = nullptr);
 
 signals:
 
