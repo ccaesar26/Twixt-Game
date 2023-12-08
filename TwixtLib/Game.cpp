@@ -117,9 +117,12 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 	}
 }
 
+//switch the current player pointer to the other player
 void Game::SwitchTurn()
 {
-	m_turn = m_turn == EColor::Black ? EColor::Red : EColor::Black;
+	m_turn = (m_turn == EColor::Black) ? EColor::Red : EColor::Black;
+	
+	std::swap(m_currentPlayer, m_nextPlayer);
 }
 
 void Game::InitializeGame()
@@ -127,6 +130,10 @@ void Game::InitializeGame()
 	m_board = Board();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
+	m_player1 = std::make_unique<Player>(EColor::Black, "Player 1");
+	m_player2 = std::make_unique<Player>(EColor::Red, "Player 2");
+	m_currentPlayer = m_player1.get();
+	m_nextPlayer = m_player2.get();
 }
 
 void Game::InitializeGame(const std::string& config, EColor turn)
@@ -143,6 +150,10 @@ void Game::InitializeGame(const std::string& config, EColor turn)
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
+	m_player1 = std::make_unique<Player>(EColor::Black, "Player 1");
+	m_player2 = std::make_unique<Player>(EColor::Red, "Player 2");
+	m_currentPlayer = (m_turn == EColor::Black) ? m_player1.get() : m_player2.get();
+	m_nextPlayer = (m_turn == EColor::Black) ? m_player2.get() : m_player1.get();
 }
 
 Game::Game()
