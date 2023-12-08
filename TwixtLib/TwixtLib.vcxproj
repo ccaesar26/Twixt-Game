@@ -141,7 +141,9 @@
     <ClInclude Include="include\IGameListener.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="include\Position.h" />
+    <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Peg.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.h" />
@@ -152,6 +154,7 @@
     </ClCompile>
     <ClCompile Include="include\IBoard.h" />
     <ClCompile Include="Peg.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />

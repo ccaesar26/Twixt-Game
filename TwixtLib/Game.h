@@ -5,6 +5,7 @@
 #include "EColor.h"
 #include "EGameState.h"
 #include "Board.h"
+#include "Player.h"
 
 #include <vector>
 #include <string>
@@ -17,6 +18,10 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	std::vector<IGameListenerWeakPtr> m_listeners;
+	std::unique_ptr<IPlayer> m_player1 = std::make_unique<Player>(EColor::Black, "Player 1");
+	std::unique_ptr<IPlayer> m_player2 = std::make_unique<Player>(EColor::Red, "Player 2");
+	IPlayer* m_currentPlayer = m_player1.get();
+	IPlayer* m_nextPlayer = m_player2.get();
 
 	void InitializeGame();
 	void InitializeGame(const std::string& config, EColor turn = EColor::Black);
@@ -39,4 +44,7 @@ public:
 	void NotifyPiecePlaced(const Position& pos) const override;
 	void NotifyGameOver(EGameResult gameResult) const override;
 	void NotifyGameRestarted() const override;
+
+	const Player& GetPlayer1() const;
+	const Player& GetPlayer2() const;
 };
