@@ -178,7 +178,27 @@ void Game::RemoveListener(IGameListener* listener)
 	std::erase_if(m_listeners, f);
 }
 
-EColor Game::GetCurrentPlayer() const
+IPlayer* Game::GetPlayer1() const
+{
+	return m_player1.get();
+}
+
+IPlayer* Game::GetPlayer2() const
+{
+	return m_player2.get();
+}
+
+IPlayer* Game::GetCurrentPlayerPtr() const
+{
+	return m_currentPlayer;
+}
+
+IPlayer* Game::GetNextPlayerPtr() const
+{
+	return m_nextPlayer;
+}
+
+EColor Game::GetCurrentPlayerColor() const
 {
 	return m_turn;
 }

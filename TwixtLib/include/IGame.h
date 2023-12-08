@@ -3,6 +3,7 @@
 #include "EColor.h"
 #include "IPiece.h"
 #include "IGameListener.h"
+#include "IPlayer.h"
 
 #include <memory>
 #include <string>
@@ -20,7 +21,11 @@ public:
 	virtual void Reset() = 0;
 	virtual void Restore(const std::string& config) const = 0;
 	virtual void PlacePiece(const Position& pos) = 0;
-	[[nodiscard]] virtual EColor GetCurrentPlayer() const = 0;
+	[[nodiscard]] virtual IPlayer* GetPlayer1() const = 0;
+	[[nodiscard]] virtual IPlayer* GetPlayer2() const = 0;
+	[[nodiscard]] virtual EColor GetCurrentPlayerColor() const = 0;
+	[[nodiscard]] virtual IPlayer* GetCurrentPlayerPtr() const = 0;
+	[[nodiscard]] virtual IPlayer* GetNextPlayerPtr() const = 0;
 	[[nodiscard]] virtual IPiecePtr GetPiecePtr(const Position& pos) const = 0;
 	[[nodiscard]] virtual bool IsGameOver() const = 0;
 	[[nodiscard]] virtual bool IsDraw() const = 0;

@@ -31,7 +31,11 @@ public:
 	Game();
 	void AddListener(IGameListenerPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
-	[[nodiscard]] EColor GetCurrentPlayer() const override;
+	[[nodiscard]] IPlayer* GetPlayer1() const override;
+	[[nodiscard]] IPlayer* GetPlayer2() const override;
+	[[nodiscard]] EColor GetCurrentPlayerColor() const override;
+	[[nodiscard]] IPlayer* GetCurrentPlayerPtr() const override;
+	[[nodiscard]] IPlayer* GetNextPlayerPtr() const override;
 	[[nodiscard]] IPiecePtr GetPiecePtr(const Position& pos) const override;
 	[[nodiscard]] bool IsGameOver() const override;
 	[[nodiscard]] bool IsDraw() const override;
@@ -44,7 +48,4 @@ public:
 	void NotifyPiecePlaced(const Position& pos) const override;
 	void NotifyGameOver(EGameResult gameResult) const override;
 	void NotifyGameRestarted() const override;
-
-	const Player& GetPlayer1() const;
-	const Player& GetPlayer2() const;
 };
