@@ -12,7 +12,7 @@ void TwixtConsole::setGame(IGamePtr game)
 void TwixtConsole::printCurrentPlayer()
 {
 	std::cout << "Current player is: ";
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetCurrentPlayerColor())
 	{
 	case EColor::Black:
 		std::cout << "Black";
@@ -45,10 +45,27 @@ void TwixtConsole::OnPiecePlaced(const Position& pos)
 
 void TwixtConsole::OnGameOver(const EGameResult& result)
 {
+	printBoard();
+	switch (result)
+	{
+	case EGameResult::BlackWinner:
+		std::cout << "The black player is the winner!!\n";
+		break;
+	case EGameResult::RedWinner:
+			std::cout << "The red player is the winner!!\n";
+			break;
+	case EGameResult::Draw:
+			std::cout << "The game ended in a draw!!\n";
+			break;
+	}
+
 }
 
 void TwixtConsole::OnGameRestarted()
 {
+	std::cout << "The game was restarted!!\n";
+	printBoard();
+	printHelperMenu();
 }
 
 void TwixtConsole::printBoard()
