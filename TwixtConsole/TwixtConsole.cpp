@@ -63,11 +63,18 @@ void TwixtConsole::OnGameOver(const EGameResult& result)
 
 void TwixtConsole::OnGameRestarted()
 {
-	std::cout << "The game was restarted!!\n";
 	printBoard();
+	std::cout << "The game was restarted!!\n";
 	printHelperMenu();
 }
 
 void TwixtConsole::printBoard()
 {
+}
+
+void TwixtConsole::PlacePiece(int x, int y)
+{
+	Position pos(x, y);
+	m_game->PlacePiece(pos);
+	OnPiecePlaced(pos);
 }
