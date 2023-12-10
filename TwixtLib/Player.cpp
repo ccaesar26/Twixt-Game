@@ -1,4 +1,10 @@
 #include "Player.h"
+#include <memory>
+
+IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name)
+{
+	return std::make_unique<Player>(color, name);
+}
 
 Player::Player(EColor color, std::string name)
 {

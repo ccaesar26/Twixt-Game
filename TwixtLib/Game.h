@@ -18,8 +18,8 @@ private:
 	EColor m_turn;
 	EGameState m_state;
 	std::vector<IGameListenerWeakPtr> m_listeners;
-	std::unique_ptr<IPlayer> m_player1;
-	std::unique_ptr<IPlayer> m_player2;
+	IPlayerPtr m_player1;
+	IPlayerPtr m_player2;
 	IPlayer* m_currentPlayer;
 	IPlayer* m_nextPlayer;
 
