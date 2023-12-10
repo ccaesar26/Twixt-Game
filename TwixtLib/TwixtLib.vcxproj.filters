@@ -45,7 +45,7 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IPlayer.h">
+    <ClInclude Include="include\IPlayer.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">

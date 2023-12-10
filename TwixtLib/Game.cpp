@@ -130,8 +130,8 @@ void Game::InitializeGame()
 	m_board = Board();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
-	m_player1 = std::make_unique<Player>(EColor::Black, "Player 1");
-	m_player2 = std::make_unique<Player>(EColor::Red, "Player 2");
+	m_player1 = std::make_unique<IPlayer>(EColor::Black, "Player 1");
+	m_player2 = std::make_unique<IPlayer>(EColor::Red, "Player 2");
 	m_currentPlayer = m_player1.get();
 	m_nextPlayer = m_player2.get();
 }
@@ -150,8 +150,8 @@ void Game::InitializeGame(const std::string& config, EColor turn)
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
-	m_player1 = std::make_unique<Player>(EColor::Black, "Player 1");
-	m_player2 = std::make_unique<Player>(EColor::Red, "Player 2");
+	m_player1 = std::make_unique<IPlayer>(EColor::Black, "Player 1");
+	m_player2 = std::make_unique<IPlayer>(EColor::Red, "Player 2");
 	m_currentPlayer = (m_turn == EColor::Black) ? m_player1.get() : m_player2.get();
 	m_nextPlayer = (m_turn == EColor::Black) ? m_player2.get() : m_player1.get();
 }

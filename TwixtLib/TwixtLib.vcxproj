@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -140,8 +140,8 @@
     <ClInclude Include="include\IGame.h" />
     <ClInclude Include="include\IGameListener.h" />
     <ClInclude Include="include\IPiece.h" />
+    <ClInclude Include="include\IPlayer.h" />
     <ClInclude Include="include\Position.h" />
-    <ClInclude Include="IPlayer.h" />
     <ClInclude Include="Peg.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
