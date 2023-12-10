@@ -84,6 +84,17 @@ Board& Board::operator=(const Board& other)
 	return *this;
 }
 
+Board& Board::operator=(Board&& other) noexcept
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+	m_size = other.m_size;
+	m_board = std::move(other.m_board);
+	return *this;
+}
+
 int Board::GetSize() const
 {
 	return m_size;
