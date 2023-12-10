@@ -18,6 +18,9 @@ public:
     HoleButton& operator=(const HoleButton& other);
     HoleButton& operator=(HoleButton&& other) noexcept;
 	
+    void PlacePeg(EColor color);
+    std::optional<EColor> GetColor() const;
+	
 
 signals:
 

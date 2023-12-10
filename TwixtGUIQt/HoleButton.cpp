@@ -13,3 +13,13 @@ HoleButton::HoleButton(const Position& position, EColor color, QWidget* parent)
 	, m_color(color)
 {
 }
+
+void HoleButton::PlacePeg(EColor color)
+{
+	m_color = color;
+}
+
+std::optional<EColor> HoleButton::GetColor() const
+{
+	return m_color;
+}
