@@ -15,7 +15,10 @@ public:
 	virtual void OnGameOver(const EGameResult& result) override;
 	virtual void OnGameRestarted() override;
 	void printBoard();
-	void PlacePiece(int x, int y);
+	void PlacePiece(Position& pos);
+	void PlaceBridge(Position& pos1, Position& pos2);
+	void DeleteBridge(Position& pos1, Position& pos2);
+	void EndTurn();
 
 private:
 	IGamePtr m_game;

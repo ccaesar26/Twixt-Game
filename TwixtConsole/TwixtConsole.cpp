@@ -73,9 +73,20 @@ void TwixtConsole::printBoard()
 {
 }
 
-void TwixtConsole::PlacePiece(int x, int y)
+void TwixtConsole::PlacePiece(Position& pos)
 {
-	Position pos(x, y);
 	m_game->PlacePiece(pos);
 	OnPiecePlaced(pos);
+}
+
+void TwixtConsole::PlaceBridge(Position& pos1, Position& pos2)
+{
+}
+
+void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
+{
+}
+
+void TwixtConsole::EndTurn()
+{
 }
