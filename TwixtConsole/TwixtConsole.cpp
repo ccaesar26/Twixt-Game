@@ -27,6 +27,7 @@ void TwixtConsole::printCurrentPlayer()
 void TwixtConsole::printHelperMenu()
 {
 	std::cout << ">  Optiuni Disponibile <"<<std::endl;
+	std::cout << "Tasta 0 -> Plasare Piesa " << std::endl;
 	std::cout << "Tasta 1 -> Plasare Pod "<<std::endl;
 	std::cout << "Tasta 2 -> Eliminare Pod " << std::endl;
 	std::cout << "Tasta 3 -> Incarca Joc Din Fisier " << std::endl;
