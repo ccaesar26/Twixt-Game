@@ -59,6 +59,8 @@ void HoleButton::UpdatePeg()
 	{
 		setStyleSheet("background-color: white;");
 	}
+	
+	setStyleSheet("border-radius: 25px;");
 }
 
 HoleButton::HoleButton(const HoleButton& other)
