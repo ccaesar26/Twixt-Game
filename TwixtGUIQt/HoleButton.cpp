@@ -33,6 +33,18 @@ void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 	}
 }
 
+void HoleButton::UpdatePeg()
+{
+	if (m_color.has_value())
+	{
+		setStyleSheet("background-color: " + EColorToString(m_color.value()) + ";");
+	}
+	else
+	{
+		setStyleSheet("background-color: white;");
+	}
+}
+
 HoleButton::HoleButton(const HoleButton& other)
 	: QPushButton{ other.parentWidget() }
 	, m_position{ other.m_position }

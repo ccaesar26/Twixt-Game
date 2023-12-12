@@ -23,6 +23,8 @@ public:
 	
     void mouseReleaseEvent(QMouseEvent* event) override;
 
+    void UpdatePeg();
+
 signals:
     void Clicked(const std::pair<int, int>& position);
 
