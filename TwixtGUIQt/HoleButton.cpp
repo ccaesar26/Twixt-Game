@@ -37,3 +37,13 @@ HoleButton::HoleButton(HoleButton&& other) noexcept
 	, m_color{ std::move(other.m_color) }
 {
 }
+
+HoleButton& HoleButton::operator=(const HoleButton& other)
+{
+	if (this != &other)
+	{
+		m_position = other.m_position;
+		m_color = other.m_color;
+	}
+	return *this;
+}
