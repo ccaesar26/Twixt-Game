@@ -30,3 +30,10 @@ HoleButton::HoleButton(const HoleButton& other)
 	, m_color{ other.m_color }
 {
 }
+
+HoleButton::HoleButton(HoleButton&& other) noexcept
+	: QPushButton{ other.parentWidget() }
+	, m_position{ std::move(other.m_position) }
+	, m_color{ std::move(other.m_color) }
+{
+}
