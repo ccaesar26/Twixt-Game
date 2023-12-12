@@ -24,6 +24,15 @@ std::optional<EColor> HoleButton::GetColor() const
 	return m_color;
 }
 
+void HoleButton::mouseReleaseEvent(QMouseEvent* event)
+{
+	QPushButton::mouseReleaseEvent(event);
+	if (isEnabled())
+	{
+		emit Clicked(m_position);
+	}
+}
+
 HoleButton::HoleButton(const HoleButton& other)
 	: QPushButton{ other.parentWidget() }
 	, m_position{ other.m_position }

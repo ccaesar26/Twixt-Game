@@ -21,8 +21,10 @@ public:
     void PlacePeg(EColor color);
     std::optional<EColor> GetColor() const;
 	
+    void mouseReleaseEvent(QMouseEvent* event) override;
 
 signals:
+    void Clicked(const std::pair<int, int>& position);
 
 private:
     Position m_position;
