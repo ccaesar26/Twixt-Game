@@ -1,5 +1,21 @@
 #include "HoleButton.h"
 
+namespace
+{
+	QString ColorToString(const EColor color)
+	{
+		switch (color)
+		{
+		case EColor::Red:
+			return "red";
+		case EColor::Black:
+			return "black";
+		default:
+			return "white";
+		}
+	}
+}
+
 HoleButton::HoleButton(const Position& position, QWidget* parent)
 	: QPushButton(parent)
 	, m_position(position)
@@ -37,7 +53,7 @@ void HoleButton::UpdatePeg()
 {
 	if (m_color.has_value())
 	{
-		setStyleSheet("background-color: " + EColorToString(m_color.value()) + ";");
+		setStyleSheet("background-color: " + ColorToString(m_color.value()) + ";");
 	}
 	else
 	{
