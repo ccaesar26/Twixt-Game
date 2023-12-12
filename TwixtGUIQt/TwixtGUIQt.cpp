@@ -1,6 +1,6 @@
 #include "TwixtGUIQt.h"
 
-#include <QGridLayout>
+#include <QLabel>
 
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
@@ -28,4 +28,14 @@ void TwixtGUIQt::OnGameOver(const EGameResult& result)
 
 void TwixtGUIQt::OnGameRestarted()
 {
+}
+
+void TwixtGUIQt::InitializeTitleLabel(QGridLayout* mainGridLayout)
+{
+    const auto titleLabel = new QLabel{};
+    titleLabel->setText("Twixt");
+
+    // TODO: setAlignment, setStyleSheet
+
+    mainGridLayout->addWidget(titleLabel, 0, 0, 1, 1);
 }
