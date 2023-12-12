@@ -27,5 +27,6 @@ public:
     // UI initializations
     static void InitializeTitleLabel(QGridLayout* mainGridLayout);
 	static void InitializeGameControlButtons(QGridLayout* mainGridLayout);
+    static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
 private:
 };

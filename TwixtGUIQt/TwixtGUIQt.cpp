@@ -47,7 +47,7 @@ void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
     const auto loadButton = new QPushButton{ "Load" };
     const auto quitButton = new QPushButton{ "Quit" };
 
-    auto buttonContainer = new QWidget{};
+    const auto buttonContainer = new QWidget{};
     const auto buttonContainerLayout = new QGridLayout{};
 
     buttonContainerLayout->addWidget(restartButton, 0, 0);
@@ -61,4 +61,27 @@ void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
 
     buttonContainer->setLayout(buttonContainerLayout);
     mainGridLayout->addWidget(buttonContainer, 3, 0, 1, 1);
+}
+
+void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
+{
+    const auto placeButton = new QPushButton{ "Place Link" };
+    const auto removeButton = new QPushButton{ "Remove Link" };
+    const auto drawButton = new QPushButton{ "Request Draw" };
+    const auto endTurnButton = new QPushButton{ "End Turn" };
+
+    const auto buttonContainer = new QWidget{};
+    const auto buttonContainerLayout = new QGridLayout{};
+
+    buttonContainerLayout->addWidget(placeButton, 0, 0);
+    buttonContainerLayout->addWidget(removeButton, 0, 1);
+    buttonContainerLayout->addWidget(drawButton, 0, 2);
+    buttonContainerLayout->addWidget(endTurnButton, 0, 3);
+
+    // TODO: connect signals and slots
+
+    // TODO: setStyleSheet
+
+    buttonContainer->setLayout(buttonContainerLayout);
+    mainGridLayout->addWidget(buttonContainer, 3, 2, 1, 1);
 }
