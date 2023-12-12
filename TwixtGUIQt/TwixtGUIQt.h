@@ -6,6 +6,8 @@
 #include "IGameListener.h"
 #include "IGame.h"
 
+#include "HoleButton.h"
+
 class TwixtGUIQt : public QMainWindow, public IGameListener
 {
     Q_OBJECT
@@ -24,5 +26,6 @@ public:
 
     // UI initializations
     static void InitializeTitleLabel(QGridLayout* mainGridLayout);
+	static void InitializeGameControlButtons(QGridLayout* mainGridLayout);
 private:
 };
