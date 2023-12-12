@@ -1,7 +1,5 @@
 #include "TwixtGUIQt.h"
 
-#include <QLabel>
-
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -84,4 +82,14 @@ void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
 
     buttonContainer->setLayout(buttonContainerLayout);
     mainGridLayout->addWidget(buttonContainer, 3, 2, 1, 1);
+}
+
+void TwixtGUIQt::InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout)
+{
+    const auto currentPlayerLabel = new QLabel{};
+    currentPlayerLabel->setText("Current player\nRed");
+
+    // TODO: setAlignment, setStyleSheet
+
+    mainGridLayout->addWidget(currentPlayerLabel, 0, 2, 1, 1);
 }

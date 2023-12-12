@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QGridLayout>
+#include <QLabel>
 
 #include "IGameListener.h"
 #include "IGame.h"
@@ -19,6 +20,7 @@ public:
 
     // Copy and move semantics
 
+private:
     // IGameListener overrides
     void OnPiecePlaced(const Position& pos) override;
     void OnGameOver(const EGameResult& result) override;
@@ -28,5 +30,8 @@ public:
     static void InitializeTitleLabel(QGridLayout* mainGridLayout);
 	static void InitializeGameControlButtons(QGridLayout* mainGridLayout);
     static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
+
+	void InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout);
 private:
+    QLabel* m_currentPlayerLabel;
 };
