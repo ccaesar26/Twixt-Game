@@ -131,3 +131,16 @@ void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
 void TwixtConsole::EndTurn()
 {
 }
+
+void TwixtConsole::SaveToFile()
+{
+	m_game->SaveToFile("Game safe");
+	std::cout << "Salvarea a fost efectuata cu succes!"<<"\n\n";
+}
+
+void TwixtConsole::LoadFromFile()
+{
+	m_game->LoadFromFile("Game safe");
+	std::cout << "Salvarea a fost efectuata cu succes!" << "\n\n";
+}
+
