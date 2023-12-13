@@ -33,7 +33,7 @@ void TwixtConsole::printHelperMenu()
 	std::cout << "Tasta 3 -> Incarca Joc Din Fisier " << std::endl;
 	std::cout << "Tasta 4 -> Salvare Joc In Fisier " << std::endl;
 	std::cout << "Tasta 5 -> Solicita Remiza " << std::endl;
-	std::cout << "Tasta 6 -> Termina Tura " << std::endl;
+	std::cout << "Tasta 6 -> Termina Tura " << std::endl<<std::endl;
 }
 
 void TwixtConsole::OnPiecePlaced(const Position& pos)
@@ -71,6 +71,46 @@ void TwixtConsole::OnGameRestarted()
 
 void TwixtConsole::printBoard()
 {
+	for (size_t i = 0; i < 24; i++)
+	{
+		if (i == 1 || i == 23)
+			std::cout << "--|---------------------------------------------|--"<<std::endl;
+		for (size_t j = 0; j < 23; j++)
+		{
+			
+			
+			const auto piecePtr = m_game->GetPiecePtr(Position(i, j));
+			if (piecePtr)
+			{
+				if(piecePtr->GetColor() == EColor::Black)
+					std::cout << " B";
+				else
+					std::cout << " R";
+			}
+			else
+			{
+				std::cout << " O";
+			}
+			if (j == 0||j==23)
+				std::cout << "|";
+		}
+		std::cout << " |";
+		const auto piecePtr = m_game->GetPiecePtr(Position(i, 23));
+		if (piecePtr)
+		{
+			if (piecePtr->GetColor() == EColor::Black)
+				std::cout << " B";
+			else
+				std::cout << " R";
+		}
+		else
+		{
+			std::cout << " O";
+		}
+		
+		std::cout <<"\n";
+	}
+	std::cout << "\n";
 }
 
 void TwixtConsole::PlacePiece(Position& pos)
@@ -81,6 +121,7 @@ void TwixtConsole::PlacePiece(Position& pos)
 
 void TwixtConsole::PlaceBridge(Position& pos1, Position& pos2)
 {
+	
 }
 
 void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)

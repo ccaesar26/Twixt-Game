@@ -7,6 +7,7 @@ int main()
 	std::shared_ptr gameLogic = IGame::CreateGame();
 
 	console->setGame(gameLogic);
+	console->printBoard();
 	console->printHelperMenu();
 	int n;
 	std::cin >> n;
@@ -15,6 +16,8 @@ int main()
 	Position pos1, pos2;
 	while (n != 9)
 	{
+		console->printBoard();
+		console->printHelperMenu();
 		switch (n)
 		{
 		case 0:
