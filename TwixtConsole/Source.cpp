@@ -49,10 +49,13 @@ int main()
 			console->DeleteBridge(pos1, pos2);
 			break;
 		case 3:
+			console->LoadFromFile();
 			break;
 		case 4:
+			console->SaveToFile();
 			break;
 		case 5:
+			console->SolicitDraw();
 			break;
 		case 6:
 			console->EndTurn();

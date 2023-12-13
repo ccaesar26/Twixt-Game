@@ -121,7 +121,7 @@ void TwixtConsole::PlacePiece(Position& pos)
 
 void TwixtConsole::PlaceBridge(Position& pos1, Position& pos2)
 {
-	
+
 }
 
 void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
@@ -130,7 +130,7 @@ void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
 
 void TwixtConsole::EndTurn()
 {
-	
+	m_game->SwitchTurn();
 }
 
 void TwixtConsole::SaveToFile()
@@ -143,5 +143,16 @@ void TwixtConsole::LoadFromFile()
 {
 	m_game->LoadFromFile("Game safe");
 	std::cout << "Salvarea a fost efectuata cu succes!" << "\n\n";
+}
+
+void TwixtConsole::SolicitDraw()
+{
+	std::cout << "Ambii jucatori vor remizaa?";
+	std::string s;
+	std::cin >> s;
+	if (s == "DA" || s == "da" || s == "dA" || s == "Da")
+		m_game->IsDraw();
+	else
+		std::cout << "Celalalt jucator nu a vrut sa fie remiza!" << "\n\n";
 }
 

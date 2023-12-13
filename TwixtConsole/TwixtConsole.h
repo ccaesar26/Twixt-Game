@@ -21,6 +21,7 @@ public:
 	void EndTurn();
 	void SaveToFile();
 	void LoadFromFile();
+	void SolicitDraw();
 
 private:
 	IGamePtr m_game;
