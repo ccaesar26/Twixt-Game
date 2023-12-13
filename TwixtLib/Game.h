@@ -25,9 +25,9 @@ private:
 
 	void InitializeGame();
 	void InitializeGame(const std::string& config, EColor turn = EColor::Black);
-	void SwitchTurn();
 
 public:
+	void SwitchTurn() override;
 	Game();
 	void AddListener(IGameListenerPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;

@@ -130,6 +130,7 @@ void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
 
 void TwixtConsole::EndTurn()
 {
+	
 }
 
 void TwixtConsole::SaveToFile()
