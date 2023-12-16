@@ -2,6 +2,7 @@
 #include "GameException.h"
 #include <stack>
 #include "Peg.h"
+#include <set>
 
 IBoardPtr IBoard::CreateBoard()
 {
@@ -171,7 +172,47 @@ bool Board::IsPositionValid(const Position& pos) const
 
 bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const
 {
-	return false;
+	if (!IsPositionValid(pos)) {
+		return false;
+	}
+
+	std::stack<Position> stack;
+
+	std::set<Position> visited;
+
+	stack.push(pos);
+
+	bool foundUpperRow = false;
+	bool foundLowerRow = false;
+
+	while (!stack.empty() && !(foundUpperRow && foundLowerRow)) {
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0) {
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		if (currentPiece && currentPiece->GetPosition().row == targetUpperRow) {
+			foundUpperRow = true;
+		}
+
+		if (currentPiece && currentPiece->GetPosition().row == targetLowerRow) {
+			foundLowerRow = true;
+		}
+
+		for (const auto& neighbor : currentPiece->GetNeighbors()) {
+			if (!visited.contains(neighbor->GetPosition())) {
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return foundUpperRow && foundLowerRow;
 }
 
 bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const
