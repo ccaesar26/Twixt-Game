@@ -217,7 +217,47 @@ bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLo
 
 bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const
 {
-	return false;
+	if (!IsPositionValid(pos)){
+		return false;
+	}
+
+	std::stack<Position> stack;
+
+	std::set<Position> visited;
+
+	stack.push(pos);
+
+	bool foundLeftCol = false;
+	bool foundRightCol = false;
+
+	while (!stack.empty() && !(foundLeftCol && foundRightCol)){
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0){
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		if (currentPiece && currentPiece->GetPosition().col == targetLeftCol){
+			foundLeftCol = true;
+		}
+
+		if (currentPiece && currentPiece->GetPosition().col == targetRightCol){
+			foundRightCol = true;
+		}
+
+		for (const auto& neighbor : currentPiece->GetNeighbors()){
+			if (!visited.contains(neighbor->GetPosition())){
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return foundLeftCol && foundRightCol;
 }
 
 bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const
