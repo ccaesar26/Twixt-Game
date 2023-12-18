@@ -126,6 +126,7 @@ void TwixtConsole::PlaceBridge(Position& pos1, Position& pos2)
 
 void TwixtConsole::DeleteBridge(Position& pos1, Position& pos2)
 {
+
 }
 
 void TwixtConsole::EndTurn()
@@ -147,7 +148,7 @@ void TwixtConsole::LoadFromFile()
 
 void TwixtConsole::SolicitDraw()
 {
-	std::cout << "Ambii jucatori vor remizaa?";
+	std::cout << "Ambii jucatori vor remiza?\n"<<"Da/Nu\n";
 	std::string s;
 	std::cin >> s;
 	if (s == "DA" || s == "da" || s == "dA" || s == "Da")

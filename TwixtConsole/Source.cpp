@@ -62,6 +62,9 @@ int main()
 			console->printHelperMenu();
 			std::cin >> n;
 			break;
+		case 9:
+			std::cout << "Ati parasit jocul!!";
+			break;
 		}
 		return 0;
 	}
