@@ -30,7 +30,6 @@ public:
 bool operator==(const std::pair<int, int>& p, const Position& pos);
 bool operator!=(const std::pair<int, int>& p, const Position& pos);
 
-
 inline Position::Position(int r, int c) : row(r), col(c) {}
 inline Position::Position(const std::pair<int, int>& p) : row(p.first), col(p.second) {}
 inline Position& Position::operator=(const std::pair<int, int>& p)
@@ -58,4 +57,10 @@ inline bool operator==(const std::pair<int, int>& p, const Position& pos)
 inline bool operator!=(const std::pair<int, int>& p, const Position& pos)
 {
 	return !(p == pos);
+}
+
+//inline less-than operator
+inline bool operator<(const Position& first, const Position& second)
+{
+	return first.row < second.row || (first.row == second.row && first.col < second.col);
 }
