@@ -7,6 +7,7 @@ int main()
 	std::shared_ptr gameLogic = IGame::CreateGame();
 
 	console->setGame(gameLogic);
+	console->printBoard();
 	console->printHelperMenu();
 	int n;
 	std::cin >> n;
@@ -15,6 +16,8 @@ int main()
 	Position pos1, pos2;
 	while (n != 9)
 	{
+		console->printBoard();
+		console->printHelperMenu();
 		switch (n)
 		{
 		case 0:
@@ -46,15 +49,21 @@ int main()
 			console->DeleteBridge(pos1, pos2);
 			break;
 		case 3:
+			console->LoadFromFile();
 			break;
 		case 4:
+			console->SaveToFile();
 			break;
 		case 5:
+			console->SolicitDraw();
 			break;
 		case 6:
 			console->EndTurn();
 			console->printHelperMenu();
 			std::cin >> n;
+			break;
+		case 9:
+			std::cout << "Ati parasit jocul!!";
 			break;
 		}
 		return 0;

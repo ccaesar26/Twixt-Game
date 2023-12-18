@@ -19,6 +19,9 @@ public:
 	void PlaceBridge(Position& pos1, Position& pos2);
 	void DeleteBridge(Position& pos1, Position& pos2);
 	void EndTurn();
+	void SaveToFile();
+	void LoadFromFile();
+	void SolicitDraw();
 
 private:
 	IGamePtr m_game;

@@ -29,10 +29,7 @@ void Game::PlacePiece(const Position& pos)
 			NotifyGameOver(EGameResult::RedWinner);
 		}
 	}
-	else if (m_state != EGameState::Draw)
-	{
-		SwitchTurn();
-	}
+	
 }
 
 void Game::Reset()
