@@ -16,3 +16,12 @@ protected:
 
     Board  b1;
 };
+
+TEST_F(BoardTest,PlacePiece)
+{
+    EXPECT_EQ(b1.At(Position(1, 1))->GetColor(), EColor::Black);
+    EXPECT_EQ(b1.At(Position(2, 3))->GetColor(), EColor::Black);
+    EXPECT_EQ(b1.At(Position(4, 4))->GetColor(), EColor::Red);
+    EXPECT_EQ(b1.At(Position(10, 10))->GetColor(), EColor::Red);
+
+}
