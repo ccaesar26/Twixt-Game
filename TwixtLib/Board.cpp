@@ -156,6 +156,25 @@ void Board::PlacePiece(const Position pos, const EColor color)
 	m_board[pos.row][pos.col] = IPiece::Produce(color, pos);
 }
 
+void Board::LinkPieces(Position pos1, Position pos2)
+{
+if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
+	{
+		throw GameException("Invalid position");
+	}
+	if (pos2.row < 0 || pos2.row >= m_size || pos2.col < 0 || pos2.col >= m_size)
+	{
+		throw GameException("Invalid position");
+	}
+	if (m_board[pos1.row][pos1.col] == nullptr || m_board[pos2.row][pos2.col] == nullptr)
+	{
+		throw GameException("Invalid position");
+	}
+	m_board[pos1.row][pos1.col]->AddNeighbor(m_board[pos2.row][pos2.col]);
+	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
+}
+
+
 IPiecePtr Board::At(const Position pos) const
 {
 	if (pos.row < 0 || pos.row >= m_size || pos.col < 0 || pos.col >= m_size)

@@ -22,5 +22,6 @@ public:
 	[[nodiscard]] bool IsSouthLinked() const override;
 	[[nodiscard]] EColor GetColor() const override;
 	std::vector<IPiecePtr> GetNeighbors() const;
+	void AddNeighbor(IPiecePtr piece) override;
 	Position GetPosition() const;
 };

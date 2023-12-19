@@ -32,6 +32,8 @@ public:
 
 	void PlacePiece(Position pos, EColor color) override;
 
+	void LinkPieces(Position pos1, Position pos2) override;
+
 	[[nodiscard]] IPiecePtr At(const Position pos) const override;
 
 	[[nodiscard]] bool IsPositionValid(const Position& pos) const;

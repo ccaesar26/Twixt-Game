@@ -33,6 +33,11 @@ std::vector<IPiecePtr> Peg::GetNeighbors() const
 	return m_neighbors;
 }
 
+void Peg::AddNeighbor(IPiecePtr piece)
+{
+	m_neighbors.push_back(piece);
+}
+
 Position Peg::GetPosition() const
 {
 	return m_position;
