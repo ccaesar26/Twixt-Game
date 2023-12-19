@@ -25,3 +25,8 @@ TEST_F(BoardTest,PlacePiece)
     EXPECT_EQ(b1.At(Position(10, 10))->GetColor(), EColor::Red);
 
 }
+
+TEST_F(BoardTest, TestSize)
+{
+    EXPECT_EQ(b1.GetSize(), 10);
+}
