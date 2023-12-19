@@ -35,6 +35,14 @@ TEST_F(BoardTest, TestAtOutOfBounds)
     EXPECT_THROW(b1.At(Position(11,30)), GameException);
 }
 
+TEST_F(BoardTest, TestPlacePieceOutOfBounds)
+{
+    EXPECT_THROW(b1.PlacePiece(Position(1, 1), EColor::Red), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(1,1), EColor::Black), GameException);
+	EXPECT_THROW(b1.PlacePiece(Position(-1, -1), EColor::Black), GameException);
+	EXPECT_THROW(b1.PlacePiece(Position(11, 30), EColor::Red), GameException);
+}
+
 TEST_F(BoardTest, TestSize)
 {
     EXPECT_EQ(b1.GetSize(), 10);
