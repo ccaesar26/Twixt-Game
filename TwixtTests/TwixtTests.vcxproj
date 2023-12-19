@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoardTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PegTest.cpp" />
   </ItemGroup>
