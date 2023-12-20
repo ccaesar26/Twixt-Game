@@ -3,12 +3,15 @@
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
-    auto mainWidget = new QWidget{};
-    auto mainGridLayout = new QGridLayout{};
+    const auto mainWidget = new QWidget{};
+    m_mainGridLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
     //TODO: initialize components of the main grid
 
-    mainWidget->setLayout(mainGridLayout);
+    mainWidget->setLayout(m_mainGridLayout.data());
+
+    // Note: QMainWindow takes ownership of the widget pointer and deletes it at the appropriate time.
+    // See https://doc.qt.io/qt-6/qmainwindow.html#setCentralWidget
     this->setCentralWidget(mainWidget);
 }
 

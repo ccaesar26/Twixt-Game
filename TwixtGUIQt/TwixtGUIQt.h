@@ -15,7 +15,7 @@ class TwixtGUIQt : public QMainWindow, public IGameListener
 
 public:
     // Constructors and destructor
-    TwixtGUIQt(QWidget *parent = nullptr);
+    explicit TwixtGUIQt(QWidget *parent = nullptr);
     ~TwixtGUIQt() override;
 
     // Copy and move semantics
@@ -34,4 +34,6 @@ private:
 	void InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout);
 private:
     QLabel* m_currentPlayerLabel;
+
+    QSharedPointer<QGridLayout> m_mainGridLayout;
 };
