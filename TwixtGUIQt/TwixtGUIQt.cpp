@@ -61,27 +61,27 @@ void TwixtGUIQt::InitializeHintLabel()
     m_mainGridLayout->addWidget(m_hintLabel.data(), 2, 2, 1, 1);
 }
 
-void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeGameControlButtons()
 {
-    const auto restartButton = new QPushButton{ "Restart" };
-    const auto saveButton = new QPushButton{ "Save" };
-    const auto loadButton = new QPushButton{ "Load" };
-    const auto quitButton = new QPushButton{ "Quit" };
+    m_restartButton = QSharedPointer<QPushButton>{ new QPushButton{"Restart"} };
+    m_saveButton = QSharedPointer<QPushButton>{ new QPushButton{"Save"} };
+    m_loadButton = QSharedPointer<QPushButton>{ new QPushButton{"Load"} };
+    m_quitButton = QSharedPointer<QPushButton>{ new QPushButton{"Quit"} };
 
-    const auto buttonContainer = new QWidget{};
-    const auto buttonContainerLayout = new QGridLayout{};
+    m_controlButtonsContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_controlButtonsContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    buttonContainerLayout->addWidget(restartButton, 0, 0);
-    buttonContainerLayout->addWidget(saveButton, 0, 1);
-    buttonContainerLayout->addWidget(loadButton, 0, 2);
-    buttonContainerLayout->addWidget(quitButton, 0, 3);
+    m_controlButtonsContainerLayout->addWidget(m_restartButton.data(), 0, 0);
+    m_controlButtonsContainerLayout->addWidget(m_saveButton.data(), 1, 0);
+    m_controlButtonsContainerLayout->addWidget(m_loadButton.data(), 2, 0);
+    m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
     // TODO: connect signals and slots
 
     // TODO: setStyleSheet
 
-    buttonContainer->setLayout(buttonContainerLayout);
-    mainGridLayout->addWidget(buttonContainer, 3, 0, 1, 1);
+    m_controlButtonsContainer->setLayout(m_controlButtonsContainerLayout.data());
+    m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 1, 1);
 }
 
 void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
