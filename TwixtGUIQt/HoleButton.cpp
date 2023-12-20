@@ -55,16 +55,23 @@ void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 
 void HoleButton::UpdatePeg()
 {
+	QString path = "assets/";
 	if (m_color.has_value())
 	{
-		setStyleSheet("background-color: " + ColorToString(m_color.value()) + ";");
+		path += ColorToString(m_color.value());
 	}
 	else
 	{
-		setStyleSheet("background-color: white;");
+		path += "empty";
 	}
-	
-	setStyleSheet("border-radius: 25px;");
+	path += ".png";
+
+	const QPixmap pixmap(path);
+	const QIcon icon(pixmap);
+	setIcon(icon);
+	setIconSize(pixmap.rect().size());
+
+	setStyleSheet("border: none;");
 }
 
 HoleButton::HoleButton(const HoleButton& other)
