@@ -29,12 +29,14 @@ private:
     // UI initializations
     void InitializeTitleLabel();
 	void InitializeCurrentPlayerLabel();
+    void InitializeHintLabel();
 	void InitializeGameControlButtons(QGridLayout* mainGridLayout);
     static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
     QSharedPointer<QLabel> m_currentPlayerLabel;
+    QSharedPointer<QLabel> m_hintLabel;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 };

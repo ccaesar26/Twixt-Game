@@ -51,6 +51,16 @@ void TwixtGUIQt::InitializeCurrentPlayerLabel()
     m_mainGridLayout->addWidget(m_currentPlayerLabel.data(), 0, 2, 1, 1);
 }
 
+void TwixtGUIQt::InitializeHintLabel()
+{
+    m_hintLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_hintLabel->setText("");
+
+    // TODO: setAlignment, setStyleSheet
+
+    m_mainGridLayout->addWidget(m_hintLabel.data(), 2, 2, 1, 1);
+}
+
 void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
 {
     const auto restartButton = new QPushButton{ "Restart" };
