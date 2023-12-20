@@ -15,10 +15,14 @@ class TwixtGUIQt : public QMainWindow, public IGameListener
 
 public:
     // Constructors and destructor
-    explicit TwixtGUIQt(QWidget *parent = nullptr);
-    ~TwixtGUIQt() override;
+    explicit TwixtGUIQt(QWidget* parent = nullptr);
+    ~TwixtGUIQt() override = default;
 
-    // Copy and move semantics
+    // No other constructors or assignment operators?
+    // See https://doc.qt.io/qt-6/qobject.html#no-copy-constructor-or-assignment-operator
+
+    // Setters
+    void SetGameLogic(std::shared_ptr<IGame>&& gameLogic);
 
 private:
     // IGameListener overrides
@@ -53,4 +57,6 @@ private:
     QSharedPointer<QPushButton> m_endTurnButton;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
+
+    std::shared_ptr<IGame> m_gameLogic;
 };

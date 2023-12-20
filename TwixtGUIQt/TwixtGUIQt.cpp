@@ -15,8 +15,9 @@ TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     this->setCentralWidget(mainWidget);
 }
 
-TwixtGUIQt::~TwixtGUIQt()
+void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
 {
+	m_gameLogic = std::move(gameLogic);
 }
 
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
