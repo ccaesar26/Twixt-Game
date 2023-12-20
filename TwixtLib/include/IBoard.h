@@ -16,7 +16,7 @@ public:
 
 	virtual void PlacePiece(Position pos, EColor color) = 0;
 
-	[[nodiscard]] virtual IPiecePtr At(Position pos) const = 0;
+	[[nodiscard]] virtual IPiecePtr At(const Position pos) const = 0;
 
 	[[nodiscard]] virtual bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const = 0;
 };

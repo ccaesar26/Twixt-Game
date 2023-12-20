@@ -1,15 +1,16 @@
 #include "Peg.h"
 
-IPiecePtr IPiece::Produce(EColor color)
+IPiecePtr IPiece::Produce(EColor color, Position pos)
 {
-	return std::make_shared<Peg>(color);
+	return std::make_shared<Peg>(color, pos);
 }
 
-Peg::Peg(const EColor color)
+Peg::Peg(const EColor color, const Position pos)
 {
 	m_color = color;
 	m_isNorthLinked = false;
 	m_isSouthLinked = false;
+	m_position = pos;
 }
 
 bool Peg::IsNorthLinked() const
@@ -25,4 +26,14 @@ bool Peg::IsSouthLinked() const
 EColor Peg::GetColor() const
 {
 	return m_color;
+}
+
+std::vector<IPiecePtr> Peg::GetNeighbors() const
+{
+	return m_neighbors;
+}
+
+Position Peg::GetPosition() const
+{
+	return m_position;
 }

@@ -1,5 +1,8 @@
 #include "Board.h"
 #include "GameException.h"
+#include <stack>
+#include "Peg.h"
+#include <set>
 
 IBoardPtr IBoard::CreateBoard()
 {
@@ -19,22 +22,25 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
-Board::Board(const std::string& boardString)
+Board::Board(const std::string& boardString, int size)
 {
 	size_t pos = 0;
 	while (boardString[pos] != '\n')
 	{
 		if (boardString[pos] == ' ')
 		{
-			m_board[pos / m_size].push_back(nullptr);
+			m_board[pos / size].push_back(nullptr);
 		}
 		else if (boardString[pos] == '0' || boardString[pos] == '1')
 		{
-			m_board[pos / m_size].push_back(std::make_shared<Peg>(static_cast<EColor>(boardString[pos] - '0')));
+			Position pegPos;
+			pegPos.row = pos / size;
+			pegPos.col = pos % size;
+			m_board[pos / size].push_back(std::make_shared<Peg>(static_cast<EColor>(boardString[pos] - '0'), pegPos));
 		}
 		pos++;
 	}
-	m_size = static_cast<int>(m_board.size());
+	m_size = size;
 }
 
 Board::Board(const Board& other)
@@ -52,7 +58,10 @@ Board::Board(const Board& other)
 			}
 			else
 			{
-				m_board[i][j] = std::make_shared<Peg>(other.m_board[i][j]->GetColor());
+				Position pegPos;
+				pegPos.row = i;
+				pegPos.col = j;
+				m_board[i][j] = std::make_shared<Peg>(other.m_board[i][j]->GetColor(), pegPos);
 			}
 		}
 	}
@@ -77,7 +86,10 @@ Board& Board::operator=(const Board& other)
 			}
 			else
 			{
-				m_board[i][j] = std::make_shared<Peg>(other.m_board[i][j]->GetColor());
+				Position pegPos;
+				pegPos.row = i;
+				pegPos.col = j;
+				m_board[i][j] = std::make_shared<Peg>(other.m_board[i][j]->GetColor(), pegPos);
 			}
 		}
 	}
@@ -141,7 +153,7 @@ void Board::PlacePiece(const Position pos, const EColor color)
 	{
 		throw GameException("Position is already occupied");
 	}
-	m_board[pos.row][pos.col] = IPiece::Produce(color);
+	m_board[pos.row][pos.col] = IPiece::Produce(color, pos);
 }
 
 IPiecePtr Board::At(const Position pos) const
@@ -151,6 +163,101 @@ IPiecePtr Board::At(const Position pos) const
 		throw GameException("Invalid position");
 	}
 	return m_board[pos.row][pos.col];
+}
+
+bool Board::IsPositionValid(const Position& pos) const
+{
+	return pos.row >= 0 && pos.row < m_size && pos.col >= 0 && pos.col < m_size;
+}
+
+bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const
+{
+	if (!IsPositionValid(pos)) {
+		return false;
+	}
+
+	std::stack<Position> stack;
+
+	std::set<Position> visited;
+
+	stack.push(pos);
+
+	bool foundUpperRow = false;
+	bool foundLowerRow = false;
+
+	while (!stack.empty() && !(foundUpperRow && foundLowerRow)) {
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0) {
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		if (currentPiece && currentPiece->GetPosition().row == targetUpperRow) {
+			foundUpperRow = true;
+		}
+
+		if (currentPiece && currentPiece->GetPosition().row == targetLowerRow) {
+			foundLowerRow = true;
+		}
+
+		for (const auto& neighbor : currentPiece->GetNeighbors()) {
+			if (!visited.contains(neighbor->GetPosition())) {
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return foundUpperRow && foundLowerRow;
+}
+
+bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const
+{
+	if (!IsPositionValid(pos)){
+		return false;
+	}
+
+	std::stack<Position> stack;
+
+	std::set<Position> visited;
+
+	stack.push(pos);
+
+	bool foundLeftCol = false;
+	bool foundRightCol = false;
+
+	while (!stack.empty() && !(foundLeftCol && foundRightCol)){
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0){
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		if (currentPiece && currentPiece->GetPosition().col == targetLeftCol){
+			foundLeftCol = true;
+		}
+
+		if (currentPiece && currentPiece->GetPosition().col == targetRightCol){
+			foundRightCol = true;
+		}
+
+		for (const auto& neighbor : currentPiece->GetNeighbors()){
+			if (!visited.contains(neighbor->GetPosition())){
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return foundLeftCol && foundRightCol;
 }
 
 bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const

@@ -3,7 +3,6 @@
 #include "IBoard.h"
 #include "EColor.h"
 #include "IPiece.h"
-#include "Peg.h"
 
 #include <vector>
 #include <string>
@@ -14,7 +13,7 @@ class Board final :
 public:
 	explicit Board(int size = 24);
 
-	Board(const std::string& boardString);
+	Board(const std::string& boardString, int size = 24);
 
 	// Rule of 5: Destructor
 	~Board() override = default;
@@ -33,7 +32,9 @@ public:
 
 	void PlacePiece(Position pos, EColor color) override;
 
-	[[nodiscard]] IPiecePtr At(Position pos) const override;
+	[[nodiscard]] IPiecePtr At(const Position pos) const override;
+
+	[[nodiscard]] bool IsPositionValid(const Position& pos) const;
 
 	[[nodiscard]] bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const override;
 
@@ -41,6 +42,9 @@ public:
 
 	[[nodiscard]] std::string ToString() const;
 
+	[[nodiscard]] bool CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const;
+
+	[[nodiscard]] bool CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const;
 private:
 	int m_size;
 	std::vector<std::vector<IPiecePtr>> m_board;

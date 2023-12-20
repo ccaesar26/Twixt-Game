@@ -21,6 +21,8 @@ HoleButton::HoleButton(const Position& position, QWidget* parent)
 	, m_position(position)
 	, m_color(std::nullopt)
 {
+	setFixedSize(QSize(18, 18));
+	UpdatePeg();
 }
 
 HoleButton::HoleButton(const Position& position, EColor color, QWidget* parent)
@@ -28,6 +30,8 @@ HoleButton::HoleButton(const Position& position, EColor color, QWidget* parent)
 	, m_position(position)
 	, m_color(color)
 {
+	setFixedSize(QSize(18, 18));
+	UpdatePeg();
 }
 
 void HoleButton::PlacePeg(EColor color)

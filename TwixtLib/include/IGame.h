@@ -21,6 +21,7 @@ public:
 	virtual void Reset() = 0;
 	virtual void Restore(const std::string& config) const = 0;
 	virtual void PlacePiece(const Position& pos) = 0;
+	virtual void SwitchTurn()=0;
 	[[nodiscard]] virtual IPlayer* GetPlayer1() const = 0;
 	[[nodiscard]] virtual IPlayer* GetPlayer2() const = 0;
 	[[nodiscard]] virtual EColor GetCurrentPlayerColor() const = 0;
