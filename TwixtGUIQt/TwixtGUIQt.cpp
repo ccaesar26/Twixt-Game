@@ -1,5 +1,13 @@
 #include "TwixtGUIQt.h"
 
+namespace
+{
+    bool isCorner(int i, int j)
+    {
+        return (i == 0 && j == 0) || (i == 0 && j == 23) || (i == 23 && j == 0) || (i == 23 && j == 23);
+    }
+}
+
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -106,4 +114,34 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 
     m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());
     m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 1, 1);
+}
+
+void TwixtGUIQt::InitializeBoard()
+{
+    m_boardContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_boardContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
+
+    m_board.resize(24);
+
+    for (int i = 0; i < 24; ++i)
+    {
+        m_board[i].resize(24);
+
+        for (int j = 0; j < 24; ++j)
+        {
+            if (isCorner(i, j))
+            {
+                m_board[i][j] = nullptr;
+            }
+            else
+            {
+                m_board[i][j] = new HoleButton{ Position{i, j} };
+                m_boardContainerLayout->addWidget(m_board[i][j], i, j);
+                m_board[i][j]->UpdatePeg();
+            }
+        }
+    }
+
+    m_boardContainer->setLayout(m_boardContainerLayout.data());
+    m_mainGridLayout->addWidget(m_boardContainer.data(), 0, 1, 4, 1);
 }

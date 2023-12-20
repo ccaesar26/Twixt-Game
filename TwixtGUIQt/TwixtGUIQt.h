@@ -36,6 +36,7 @@ private:
     void InitializeHintLabel();
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
+    void InitializeBoard();
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
@@ -55,6 +56,10 @@ private:
     QSharedPointer<QPushButton> m_removeBridgeButton;
     QSharedPointer<QPushButton> m_requestDrawButton;
     QSharedPointer<QPushButton> m_endTurnButton;
+
+    QSharedPointer<QWidget> m_boardContainer;
+    QSharedPointer<QGridLayout> m_boardContainerLayout;
+    QVector<QVector<HoleButton*>> m_board;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 
