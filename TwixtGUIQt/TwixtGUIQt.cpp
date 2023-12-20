@@ -14,7 +14,12 @@ TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     const auto mainWidget = new QWidget{};
     m_mainGridLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    //TODO: initialize components of the main grid
+    InitializeTitleLabel();
+    InitializeGameControlButtons();
+    InitializeGameActionsButtons();
+    InitializeCurrentPlayerLabel();
+    InitializeHintLabel();
+    InitializeBoard();
 
     mainWidget->setLayout(m_mainGridLayout.data());
 
