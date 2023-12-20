@@ -41,6 +41,16 @@ void TwixtGUIQt::InitializeTitleLabel()
     m_mainGridLayout->addWidget(m_titleLabel.data(), 0, 0, 1, 1);
 }
 
+void TwixtGUIQt::InitializeCurrentPlayerLabel()
+{
+    m_currentPlayerLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_currentPlayerLabel->setText("Current player\nRed");
+
+    // TODO: setAlignment, setStyleSheet
+
+    m_mainGridLayout->addWidget(m_currentPlayerLabel.data(), 0, 2, 1, 1);
+}
+
 void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
 {
     const auto restartButton = new QPushButton{ "Restart" };
@@ -85,14 +95,4 @@ void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
 
     buttonContainer->setLayout(buttonContainerLayout);
     mainGridLayout->addWidget(buttonContainer, 3, 2, 1, 1);
-}
-
-void TwixtGUIQt::InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout)
-{
-    const auto currentPlayerLabel = new QLabel{};
-    currentPlayerLabel->setText("Current player\nRed");
-
-    // TODO: setAlignment, setStyleSheet
-
-    mainGridLayout->addWidget(currentPlayerLabel, 0, 2, 1, 1);
 }
