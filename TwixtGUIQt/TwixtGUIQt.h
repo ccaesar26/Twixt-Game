@@ -31,7 +31,7 @@ private:
 	void InitializeCurrentPlayerLabel();
     void InitializeHintLabel();
 	void InitializeGameControlButtons();
-    static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
+    void InitializeGameActionsButtons();
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
@@ -44,6 +44,13 @@ private:
     QSharedPointer<QPushButton> m_saveButton;
     QSharedPointer<QPushButton> m_loadButton;
     QSharedPointer<QPushButton> m_quitButton;
+
+    QSharedPointer<QWidget> m_actionsButtonsContainer;
+    QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
+    QSharedPointer<QPushButton> m_placeBridgeButton;
+    QSharedPointer<QPushButton> m_removeBridgeButton;
+    QSharedPointer<QPushButton> m_requestDrawButton;
+    QSharedPointer<QPushButton> m_endTurnButton;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 };

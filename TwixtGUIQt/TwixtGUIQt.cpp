@@ -84,25 +84,25 @@ void TwixtGUIQt::InitializeGameControlButtons()
     m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 1, 1);
 }
 
-void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeGameActionsButtons()
 {
-    const auto placeButton = new QPushButton{ "Place Link" };
-    const auto removeButton = new QPushButton{ "Remove Link" };
-    const auto drawButton = new QPushButton{ "Request Draw" };
-    const auto endTurnButton = new QPushButton{ "End Turn" };
+    m_placeBridgeButton = QSharedPointer<QPushButton>{ new QPushButton{"Place bridge"} };
+    m_removeBridgeButton = QSharedPointer<QPushButton>{ new QPushButton{"Remove bridge"} };
+    m_requestDrawButton = QSharedPointer<QPushButton>{ new QPushButton{"Request draw"} };
+    m_endTurnButton = QSharedPointer<QPushButton>{ new QPushButton{"End turn"} };
 
-    const auto buttonContainer = new QWidget{};
-    const auto buttonContainerLayout = new QGridLayout{};
+    m_actionsButtonsContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_actionsButtonsContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    buttonContainerLayout->addWidget(placeButton, 0, 0);
-    buttonContainerLayout->addWidget(removeButton, 0, 1);
-    buttonContainerLayout->addWidget(drawButton, 0, 2);
-    buttonContainerLayout->addWidget(endTurnButton, 0, 3);
+    m_actionsButtonsContainerLayout->addWidget(m_placeBridgeButton.data(), 0, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_removeBridgeButton.data(), 1, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_requestDrawButton.data(), 2, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
 
     // TODO: connect signals and slots
 
     // TODO: setStyleSheet
 
-    buttonContainer->setLayout(buttonContainerLayout);
-    mainGridLayout->addWidget(buttonContainer, 3, 2, 1, 1);
+    m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());
+    m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 1, 1);
 }
