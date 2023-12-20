@@ -31,14 +31,14 @@ void TwixtGUIQt::OnGameRestarted()
 {
 }
 
-void TwixtGUIQt::InitializeTitleLabel(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeTitleLabel()
 {
-    const auto titleLabel = new QLabel{};
-    titleLabel->setText("Twixt");
+    m_titleLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_titleLabel->setText("Twixt");
 
     // TODO: setAlignment, setStyleSheet
 
-    mainGridLayout->addWidget(titleLabel, 0, 0, 1, 1);
+    m_mainGridLayout->addWidget(m_titleLabel.data(), 0, 0, 1, 1);
 }
 
 void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)

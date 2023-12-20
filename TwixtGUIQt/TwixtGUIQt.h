@@ -27,12 +27,13 @@ private:
     void OnGameRestarted() override;
 
     // UI initializations
-    static void InitializeTitleLabel(QGridLayout* mainGridLayout);
+    void InitializeTitleLabel();
 	static void InitializeGameControlButtons(QGridLayout* mainGridLayout);
     static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
 
 	void InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout);
 private:
+    QSharedPointer<QLabel> m_titleLabel;
     QLabel* m_currentPlayerLabel;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
