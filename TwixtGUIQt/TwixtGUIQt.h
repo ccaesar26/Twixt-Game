@@ -15,10 +15,14 @@ class TwixtGUIQt : public QMainWindow, public IGameListener
 
 public:
     // Constructors and destructor
-    TwixtGUIQt(QWidget *parent = nullptr);
-    ~TwixtGUIQt() override;
+    explicit TwixtGUIQt(QWidget* parent = nullptr);
+    ~TwixtGUIQt() override = default;
 
-    // Copy and move semantics
+    // No other constructors or assignment operators?
+    // See https://doc.qt.io/qt-6/qobject.html#no-copy-constructor-or-assignment-operator
+
+    // Setters
+    void SetGameLogic(std::shared_ptr<IGame>&& gameLogic);
 
 private:
     // IGameListener overrides
@@ -27,11 +31,37 @@ private:
     void OnGameRestarted() override;
 
     // UI initializations
-    static void InitializeTitleLabel(QGridLayout* mainGridLayout);
-	static void InitializeGameControlButtons(QGridLayout* mainGridLayout);
-    static void InitializeGameActionsButtons(QGridLayout* mainGridLayout);
+    void InitializeTitleLabel();
+	void InitializeCurrentPlayerLabel();
+    void InitializeHintLabel();
+	void InitializeGameControlButtons();
+    void InitializeGameActionsButtons();
+    void InitializeBoard();
 
-	void InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout);
 private:
-    QLabel* m_currentPlayerLabel;
+    QSharedPointer<QLabel> m_titleLabel;
+    QSharedPointer<QLabel> m_currentPlayerLabel;
+    QSharedPointer<QLabel> m_hintLabel;
+
+    QSharedPointer<QWidget> m_controlButtonsContainer;
+    QSharedPointer<QGridLayout> m_controlButtonsContainerLayout;
+    QSharedPointer<QPushButton> m_restartButton;
+    QSharedPointer<QPushButton> m_saveButton;
+    QSharedPointer<QPushButton> m_loadButton;
+    QSharedPointer<QPushButton> m_quitButton;
+
+    QSharedPointer<QWidget> m_actionsButtonsContainer;
+    QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
+    QSharedPointer<QPushButton> m_placeBridgeButton;
+    QSharedPointer<QPushButton> m_removeBridgeButton;
+    QSharedPointer<QPushButton> m_requestDrawButton;
+    QSharedPointer<QPushButton> m_endTurnButton;
+
+    QSharedPointer<QWidget> m_boardContainer;
+    QSharedPointer<QGridLayout> m_boardContainerLayout;
+    QVector<QVector<HoleButton*>> m_board;
+
+    QSharedPointer<QGridLayout> m_mainGridLayout;
+
+    std::shared_ptr<IGame> m_gameLogic;
 };

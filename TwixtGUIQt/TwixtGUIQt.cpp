@@ -1,19 +1,36 @@
 #include "TwixtGUIQt.h"
 
+namespace
+{
+    bool isCorner(int i, int j)
+    {
+        return (i == 0 && j == 0) || (i == 0 && j == 23) || (i == 23 && j == 0) || (i == 23 && j == 23);
+    }
+}
+
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
-    auto mainWidget = new QWidget{};
-    auto mainGridLayout = new QGridLayout{};
+    const auto mainWidget = new QWidget{};
+    m_mainGridLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    //TODO: initialize components of the main grid
+    InitializeTitleLabel();
+    InitializeGameControlButtons();
+    InitializeGameActionsButtons();
+    InitializeCurrentPlayerLabel();
+    InitializeHintLabel();
+    InitializeBoard();
 
-    mainWidget->setLayout(mainGridLayout);
+    mainWidget->setLayout(m_mainGridLayout.data());
+
+    // Note: QMainWindow takes ownership of the widget pointer and deletes it at the appropriate time.
+    // See https://doc.qt.io/qt-6/qmainwindow.html#setCentralWidget
     this->setCentralWidget(mainWidget);
 }
 
-TwixtGUIQt::~TwixtGUIQt()
+void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
 {
+	m_gameLogic = std::move(gameLogic);
 }
 
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
@@ -28,68 +45,108 @@ void TwixtGUIQt::OnGameRestarted()
 {
 }
 
-void TwixtGUIQt::InitializeTitleLabel(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeTitleLabel()
 {
-    const auto titleLabel = new QLabel{};
-    titleLabel->setText("Twixt");
+    m_titleLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_titleLabel->setText("Twixt");
 
     // TODO: setAlignment, setStyleSheet
 
-    mainGridLayout->addWidget(titleLabel, 0, 0, 1, 1);
+    m_mainGridLayout->addWidget(m_titleLabel.data(), 0, 0, 1, 1);
 }
 
-void TwixtGUIQt::InitializeGameControlButtons(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeCurrentPlayerLabel()
 {
-    const auto restartButton = new QPushButton{ "Restart" };
-    const auto saveButton = new QPushButton{ "Save" };
-    const auto loadButton = new QPushButton{ "Load" };
-    const auto quitButton = new QPushButton{ "Quit" };
+    m_currentPlayerLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_currentPlayerLabel->setText("Current player\nRed");
 
-    const auto buttonContainer = new QWidget{};
-    const auto buttonContainerLayout = new QGridLayout{};
+    // TODO: setAlignment, setStyleSheet
 
-    buttonContainerLayout->addWidget(restartButton, 0, 0);
-    buttonContainerLayout->addWidget(saveButton, 0, 1);
-    buttonContainerLayout->addWidget(loadButton, 0, 2);
-    buttonContainerLayout->addWidget(quitButton, 0, 3);
+    m_mainGridLayout->addWidget(m_currentPlayerLabel.data(), 0, 2, 1, 1);
+}
+
+void TwixtGUIQt::InitializeHintLabel()
+{
+    m_hintLabel = QSharedPointer<QLabel>{ new QLabel{} };
+    m_hintLabel->setText("");
+
+    // TODO: setAlignment, setStyleSheet
+
+    m_mainGridLayout->addWidget(m_hintLabel.data(), 2, 2, 1, 1);
+}
+
+void TwixtGUIQt::InitializeGameControlButtons()
+{
+    m_restartButton = QSharedPointer<QPushButton>{ new QPushButton{"Restart"} };
+    m_saveButton = QSharedPointer<QPushButton>{ new QPushButton{"Save"} };
+    m_loadButton = QSharedPointer<QPushButton>{ new QPushButton{"Load"} };
+    m_quitButton = QSharedPointer<QPushButton>{ new QPushButton{"Quit"} };
+
+    m_controlButtonsContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_controlButtonsContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
+
+    m_controlButtonsContainerLayout->addWidget(m_restartButton.data(), 0, 0);
+    m_controlButtonsContainerLayout->addWidget(m_saveButton.data(), 1, 0);
+    m_controlButtonsContainerLayout->addWidget(m_loadButton.data(), 2, 0);
+    m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
     // TODO: connect signals and slots
 
     // TODO: setStyleSheet
 
-    buttonContainer->setLayout(buttonContainerLayout);
-    mainGridLayout->addWidget(buttonContainer, 3, 0, 1, 1);
+    m_controlButtonsContainer->setLayout(m_controlButtonsContainerLayout.data());
+    m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 1, 1);
 }
 
-void TwixtGUIQt::InitializeGameActionsButtons(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeGameActionsButtons()
 {
-    const auto placeButton = new QPushButton{ "Place Link" };
-    const auto removeButton = new QPushButton{ "Remove Link" };
-    const auto drawButton = new QPushButton{ "Request Draw" };
-    const auto endTurnButton = new QPushButton{ "End Turn" };
+    m_placeBridgeButton = QSharedPointer<QPushButton>{ new QPushButton{"Place bridge"} };
+    m_removeBridgeButton = QSharedPointer<QPushButton>{ new QPushButton{"Remove bridge"} };
+    m_requestDrawButton = QSharedPointer<QPushButton>{ new QPushButton{"Request draw"} };
+    m_endTurnButton = QSharedPointer<QPushButton>{ new QPushButton{"End turn"} };
 
-    const auto buttonContainer = new QWidget{};
-    const auto buttonContainerLayout = new QGridLayout{};
+    m_actionsButtonsContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_actionsButtonsContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    buttonContainerLayout->addWidget(placeButton, 0, 0);
-    buttonContainerLayout->addWidget(removeButton, 0, 1);
-    buttonContainerLayout->addWidget(drawButton, 0, 2);
-    buttonContainerLayout->addWidget(endTurnButton, 0, 3);
+    m_actionsButtonsContainerLayout->addWidget(m_placeBridgeButton.data(), 0, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_removeBridgeButton.data(), 1, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_requestDrawButton.data(), 2, 0);
+    m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
 
     // TODO: connect signals and slots
 
     // TODO: setStyleSheet
 
-    buttonContainer->setLayout(buttonContainerLayout);
-    mainGridLayout->addWidget(buttonContainer, 3, 2, 1, 1);
+    m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());
+    m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 1, 1);
 }
 
-void TwixtGUIQt::InitializeCurrentPlayerLabel(QGridLayout* mainGridLayout)
+void TwixtGUIQt::InitializeBoard()
 {
-    const auto currentPlayerLabel = new QLabel{};
-    currentPlayerLabel->setText("Current player\nRed");
+    m_boardContainer = QSharedPointer<QWidget>{ new QWidget{} };
+    m_boardContainerLayout = QSharedPointer<QGridLayout>{ new QGridLayout{} };
 
-    // TODO: setAlignment, setStyleSheet
+    m_board.resize(24);
 
-    mainGridLayout->addWidget(currentPlayerLabel, 0, 2, 1, 1);
+    for (int i = 0; i < 24; ++i)
+    {
+        m_board[i].resize(24);
+
+        for (int j = 0; j < 24; ++j)
+        {
+            if (isCorner(i, j))
+            {
+                m_board[i][j] = nullptr;
+            }
+            else
+            {
+                m_board[i][j] = new HoleButton{ Position{i, j} };
+                m_boardContainerLayout->addWidget(m_board[i][j], i, j);
+                m_board[i][j]->UpdatePeg();
+            }
+        }
+    }
+
+    m_boardContainer->setLayout(m_boardContainerLayout.data());
+    m_mainGridLayout->addWidget(m_boardContainer.data(), 0, 1, 4, 1);
 }

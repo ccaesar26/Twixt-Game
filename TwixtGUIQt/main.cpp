@@ -5,13 +5,15 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    std::shared_ptr<TwixtGUIQt> w = std::make_shared<TwixtGUIQt>();
+    const auto w = std::make_shared<TwixtGUIQt>();
 
-    std::shared_ptr<IGame> gameLogic = IGame::CreateGame();
+    auto gameLogic = IGame::CreateGame();
 
     gameLogic->AddListener(w);
 
+    w->SetGameLogic(std::move(gameLogic));
+
     w->show();
 
-    return a.exec();
+    return QApplication::exec();
 }
