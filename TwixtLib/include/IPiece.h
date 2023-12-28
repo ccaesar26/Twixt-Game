@@ -18,5 +18,6 @@ public:
 	[[nodiscard]] virtual bool IsSouthLinked() const = 0;
 	[[nodiscard]] virtual std::vector<IPiecePtr> GetNeighbors() const = 0;
 	[[nodiscard]] virtual void AddNeighbor(IPiecePtr piece) = 0;
+	[[nodiscard]] virtual void RemoveNeighbor(IPiecePtr piece) = 0;
 	[[nodiscard]] virtual Position GetPosition() const = 0;
 };

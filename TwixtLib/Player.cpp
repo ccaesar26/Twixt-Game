@@ -45,7 +45,11 @@ void Player::AddLink(Position pos1, Position pos2)
 	m_links.emplace_back(link);
 }
 
-void Player::RemoveLink(IPiecePtr peg1, IPiecePtr peg2)
+void Player::RemoveLink(Position pos1, Position pos2)
 {
-	// TODO: Implement
+	m_board.UnlinkPieces(pos1, pos2);
+	erase_if(m_links, [&](const Link& link)
+	{
+		return link.GetPiece1()->GetPosition() == pos1 && link.GetPiece2()->GetPosition() == pos2;
+	});
 }

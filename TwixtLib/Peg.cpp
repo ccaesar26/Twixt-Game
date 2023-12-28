@@ -38,6 +38,18 @@ void Peg::AddNeighbor(IPiecePtr piece)
 	m_neighbors.push_back(piece);
 }
 
+void Peg::RemoveNeighbor(IPiecePtr piece)
+{
+	for (int i = 0; i < m_neighbors.size(); i++)
+	{
+		if (m_neighbors[i] == piece)
+		{
+			m_neighbors.erase(m_neighbors.begin() + i);
+			break;
+		}
+	}
+}
+
 Position Peg::GetPosition() const
 {
 	return m_position;

@@ -207,6 +207,14 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
 }
 
+void Board::UnlinkPieces(Position pos1, Position pos2)
+{
+	RemoveLink(GetLinkBetween(pos1, pos2));
+
+	m_board[pos1.row][pos1.col]->RemoveNeighbor(m_board[pos2.row][pos2.col]);
+	m_board[pos2.row][pos2.col]->RemoveNeighbor(m_board[pos1.row][pos1.col]);
+}
+
 
 IPiecePtr Board::At(const Position pos) const
 {
@@ -333,6 +341,19 @@ Link& Board::GetLinkBetween(Position pos1, Position pos2)
 void Board::AddLink(const Link& link)
 {
 	m_links.push_back(link);
+}
+
+void Board::RemoveLink(const Link& link)
+{
+	for (auto it = m_links.begin(); it != m_links.end(); ++it)
+	{
+		if (*it == link)
+		{
+			m_links.erase(it);
+			return;
+		}
+	}
+	throw GameException("Link not found");
 }
 
 bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const

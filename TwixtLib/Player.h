@@ -19,5 +19,5 @@ public:
 	[[nodiscard]] std::string GetName() const override;
 	void AddPeg(Position pos);
 	void AddLink(Position pos1, Position pos2);
-	void RemoveLink(IPiecePtr peg1, IPiecePtr peg2);
+	void RemoveLink(Position peg1, Position peg2);
 };

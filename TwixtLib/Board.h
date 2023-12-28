@@ -36,6 +36,8 @@ public:
 
 	void LinkPieces(Position pos1, Position pos2) override;
 
+	void UnlinkPieces(Position pos1, Position pos2) override;
+
 	[[nodiscard]] IPiecePtr At(const Position pos) const override;
 
 	[[nodiscard]] bool IsPositionValid(const Position& pos) const;
@@ -55,6 +57,8 @@ public:
 	[[nodiscard]] Link& GetLinkBetween(Position pos1, Position pos2);
 
 	void AddLink(const Link& link);
+
+	void RemoveLink(const Link& link);
 private:
 	int m_size;
 	std::vector<std::vector<IPiecePtr>> m_board;
