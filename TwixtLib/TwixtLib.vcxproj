@@ -144,6 +144,7 @@
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="include\IPlayer.h" />
     <ClInclude Include="include\Position.h" />
+    <ClInclude Include="Link.h" />
     <ClInclude Include="Peg.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
