@@ -180,7 +180,28 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 		throw GameException("Invalid position");
 	}
 
-	//check if the two positions are blocked by another link
+	//check if the two positions are adjacent (a chess knight move away)
+	if (abs(pos1.row - pos2.row) + abs(pos1.col - pos2.col) != 3)
+	{
+		throw GameException("Pieces are not adjacent");
+	}
+
+	//check if the two positions have pieces of the same color
+	if(m_board[pos1.row][pos1.col]->GetColor() == m_board[pos2.row][pos2.col]->GetColor())
+	{
+		throw GameException("Differently colored pieces");
+	}
+
+	//check if the two positions are blocked by another link in the links vector
+	for (const auto& link : m_links)
+	{
+		if (DoSegmentsIntersect(pos1, pos2, link.GetPiece1()->GetPosition(), link.GetPiece2()->GetPosition()))
+		{
+			throw GameException("Overlapping link");
+		}
+	}
+
+	AddLink(Link(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], m_board[pos1.row][pos1.col]->GetColor()));
 
 	m_board[pos1.row][pos1.col]->AddNeighbor(m_board[pos2.row][pos2.col]);
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
@@ -289,6 +310,16 @@ bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRig
 	}
 
 	return foundLeftCol && foundRightCol;
+}
+
+const std::vector<Link>& Board::GetLinks() const
+{
+	return m_links;
+}
+
+void Board::AddLink(const Link& link)
+{
+	m_links.push_back(link);
 }
 
 bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const

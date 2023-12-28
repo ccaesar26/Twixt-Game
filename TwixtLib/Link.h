@@ -10,6 +10,7 @@ class Link final
 	public:
 	Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color);
 	Link(const Link& other) = default;
+	~Link() = default;
 	[[nodiscard]] IPiecePtr GetPiece1() const;
 	[[nodiscard]] IPiecePtr GetPiece2() const;
 	[[nodiscard]] EColor GetColor() const;

@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include "Link.h"
+
 class Board final :
 	public IBoard
 {
@@ -47,7 +49,12 @@ public:
 	[[nodiscard]] bool CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const;
 
 	[[nodiscard]] bool CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const;
+
+	[[nodiscard]] const std::vector<Link>& GetLinks() const;
+
+	void AddLink(const Link& link);
 private:
 	int m_size;
 	std::vector<std::vector<IPiecePtr>> m_board;
+	std::vector<Link> m_links;
 };
