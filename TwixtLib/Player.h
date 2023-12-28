@@ -1,4 +1,5 @@
 #pragma once
+#include "Board.h"
 #include "IPlayer.h"
 
 class Player final :
@@ -6,16 +7,17 @@ class Player final :
 {
 private:
 	std::vector<IPiecePtr> m_pegs;
-	std::vector<Links> m_links;
+	std::vector<std::reference_wrapper<Link>> m_links;
 	EColor m_color;
 	std::string m_name;
+	Board& m_board;
 public:
-	explicit Player(EColor color, std::string name);
+	explicit Player(EColor color, std::string name, Board& board);
 	[[nodiscard]] std::vector<IPiecePtr> GetPegs() const override;
-	[[nodiscard]] std::vector<Links> GetLinks() const override;
+	[[nodiscard]] std::vector<std::reference_wrapper<Link>> GetLinks() const override;
 	[[nodiscard]] EColor GetColor() const override;
 	[[nodiscard]] std::string GetName() const override;
-	void AddPeg(IPiecePtr peg);
-	void AddLink(IPiecePtr peg1, IPiecePtr peg2);
+	void AddPeg(Position pos);
+	void AddLink(Position pos1, Position pos2);
 	void RemoveLink(IPiecePtr peg1, IPiecePtr peg2);
 };

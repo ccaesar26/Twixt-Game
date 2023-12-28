@@ -36,8 +36,9 @@ void Game::Reset()
 {
 }
 
-void Game::Restore(const std::string& config) const
+void Game::Restore(const std::string& config)
 {
+	InitializeGame(config);
 }
 
 bool Game::IsDraw() const
@@ -127,13 +128,13 @@ void Game::InitializeGame()
 	m_board = Board();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
-	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1");
-	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2");
+	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
+	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
 	m_currentPlayer = m_player1.get();
 	m_nextPlayer = m_player2.get();
 }
 
-void Game::InitializeGame(const std::string& config, EColor turn)
+void Game::InitializeGame(const std::string& config)
 {
 	std::string boardString;
 	size_t pos = 0;
@@ -147,8 +148,8 @@ void Game::InitializeGame(const std::string& config, EColor turn)
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
-	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1");
-	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2");
+	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
+	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
 	m_currentPlayer = (m_turn == EColor::Black) ? m_player1.get() : m_player2.get();
 	m_nextPlayer = (m_turn == EColor::Black) ? m_player2.get() : m_player1.get();
 }

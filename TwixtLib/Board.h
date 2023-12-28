@@ -52,6 +52,8 @@ public:
 
 	[[nodiscard]] const std::vector<Link>& GetLinks() const;
 
+	[[nodiscard]] Link& GetLinkBetween(Position pos1, Position pos2);
+
 	void AddLink(const Link& link);
 private:
 	int m_size;

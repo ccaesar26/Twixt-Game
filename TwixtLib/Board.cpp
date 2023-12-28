@@ -317,6 +317,19 @@ const std::vector<Link>& Board::GetLinks() const
 	return m_links;
 }
 
+Link& Board::GetLinkBetween(Position pos1, Position pos2)
+{
+	for (auto& link : m_links)
+	{
+		if ((link.GetPiece1()->GetPosition() == pos1 && link.GetPiece2()->GetPosition() == pos2) ||
+		(link.GetPiece1()->GetPosition() == pos2 && link.GetPiece2()->GetPosition() == pos1))
+		{
+			return link;
+		}
+	}
+	throw GameException("No link between the two pieces");
+}
+
 void Board::AddLink(const Link& link)
 {
 	m_links.push_back(link);

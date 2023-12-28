@@ -24,7 +24,7 @@ private:
 	IPlayer* m_nextPlayer;
 
 	void InitializeGame();
-	void InitializeGame(const std::string& config, EColor turn = EColor::Black);
+	void InitializeGame(const std::string& config);
 
 public:
 	void SwitchTurn() override;
@@ -43,7 +43,7 @@ public:
 	void LoadFromFile(const std::string& fileName) override;
 	void PlacePiece(const Position& pos) override;
 	void Reset() override;
-	void Restore(const std::string& config) const override;
+	void Restore(const std::string& config) override;
 	void SaveToFile(const std::string& fileName) const override;
 	void NotifyPiecePlaced(const Position& pos) const override;
 	void NotifyGameOver(EGameResult gameResult) const override;
