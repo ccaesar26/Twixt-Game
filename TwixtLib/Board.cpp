@@ -156,6 +156,15 @@ void Board::PlacePiece(const Position pos, const EColor color)
 	m_board[pos.row][pos.col] = IPiece::Produce(color, pos);
 }
 
+bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position& p3, const Position& p4)
+{
+	int d1 = (p3.col - p4.col) * (p1.row - p3.row) + (p3.row - p4.row) * (p3.col - p1.col);
+	int d2 = (p3.col - p4.col) * (p2.row - p3.row) + (p3.row - p4.row) * (p3.col - p2.col);
+	int d3 = (p1.col - p2.col) * (p3.row - p1.row) + (p1.row - p2.row) * (p1.col - p3.col);
+	int d4 = (p1.col - p2.col) * (p4.row - p1.row) + (p1.row - p2.row) * (p1.col - p4.col);
+	return d1 * d2 < 0 && d3 * d4 < 0;
+}
+
 void Board::LinkPieces(Position pos1, Position pos2)
 {
 if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
@@ -170,6 +179,9 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	{
 		throw GameException("Invalid position");
 	}
+
+	//check if the two positions are blocked by another link
+
 	m_board[pos1.row][pos1.col]->AddNeighbor(m_board[pos2.row][pos2.col]);
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
 }
