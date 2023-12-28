@@ -156,6 +156,7 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
     <ClCompile Include="include\IBoard.h" />
+    <ClCompile Include="Link.cpp" />
     <ClCompile Include="Peg.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>

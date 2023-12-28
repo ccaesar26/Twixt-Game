@@ -8,7 +8,8 @@ class Link final
 	IPiecePtr m_piece2;
 	EColor m_color;
 	public:
-	Link(IPiecePtr piece1, IPiecePtr piece2, EColor color);
+	Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color);
+	Link(const Link& other) = default;
 	[[nodiscard]] IPiecePtr GetPiece1() const;
 	[[nodiscard]] IPiecePtr GetPiece2() const;
 	[[nodiscard]] EColor GetColor() const;
