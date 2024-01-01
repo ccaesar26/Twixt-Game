@@ -2,6 +2,7 @@
 #include "GameException.h"
 
 #include <fstream>
+#include <regex>
 
 IGamePtr IGame::CreateGame()
 {
@@ -88,6 +89,28 @@ void Game::NotifyGameRestarted() const
 		{
 			sp->OnGameRestarted();
 		}
+	}
+}
+
+bool Game::IsFileValid(const std::string& fileName) const
+{
+	std::ifstream file(fileName);
+	std::string config;
+
+	if (!file.is_open())
+	{
+		return false;
+	}
+	
+	std::getline(file, config);
+	
+	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
+
+	if (std::regex_match(config, regexPattern)) {
+		return true; 
+	}
+	else {
+		return false;
 	}
 }
 

@@ -36,4 +36,5 @@ public:
 	virtual void NotifyPiecePlaced(const Position& pos) const = 0;
 	virtual void NotifyGameOver(EGameResult gameResult) const = 0;
 	virtual void NotifyGameRestarted() const = 0;
+	virtual bool IsFileValid(const std::string& fileName) const = 0;
 };

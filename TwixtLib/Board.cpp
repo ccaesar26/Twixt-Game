@@ -132,8 +132,8 @@ std::string Board::ToString() const
 				result += static_cast<int>(EColor::Red) + '0';
 			}
 		}
-		result += "\n";
 	}
+	result += "\n";
 	return result;
 }
 
