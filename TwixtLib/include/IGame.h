@@ -37,4 +37,5 @@ public:
 	virtual void NotifyGameOver(EGameResult gameResult) const = 0;
 	virtual void NotifyGameRestarted() const = 0;
 	virtual bool IsFileValid(const std::string& fileName) const = 0;
+	virtual bool RegexValidate(const std::string& fileName) const = 0;
 };

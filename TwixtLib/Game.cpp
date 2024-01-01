@@ -104,10 +104,14 @@ bool Game::IsFileValid(const std::string& fileName) const
 	
 	std::getline(file, config);
 	
-	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
+	return RegexValidate(config);
+}
 
-	if (std::regex_match(config, regexPattern)) {
-		return true; 
+bool Game::RegexValidate(const std::string& fileName) const
+{
+	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
+	if (std::regex_match(fileName, regexPattern)) {
+		return true;
 	}
 	else {
 		return false;
