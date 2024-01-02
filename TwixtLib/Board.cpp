@@ -186,8 +186,8 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 		throw GameException("Pieces are not adjacent");
 	}
 
-	//check if the two positions have pieces of the same color
-	if(m_board[pos1.row][pos1.col]->GetColor() == m_board[pos2.row][pos2.col]->GetColor())
+	//check if the two positions have pieces of a different color
+	if(m_board[pos1.row][pos1.col]->GetColor() != m_board[pos2.row][pos2.col]->GetColor())
 	{
 		throw GameException("Differently colored pieces");
 	}
