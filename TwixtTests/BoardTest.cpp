@@ -100,3 +100,10 @@ TEST_F(BoardTest, TestLinkAfterRemove)
     EXPECT_EQ(link.GetPiece1()->GetPosition(), Position(1, 1));
     EXPECT_EQ(link.GetPiece2()->GetPosition(), Position(2, 3));
 }
+
+TEST_F(BoardTest, TestFunctionLink)
+{
+    Link link(b1.At(Position(1, 1)), b1.At(Position(2, 3)), EColor::Black);
+    b1.AddLink(link);
+    EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3)).GetPiece1()->GetPosition(), Position(1, 1));
+}
