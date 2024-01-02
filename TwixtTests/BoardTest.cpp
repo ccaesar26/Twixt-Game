@@ -47,3 +47,13 @@ TEST_F(BoardTest, TestSize)
 {
     EXPECT_EQ(b1.GetSize(), 10);
 }
+
+TEST_F(BoardTest, TestIsLinked)
+{
+	b1.LinkPieces(Position(1, 1), Position(2, 3));
+	Link link = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
+    EXPECT_EQ(link.GetPiece1()->GetPosition(), Position(1, 1));
+    EXPECT_EQ(link.GetPiece2()->GetPosition(), Position(2, 3));
+}
+
+
