@@ -64,3 +64,14 @@ TEST_F(BoardTest, TestIsLinkedOutOfBounds)
     EXPECT_THROW(b1.LinkPieces(Position(10, 10), Position(11, 30)), GameException);
 }
 
+TEST_F(BoardTest, TestIsLinkedNotAdjacent)
+{
+    b1.PlacePiece(Position(1, 2), EColor::Black);
+    b1.PlacePiece(Position(4, 5), EColor::Red);
+	EXPECT_THROW(b1.LinkPieces(Position(1, 1), Position(1, 2)), GameException);
+	EXPECT_THROW(b1.LinkPieces(Position(1, 2), Position(1, 1)), GameException);
+	EXPECT_THROW(b1.LinkPieces(Position(4, 4), Position(4, 5)), GameException);
+	EXPECT_THROW(b1.LinkPieces(Position(4, 5), Position(4, 4)), GameException);
+}
+
+
