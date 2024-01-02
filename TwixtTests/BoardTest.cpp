@@ -56,4 +56,11 @@ TEST_F(BoardTest, TestIsLinked)
     EXPECT_EQ(link.GetPiece2()->GetPosition(), Position(2, 3));
 }
 
+TEST_F(BoardTest, TestIsLinkedOutOfBounds)
+{
+    EXPECT_THROW(b1.LinkPieces(Position(1, 1), Position(11, 11)), GameException);
+    EXPECT_THROW(b1.LinkPieces(Position(1, 1), Position(-1, -1)), GameException);
+    EXPECT_THROW(b1.LinkPieces(Position(1, 1), Position(11, 30)), GameException);
+    EXPECT_THROW(b1.LinkPieces(Position(10, 10), Position(11, 30)), GameException);
+}
 
