@@ -83,3 +83,10 @@ TEST_F(BoardTest, TestIsLinkedSameColor)
     EXPECT_THROW(b1.LinkPieces(Position(5, 6), Position(4, 4)), GameException);
     EXPECT_THROW(b1.LinkPieces(Position(4, 4), Position(5, 6)), GameException);
 }
+
+TEST_F(BoardTest, TestRemoveLink)
+{
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
+    EXPECT_THROW(b1.GetLinkBetween(Position(1, 1), Position(2, 3)), GameException);
+}
