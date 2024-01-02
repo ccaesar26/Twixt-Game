@@ -90,3 +90,13 @@ TEST_F(BoardTest, TestRemoveLink)
     b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
     EXPECT_THROW(b1.GetLinkBetween(Position(1, 1), Position(2, 3)), GameException);
 }
+
+TEST_F(BoardTest, TestLinkAfterRemove)
+{
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    Link link = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
+    EXPECT_EQ(link.GetPiece1()->GetPosition(), Position(1, 1));
+    EXPECT_EQ(link.GetPiece2()->GetPosition(), Position(2, 3));
+}
