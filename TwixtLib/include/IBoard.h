@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IPiece.h"
+#include "ILink.h"
 #include "Position.h"
 
 #include <memory>
@@ -23,4 +24,6 @@ public:
 	[[nodiscard]] virtual IPiecePtr At(const Position pos) const = 0;
 
 	[[nodiscard]] virtual bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const = 0;
+
+	[[nodiscard]] virtual ILink& GetLinkBetween(Position pos1, Position pos2) = 0;
 };

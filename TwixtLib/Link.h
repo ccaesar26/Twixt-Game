@@ -1,19 +1,21 @@
 #pragma once
+#include "ILink.h"
 #include "IPiece.h"
 
 class Link final
+	: public ILink 
 {
-	private:
+public:
+	Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color);
+	Link(const Link& other) = default;
+	[[nodiscard]] IPiecePtr GetPiece1() const override;
+	[[nodiscard]] IPiecePtr GetPiece2() const override;
+	[[nodiscard]] EColor GetColor() const override;
+	[[nodiscard]] bool operator==(const Link& other) const;
+	[[nodiscard]] bool operator!=(const Link& other) const;
+
+private:
 	IPiecePtr m_piece1;
 	IPiecePtr m_piece2;
 	EColor m_color;
-	public:
-	Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color);
-	Link(const Link& other) = default;
-	~Link() = default;
-	[[nodiscard]] IPiecePtr GetPiece1() const;
-	[[nodiscard]] IPiecePtr GetPiece2() const;
-	[[nodiscard]] EColor GetColor() const;
-	[[nodiscard]] bool operator==(const Link& other) const;
-	[[nodiscard]] bool operator!=(const Link& other) const;
 };

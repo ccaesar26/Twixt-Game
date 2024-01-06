@@ -54,7 +54,7 @@ public:
 
 	[[nodiscard]] const std::vector<Link>& GetLinks() const;
 
-	[[nodiscard]] Link& GetLinkBetween(Position pos1, Position pos2);
+	[[nodiscard]] Link& GetLinkBetween(Position pos1, Position pos2) override;
 
 	void AddLink(const Link& link);
 

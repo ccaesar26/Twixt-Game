@@ -1,12 +1,12 @@
 #include "Player.h"
 #include <memory>
 
-IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, Board& board)
+IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoard& board)
 {
 	return std::make_unique<Player>(color, name, board);
 }
 
-Player::Player(EColor color, std::string name, Board& board) :
+Player::Player(EColor color, std::string name, IBoard& board) :
 	m_color{ color },
 	m_name{ std::move(name) },
 	m_board{ board }
@@ -17,7 +17,7 @@ std::vector<IPiecePtr> Player::GetPegs() const
 	return m_pegs;
 }
 
-std::vector<std::reference_wrapper<Link>> Player::GetLinks() const
+std::vector<std::reference_wrapper<ILink>> Player::GetLinks() const
 {
 	return m_links;
 }
@@ -41,14 +41,14 @@ void Player::AddPeg(Position pos)
 void Player::AddLink(Position pos1, Position pos2)
 {
 	m_board.LinkPieces(pos1, pos2);
-	Link& link = m_board.GetLinkBetween(pos1, pos2);
+	ILink& link = m_board.GetLinkBetween(pos1, pos2);
 	m_links.emplace_back(link);
 }
 
 void Player::RemoveLink(Position pos1, Position pos2)
 {
 	m_board.UnlinkPieces(pos1, pos2);
-	erase_if(m_links, [&](const Link& link)
+	erase_if(m_links, [&](const ILink& link)
 	{
 		return link.GetPiece1()->GetPosition() == pos1 && link.GetPiece2()->GetPosition() == pos2;
 	});
