@@ -54,6 +54,9 @@
     <ClInclude Include="Link.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ILink.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Peg.cpp">
