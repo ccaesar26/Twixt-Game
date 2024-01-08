@@ -123,3 +123,13 @@ TEST_F(BoardTest, TestFunctionCheckPathToRows)
     EXPECT_EQ(b1.CheckPathToRows(Position(1, 1), 4, 4), false);
 
 }
+
+TEST_F(BoardTest, TestFunctionCheckPathToCols)
+{
+    b1.PlacePiece(Position(3, 5), EColor::Black);
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    b1.LinkPieces(Position(2, 3), Position(3, 5));
+
+    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 3, 5), true);
+    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 4, 4), false);
+}
