@@ -115,3 +115,11 @@ TEST_F(BoardTest, TestFunctionLink)
     b1.AddLink(link);
     EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3)).GetPiece1()->GetPosition(), Position(1, 1));
 }
+
+TEST_F(BoardTest, TestFunctionCheckPathToRows)
+{
+    b1.PlacePiece(Position(5, 6), EColor::Red);
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 5, 6), true);
+    EXPECT_EQ(b1.CheckPathToRows(Position(1, 1), 4, 4), false);
+
+}
