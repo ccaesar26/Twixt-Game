@@ -45,7 +45,7 @@ TEST_F(BoardTest, TestPlacePieceOutOfBounds)
 
 TEST_F(BoardTest, TestSize)
 {
-    EXPECT_EQ(b1.GetSize(), 10);
+    EXPECT_EQ(b1.GetSize(), 24);
 }
 
 TEST_F(BoardTest, TestIsLinked)
@@ -89,6 +89,14 @@ TEST_F(BoardTest, TestRemoveLink)
     b1.LinkPieces(Position(1, 1), Position(2, 3));
     b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
     EXPECT_THROW(b1.GetLinkBetween(Position(1, 1), Position(2, 3)), GameException);
+}
+
+TEST_F(BoardTest, TestRemoveLinkOutOfBounds)
+{
+	EXPECT_THROW(b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(11, 11))), GameException);
+	EXPECT_THROW(b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(-1, -1))), GameException);
+	EXPECT_THROW(b1.RemoveLink(b1.GetLinkBetween(Position(1, 1), Position(11, 30))), GameException);
+	EXPECT_THROW(b1.RemoveLink(b1.GetLinkBetween(Position(10, 10), Position(11, 30))), GameException);
 }
 
 TEST_F(BoardTest, TestLinkAfterRemove)
