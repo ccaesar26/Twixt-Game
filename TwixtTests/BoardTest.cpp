@@ -144,3 +144,14 @@ TEST_F(BoardTest, TestFunctionGetLinks)
 
     EXPECT_EQ(b1.GetLinks().size(), 3);
 }
+
+TEST_F(BoardTest, TestFunctionGetLinkBetween)
+{
+    b1.PlacePiece(Position(3, 5), EColor::Black);
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    b1.LinkPieces(Position(2, 3), Position(3, 5));
+
+    EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3)).GetPiece1()->GetPosition(), Position(1, 1));
+    EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3)).GetPiece2()->GetPosition(), Position(2, 3));
+
+}
