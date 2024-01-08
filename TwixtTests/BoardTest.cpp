@@ -155,3 +155,12 @@ TEST_F(BoardTest, TestFunctionGetLinkBetween)
     EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3)).GetPiece2()->GetPosition(), Position(2, 3));
 
 }
+
+TEST_F(BoardTest, TestFunctionGetLinkBetween2DifferentColors)
+{
+    b1.PlacePiece(Position(3, 5), EColor::Red);
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+
+    EXPECT_THROW(b1.GetLinkBetween(Position(2, 3), Position(3, 5)).GetPiece2()->GetPosition(), GameException);
+    EXPECT_THROW(b1.GetLinkBetween(Position(2, 3), Position(5, 5)).GetPiece1()->GetPosition(), GameException);
+}
