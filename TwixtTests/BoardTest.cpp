@@ -178,5 +178,10 @@ TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement)
     EXPECT_EQ(b1.CheckIfWinningPlacement(Position(1,1),EColor::Black), false);
 }
 
-
-
+TEST_F(BoardTest, TestLinkIntersection)
+{
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    b1.PlacePiece(Position(2, 2),EColor::Black);
+    b1.PlacePiece(Position(1, 4),EColor::Black);
+    EXPECT_THROW(b1.LinkPieces(Position(2, 2), Position(1, 4)), GameException);
+}
