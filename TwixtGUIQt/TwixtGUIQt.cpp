@@ -1,5 +1,7 @@
 #include "TwixtGUIQt.h"
 
+#include "GameException.h"
+
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -51,7 +53,18 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	{
 		return;
 	}
-	m_gameLogic->PlacePiece(pos);
+    try
+    {
+        m_gameLogic->PlacePiece(pos);
+    }
+    catch (const GameException&)
+    {
+        return;
+    }
+    catch (...)
+    {
+	    throw std::runtime_error("Unknown exception");
+    }
 }
 
 void TwixtGUIQt::resizeEvent(QResizeEvent* event)
