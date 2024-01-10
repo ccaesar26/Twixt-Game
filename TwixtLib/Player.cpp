@@ -61,6 +61,7 @@ void Player::RemoveLink(Position pos1, Position pos2)
 			{
 				return linkPtr->GetPiece1()->GetPosition() == pos1 && linkPtr->GetPiece2()->GetPosition() == pos2;
 			}
+			return false;
 		});
 	}
 }
