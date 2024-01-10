@@ -44,6 +44,11 @@ std::optional<EColor> HoleButton::GetColor() const
 	return m_color;
 }
 
+void HoleButton::SetCenter(const QPoint& center)
+{
+	m_center = center;
+}
+
 void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);

@@ -24,6 +24,11 @@ public:
     // Setters
     void SetGameLogic(std::shared_ptr<IGame>&& gameLogic);
 
+    void MapCoordinates();
+
+protected:
+    void resizeEvent(QResizeEvent* event) override;
+
 private:
     // IGameListener overrides
     void OnPiecePlaced(const Position& pos) override;
