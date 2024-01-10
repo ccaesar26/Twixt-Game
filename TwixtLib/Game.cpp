@@ -33,6 +33,16 @@ void Game::PlacePiece(const Position& pos)
 	
 }
 
+void Game::CreateLink(const Position& pos1, const Position& pos2)
+{
+	if (m_state != EGameState::Playing)
+	{
+		throw InvalidStateException("Game is not playing");
+	}
+
+	m_board.LinkPieces(pos1, pos2);
+}
+
 void Game::Reset()
 {
 }
@@ -142,12 +152,20 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 	}
 }
 
+void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (auto sp = it->lock()){
+			sp->OnLinkPlaced(pos1, pos2);
+		}
+	}
+}
+
 //switch the current player pointer to the other player
 void Game::SwitchTurn()
 {
 	m_turn = (m_turn == EColor::Black) ? EColor::Red : EColor::Black;
-	
-	std::swap(m_currentPlayer, m_nextPlayer);
 }
 
 void Game::InitializeGame()
@@ -157,8 +175,6 @@ void Game::InitializeGame()
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
 	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
-	m_currentPlayer = m_player1.get();
-	m_nextPlayer = m_player2.get();
 }
 
 void Game::InitializeGame(const std::string& config)
@@ -177,8 +193,6 @@ void Game::InitializeGame(const std::string& config)
 	m_state = static_cast<EGameState>(config[pos] - '0');
 	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
 	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
-	m_currentPlayer = (m_turn == EColor::Black) ? m_player1.get() : m_player2.get();
-	m_nextPlayer = (m_turn == EColor::Black) ? m_player2.get() : m_player1.get();
 }
 
 Game::Game()
@@ -201,26 +215,6 @@ void Game::RemoveListener(IGameListener* listener)
 
 	//m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 	std::erase_if(m_listeners, f);
-}
-
-IPlayer* Game::GetPlayer1() const
-{
-	return m_player1.get();
-}
-
-IPlayer* Game::GetPlayer2() const
-{
-	return m_player2.get();
-}
-
-IPlayer* Game::GetCurrentPlayerPtr() const
-{
-	return m_currentPlayer;
-}
-
-IPlayer* Game::GetNextPlayerPtr() const
-{
-	return m_nextPlayer;
 }
 
 EColor Game::GetCurrentPlayerColor() const
