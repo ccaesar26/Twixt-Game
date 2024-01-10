@@ -1,5 +1,10 @@
 #include "Link.h"
 
+ILinkPtr ILink::Produce(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color)
+{
+	return std::make_shared<Link>(piece1, piece2, color);
+}
+
 Link::Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color) :
 	m_piece1{ piece1 },
 	m_piece2{ piece2 },

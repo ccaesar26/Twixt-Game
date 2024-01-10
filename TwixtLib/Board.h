@@ -3,11 +3,10 @@
 #include "IBoard.h"
 #include "EColor.h"
 #include "IPiece.h"
+#include "ILink.h"
 
 #include <vector>
 #include <string>
-
-#include "Link.h"
 
 class Board final :
 	public IBoard
@@ -46,21 +45,19 @@ public:
 
 	[[nodiscard]] int GetSize() const;
 
-	[[nodiscard]] std::string ToString() const;
+	[[nodiscard]] std::string ToString() const override;
 
-	[[nodiscard]] bool CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const;
+	[[nodiscard]] bool CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const;
 
-	[[nodiscard]] bool CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const;
+	[[nodiscard]] bool CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const;
 
-	[[nodiscard]] const std::vector<Link>& GetLinks() const;
+	[[nodiscard]] ILinkPtr& GetLinkBetween(Position pos1, Position pos2) override;
 
-	[[nodiscard]] Link& GetLinkBetween(Position pos1, Position pos2) override;
+	void AddLink(const ILinkPtr& link);
 
-	void AddLink(const Link& link);
-
-	void RemoveLink(const Link& link);
+	void RemoveLink(const ILinkPtr& link);
 private:
 	int m_size;
 	std::vector<std::vector<IPiecePtr>> m_board;
-	std::vector<Link> m_links;
+	std::vector<ILinkPtr> m_links;
 };

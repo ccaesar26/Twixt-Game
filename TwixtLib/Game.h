@@ -14,7 +14,7 @@ class Game final
 	: public IGame
 {
 private:
-	Board m_board;
+	IBoardPtr m_board;
 	EColor m_turn;
 	EGameState m_state;
 	std::vector<IGameListenerWeakPtr> m_listeners;

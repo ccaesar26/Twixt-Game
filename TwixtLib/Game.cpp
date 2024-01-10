@@ -16,10 +16,10 @@ void Game::PlacePiece(const Position& pos)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board.PlacePiece(pos, m_turn);
+	m_board->PlacePiece(pos, m_turn);
 	NotifyPiecePlaced(pos);
 
-	if (m_board.CheckIfWinningPlacement(pos, m_turn))
+	if (m_board->CheckIfWinningPlacement(pos, m_turn))
 	{
 		if (m_turn == EColor::Black)
 		{
@@ -40,7 +40,7 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board.LinkPieces(pos1, pos2);
+	m_board->LinkPieces(pos1, pos2);
 }
 
 void Game::RemoveLink(const Position& pos1, const Position& pos2)
@@ -50,7 +50,7 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board.UnlinkPieces(pos1, pos2);
+	m_board->UnlinkPieces(pos1, pos2);
 }
 
 void Game::Reset()
@@ -146,7 +146,7 @@ void Game::SaveToFile(const std::string& fileName) const
 		throw std::runtime_error("Failed to open file");
 	}
 
-	file << m_board.ToString();
+	file << m_board->ToString();
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
 }
@@ -180,7 +180,7 @@ void Game::SwitchTurn()
 
 void Game::InitializeGame()
 {
-	m_board = Board();
+	m_board = IBoard::CreateBoard();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
@@ -197,7 +197,7 @@ void Game::InitializeGame(const std::string& config)
 		pos++;
 	}
 	pos++;
-	m_board = Board(boardString);
+	m_board = IBoard::CreateBoard(boardString);
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
@@ -234,5 +234,5 @@ EColor Game::GetCurrentPlayerColor() const
 
 IPiecePtr Game::GetPiecePtr(const Position& pos) const
 {
-	return m_board.At(pos);
+	return m_board->At(pos);
 }
