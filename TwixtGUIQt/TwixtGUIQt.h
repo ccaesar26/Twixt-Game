@@ -26,6 +26,20 @@ public:
 
     void MapCoordinates();
 
+public slots:
+	//// UI event handlers
+	//void OnRestartButtonClicked();
+	//void OnSaveButtonClicked();
+	//void OnLoadButtonClicked();
+	//void OnQuitButtonClicked();
+
+	//void OnPlaceBridgeButtonClicked();
+	//void OnRemoveBridgeButtonClicked();
+	//void OnRequestDrawButtonClicked();
+	//void OnEndTurnButtonClicked();
+
+	void OnHoleButtonClicked(const Position& pos);
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
 
@@ -65,7 +79,7 @@ private:
 
     QSharedPointer<QWidget> m_boardContainer;
     QSharedPointer<QGridLayout> m_boardContainerLayout;
-    QVector<QVector<HoleButton*>> m_board;
+    QVector<QVector<QSharedPointer<HoleButton>>> m_board;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 

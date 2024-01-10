@@ -1,13 +1,5 @@
 #include "TwixtGUIQt.h"
 
-namespace
-{
-    bool isCorner(int i, int j)
-    {
-        return (i == 0 && j == 0) || (i == 0 && j == 23) || (i == 23 && j == 0) || (i == 23 && j == 23);
-    }
-}
-
 TwixtGUIQt::TwixtGUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -53,6 +45,15 @@ void TwixtGUIQt::MapCoordinates()
     }
 }
 
+void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+	m_gameLogic->PlacePiece(pos);
+}
+
 void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 {
     MapCoordinates();
@@ -61,6 +62,7 @@ void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
+    m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());
 }
 
 void TwixtGUIQt::OnGameOver(const EGameResult& result)
@@ -158,6 +160,12 @@ void TwixtGUIQt::InitializeBoard()
 
     m_board.resize(24);
 
+    const auto size = m_board.size();
+    auto isCorner = [size](const int i, const int j) -> bool
+	{
+        return (i == 0 && j == 0) || (i == 0 && j == size - 1) || (i == size - 1 && j == 0) || (i == size - 1 && j == size - 1);
+	};
+
     for (int i = 0; i < 24; ++i)
     {
         m_board[i].resize(24);
@@ -170,10 +178,13 @@ void TwixtGUIQt::InitializeBoard()
             }
             else
             {
-                m_board[i][j] = new HoleButton{ Position{i, j} };
-                m_boardContainerLayout->addWidget(m_board[i][j], i, j);
+                m_board [i][j] = QSharedPointer<HoleButton>::create(Position{i, j});
+                //m_board[i][j] = QSharedPointer<HoleButton>{ new HoleButton{ Position{i, j} } };
+                //m_board[i][j] = new HoleButton{ Position{i, j} };
+                m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
                 m_board[i][j]->UpdatePeg();
             }
+            connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
         }
     }
 

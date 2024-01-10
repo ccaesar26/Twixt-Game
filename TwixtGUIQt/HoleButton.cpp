@@ -34,9 +34,10 @@ HoleButton::HoleButton(const Position& position, EColor color, QWidget* parent)
 	UpdatePeg();
 }
 
-void HoleButton::PlacePeg(EColor color)
+void HoleButton::SetPeg(EColor color)
 {
 	m_color = color;
+	UpdatePeg();
 }
 
 std::optional<EColor> HoleButton::GetColor() const

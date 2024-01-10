@@ -18,7 +18,8 @@ public:
     HoleButton& operator=(const HoleButton& other);
     HoleButton& operator=(HoleButton&& other) noexcept;
 	
-    void PlacePeg(EColor color);
+    void SetPeg(EColor color);
+
     std::optional<EColor> GetColor() const;
 
     void SetCenter(const QPoint& center);
@@ -28,7 +29,7 @@ public:
     void UpdatePeg();
 
 signals:
-    void Clicked(const std::pair<int, int>& position);
+    void Clicked(const Position& position);
 
 private:
     Position m_position;
