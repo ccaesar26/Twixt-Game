@@ -41,7 +41,7 @@ public:
 
 	[[nodiscard]] bool IsPositionValid(const Position& pos) const;
 
-	[[nodiscard]] bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const override;
+	[[nodiscard]] bool CheckIfWinningPlacement(const ILinkPtr& link) const override;
 
 	[[nodiscard]] int GetSize() const;
 

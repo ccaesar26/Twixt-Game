@@ -18,19 +18,6 @@ void Game::PlacePiece(const Position& pos)
 
 	m_board->PlacePiece(pos, m_turn);
 	NotifyPiecePlaced(pos);
-
-	if (m_board->CheckIfWinningPlacement(pos, m_turn))
-	{
-		if (m_turn == EColor::Black)
-		{
-			NotifyGameOver(EGameResult::BlackWinner);
-		}
-		else if (m_turn == EColor::Red)
-		{
-			NotifyGameOver(EGameResult::RedWinner);
-		}
-	}
-	
 }
 
 void Game::CreateLink(const Position& pos1, const Position& pos2)
@@ -41,6 +28,16 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	}
 
 	m_board->LinkPieces(pos1, pos2);
+	NotifyPiecesLinked(pos1, pos2);
+
+	ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
+
+	if (m_board->CheckIfWinningPlacement(link))
+	{
+		EColor winnerColor = link->GetColor();
+		EGameResult gameResult = winnerColor == EColor::Black ? EGameResult::BlackWinner : EGameResult::RedWinner;
+		NotifyGameOver(gameResult);
+	}
 }
 
 void Game::RemoveLink(const Position& pos1, const Position& pos2)
@@ -55,6 +52,8 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 
 void Game::Reset()
 {
+	InitializeGame();
+	NotifyGameRestarted();
 }
 
 void Game::Restore(const std::string& config)
