@@ -43,6 +43,16 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	m_board.LinkPieces(pos1, pos2);
 }
 
+void Game::RemoveLink(const Position& pos1, const Position& pos2)
+{
+	if (m_state != EGameState::Playing)
+	{
+		throw InvalidStateException("Game is not playing");
+	}
+
+	m_board.UnlinkPieces(pos1, pos2);
+}
+
 void Game::Reset()
 {
 }

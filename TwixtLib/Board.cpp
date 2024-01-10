@@ -230,7 +230,7 @@ bool Board::IsPositionValid(const Position& pos) const
 	return pos.row >= 0 && pos.row < m_size && pos.col >= 0 && pos.col < m_size;
 }
 
-bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const
+bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const
 {
 	if (!IsPositionValid(pos)) {
 		return false;
@@ -275,7 +275,7 @@ bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLo
 	return foundUpperRow && foundLowerRow;
 }
 
-bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const
+bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const
 {
 	if (!IsPositionValid(pos)){
 		return false;

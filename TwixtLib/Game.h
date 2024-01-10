@@ -37,6 +37,7 @@ public:
 	void LoadFromFile(const std::string& fileName) override;
 	void PlacePiece(const Position& pos) override;
 	void CreateLink(const Position& pos1, const Position& pos2) override;
+	void RemoveLink(const Position& pos1, const Position& pos2) override;
 	void Reset() override;
 	void Restore(const std::string& config) override;
 	void SaveToFile(const std::string& fileName) const override;
