@@ -26,7 +26,7 @@ public:
 
 	[[nodiscard]] virtual IPiecePtr At(const Position pos) const = 0;
 
-	[[nodiscard]] virtual bool CheckIfWinningPlacement(Position pos, EColor currentPlayer) const = 0;
+	[[nodiscard]] virtual bool CheckIfWinningPlacement(const ILinkPtr& link) const = 0;
 
 	[[nodiscard]] virtual ILinkPtr& GetLinkBetween(Position pos1, Position pos2) = 0;
 

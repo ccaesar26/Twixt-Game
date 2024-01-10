@@ -177,7 +177,7 @@ bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position&
 
 void Board::LinkPieces(Position pos1, Position pos2)
 {
-if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
+	if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	{
 		throw GameException("Invalid position");
 	}
@@ -197,7 +197,7 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	}
 
 	//check if the two positions have pieces of a different color
-	if(m_board[pos1.row][pos1.col]->GetColor() != m_board[pos2.row][pos2.col]->GetColor())
+	if (m_board[pos1.row][pos1.col]->GetColor() != m_board[pos2.row][pos2.col]->GetColor())
 	{
 		throw GameException("Differently colored pieces");
 	}
@@ -213,7 +213,9 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 
 	EColor color = m_board[pos1.row][pos1.col]->GetColor();
 
-	AddLink(ILink::Produce(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], color));
+	ILinkPtr link = ILink::Produce(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], color);
+
+	AddLink(link);
 
 	m_board[pos1.row][pos1.col]->AddNeighbor(m_board[pos2.row][pos2.col]);
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
@@ -363,7 +365,20 @@ void Board::RemoveLink(const ILinkPtr& link)
 	throw GameException("Link not found");
 }
 
-bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const
+bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 {
+	IPiecePtr piece = link->GetPiece1();
+	EColor color = piece->GetColor();
+
+	if (color == EColor::Red)
+	{
+		return CheckPathToRows(piece->GetPosition(), 0, m_size - 1);
+	}
+
+	if (color == EColor::Black) 
+	{
+		return CheckPathToCols(piece->GetPosition(), 0, m_size - 1);
+	}
+	
 	return false;
 }
