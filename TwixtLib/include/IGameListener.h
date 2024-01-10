@@ -13,6 +13,7 @@ class IGameListener
 public:
 	virtual ~IGameListener() = default;
 	virtual void OnPiecePlaced(const Position& pos) = 0;
+	virtual void OnLinkPlaced(const Position& pos1, const Position& pos2) = 0;
 	virtual void OnGameOver(const EGameResult& result) = 0;
 	virtual void OnGameRestarted() = 0;
 };
