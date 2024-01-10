@@ -45,6 +45,10 @@ void TwixtGUIQt::OnGameRestarted()
 {
 }
 
+void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
+{
+}
+
 void TwixtGUIQt::InitializeTitleLabel()
 {
     m_titleLabel = QSharedPointer<QLabel>{ new QLabel{} };
