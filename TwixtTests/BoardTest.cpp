@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-
+#include "Link.h"
 #include "Board.h"
 #include "GameException.h"
 
@@ -112,10 +112,13 @@ TEST_F(BoardTest, TestLinkAfterRemove)
 
 TEST_F(BoardTest, TestFunctionLink)
 {
-    ILinkPtr link(b1.At(Position(1, 1)), b1.At(Position(2, 3)), EColor::Black);
-    b1.AddLink(link);
-    EXPECT_EQ(b1.GetLinkBetween(Position(1, 1), Position(2, 3))->GetPiece1()->GetPosition(), Position(1, 1));
+  
+    Link link (b1.At(Position(1, 1)), b1.At(Position(2, 3)), EColor::Black);
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    EXPECT_EQ(link.GetPiece1()->GetPosition(), Position(1, 1));
+    EXPECT_EQ(link.GetPiece2()->GetPosition(), Position(2, 3));
 }
+
 
 TEST_F(BoardTest, TestFunctionCheckPathToRows)
 {
@@ -146,9 +149,9 @@ TEST_F(BoardTest, TestFunctionGetLinks)
     ILinkPtr link2 = b1.GetLinkBetween(Position(2, 3), Position(3, 5));
     ILinkPtr link3 = b1.GetLinkBetween(Position(3, 5), Position(4, 7));
 
-    EXPECT_EQ(link1, b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
-    EXPECT_EQ(link2, b1.GetLinkBetween(Position(2, 3), Position(3, 5)));
-    EXPECT_EQ(link3, b1.GetLinkBetween(Position(3, 5), Position(4, 7)));
+    EXPECT_EQ(link1->GetPiece1(), b1.GetLinkBetween(Position(1, 1), Position(2, 3))->GetPiece1());
+    EXPECT_EQ(link2->GetPiece1(), b1.GetLinkBetween(Position(2, 3), Position(3, 5))->GetPiece1());
+    EXPECT_EQ(link3->GetPiece1(), b1.GetLinkBetween(Position(3, 5), Position(4, 7))->GetPiece1());
 }
 
 TEST_F(BoardTest, TestFunctionGetLinkBetween)
@@ -174,9 +177,8 @@ TEST_F(BoardTest, TestFunctionGetLinkBetween2DifferentColors)
 TEST_F(BoardTest, TestUnlinkPieces)
 {
     b1.LinkPieces(Position(1, 1), Position(2, 3));
-    ILinkPtr link = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
     b1.UnlinkPieces(Position(1, 1), Position(2, 3));
-    EXPECT_EQ(link, NULL);
+    EXPECT_THROW(b1.GetLinkBetween(Position(1,1),Position(2,3)), GameException);
 }
 
 TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement)
