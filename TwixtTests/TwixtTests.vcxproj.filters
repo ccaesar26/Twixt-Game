@@ -30,7 +30,10 @@
     <ClCompile Include="BoardTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="PlayerTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
