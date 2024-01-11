@@ -1,5 +1,7 @@
 #include "HoleButton.h"
 
+#include <QMouseEvent>
+
 namespace
 {
 	QString ColorToString(const EColor color)
@@ -34,9 +36,10 @@ HoleButton::HoleButton(const Position& position, EColor color, QWidget* parent)
 	UpdatePeg();
 }
 
-void HoleButton::PlacePeg(EColor color)
+void HoleButton::SetPeg(EColor color)
 {
 	m_color = color;
+	UpdatePeg();
 }
 
 std::optional<EColor> HoleButton::GetColor() const
@@ -49,18 +52,40 @@ void HoleButton::SetCenter(const QPoint& center)
 	m_center = center;
 }
 
+QPoint HoleButton::GetCenter() const
+{
+	return m_center;
+}
+
 void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
+
+	Deselect();
+
 	if (isEnabled())
 	{
-		emit Clicked(m_position);
+		if (event->button() == Qt::RightButton)
+		{
+			emit RightClicked(m_position);
+		}
+		else
+		{
+			emit Clicked(m_position);
+		}
 	}
+}
+
+void HoleButton::mousePressEvent(QMouseEvent* event)
+{
+	QPushButton::mousePressEvent(event);
+	Select();
 }
 
 void HoleButton::UpdatePeg()
 {
 	QString path = "assets/";
+
 	if (m_color.has_value())
 	{
 		path += ColorToString(m_color.value());
@@ -69,6 +94,12 @@ void HoleButton::UpdatePeg()
 	{
 		path += "empty";
 	}
+
+	if (m_isSelected)
+	{
+		path += "_selected";
+	}
+
 	path += ".png";
 
 	const QPixmap pixmap(path);
@@ -77,6 +108,18 @@ void HoleButton::UpdatePeg()
 	setIconSize(pixmap.rect().size());
 
 	setStyleSheet("border: none;");
+}
+
+void HoleButton::Select()
+{
+	m_isSelected = true;
+	UpdatePeg();
+}
+
+void HoleButton::Deselect()
+{
+	m_isSelected = false;
+	UpdatePeg();
 }
 
 HoleButton::HoleButton(const HoleButton& other)

@@ -26,8 +26,24 @@ public:
 
     void MapCoordinates();
 
+public slots:
+	//// UI event handlers
+	//void OnRestartButtonClicked();
+	void OnSaveButtonClicked();
+	//void OnLoadButtonClicked();
+	//void OnQuitButtonClicked();
+
+	//void OnPlaceBridgeButtonClicked();
+	//void OnRemoveBridgeButtonClicked();
+	//void OnRequestDrawButtonClicked();
+	void OnEndTurnButtonClicked();
+
+	void OnHoleButtonClicked(const Position& pos);
+    void OnHoleButtonRightClicked(const Position& pos);
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 
 private:
     // IGameListener overrides
@@ -35,6 +51,7 @@ private:
     void OnGameOver(const EGameResult& result) override;
     void OnGameRestarted() override;
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
+    void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
 
     // UI initializations
     void InitializeTitleLabel();
@@ -43,6 +60,9 @@ private:
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
     void InitializeBoard();
+
+    // UI Update methods
+    void UpdateCurrentPlayerLabel();
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
@@ -65,9 +85,15 @@ private:
 
     QSharedPointer<QWidget> m_boardContainer;
     QSharedPointer<QGridLayout> m_boardContainerLayout;
-    QVector<QVector<HoleButton*>> m_board;
+    QVector<QVector<QSharedPointer<HoleButton>>> m_board;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 
+    QVector<QPair<QLine, EColor>> m_links;
+
     std::shared_ptr<IGame> m_gameLogic;
+
+    int m_clickCount;
+    Position m_firstClick;
+    Position m_secondClick;
 };

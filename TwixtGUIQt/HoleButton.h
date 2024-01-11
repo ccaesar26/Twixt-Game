@@ -1,5 +1,5 @@
 #pragma once
-#include <qpushbutton.h>
+#include <QPushButton>
 
 #include "EColor.h"
 #include "Position.h"
@@ -18,21 +18,29 @@ public:
     HoleButton& operator=(const HoleButton& other);
     HoleButton& operator=(HoleButton&& other) noexcept;
 	
-    void PlacePeg(EColor color);
+    void SetPeg(EColor color);
+
     std::optional<EColor> GetColor() const;
 
     void SetCenter(const QPoint& center);
-	
+    QPoint GetCenter() const;
+
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
 
     void UpdatePeg();
 
+    void Select();
+    void Deselect();
+
 signals:
-    void Clicked(const std::pair<int, int>& position);
+    void Clicked(const Position& position);
+    void RightClicked(Position position);
 
 private:
     Position m_position;
     std::optional<EColor> m_color;
     QPoint m_center;
+    bool m_isSelected = false;
 };
 
