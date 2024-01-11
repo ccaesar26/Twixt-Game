@@ -37,7 +37,19 @@ TEST(PlayerTests, AddPeg)
 		player.AddPeg(Position(1, 1));
 		player.AddPeg(Position(2, 1));
 		EXPECT_EQ(player.GetPegs().size(), 2);
-		
 	}
+}
 
+TEST(PlayerTests, AddLink)
+{
+		IBoardWeakPtr b;
+		if (b.lock())
+		{
+		std::string name = "Vlad";
+		Player player(EColor::Black, name, b);
+		player.AddPeg(Position(1, 1));
+		player.AddPeg(Position(2, 3));
+		player.AddLink(Position(1, 1), Position(2, 3));
+		EXPECT_EQ(player.GetLinks().size(), 1);
+	}
 }
