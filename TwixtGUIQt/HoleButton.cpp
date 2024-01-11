@@ -61,14 +61,12 @@ void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
 
+	Deselect();
+
 	if (isEnabled())
 	{
 		if (event->button() == Qt::RightButton)
 		{
-			// Handle right-click event here
-			// For example, show a context menu or perform a specific action
-
-			// Emit a signal or perform any other action you need
 			emit RightClicked(m_position);
 		}
 		else
@@ -78,9 +76,16 @@ void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 	}
 }
 
+void HoleButton::mousePressEvent(QMouseEvent* event)
+{
+	QPushButton::mousePressEvent(event);
+	Select();
+}
+
 void HoleButton::UpdatePeg()
 {
 	QString path = "assets/";
+
 	if (m_color.has_value())
 	{
 		path += ColorToString(m_color.value());
@@ -89,6 +94,12 @@ void HoleButton::UpdatePeg()
 	{
 		path += "empty";
 	}
+
+	if (m_isSelected)
+	{
+		path += "_selected";
+	}
+
 	path += ".png";
 
 	const QPixmap pixmap(path);
@@ -97,6 +108,18 @@ void HoleButton::UpdatePeg()
 	setIconSize(pixmap.rect().size());
 
 	setStyleSheet("border: none;");
+}
+
+void HoleButton::Select()
+{
+	m_isSelected = true;
+	UpdatePeg();
+}
+
+void HoleButton::Deselect()
+{
+	m_isSelected = false;
+	UpdatePeg();
 }
 
 HoleButton::HoleButton(const HoleButton& other)

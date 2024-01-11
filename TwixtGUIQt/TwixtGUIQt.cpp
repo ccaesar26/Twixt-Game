@@ -102,7 +102,7 @@ void TwixtGUIQt::OnSaveButtonClicked()
 	}
 	catch (...)
 	{
-		throw std::runtime_error("Unknown exception");
+		//throw std::runtime_error("Unknown exception");
 	}
 }
 

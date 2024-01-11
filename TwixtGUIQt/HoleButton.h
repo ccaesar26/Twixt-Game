@@ -26,8 +26,12 @@ public:
     QPoint GetCenter() const;
 
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
 
     void UpdatePeg();
+
+    void Select();
+    void Deselect();
 
 signals:
     void Clicked(const Position& position);
@@ -37,5 +41,6 @@ private:
     Position m_position;
     std::optional<EColor> m_color;
     QPoint m_center;
+    bool m_isSelected = false;
 };
 
