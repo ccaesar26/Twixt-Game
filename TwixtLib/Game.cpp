@@ -146,6 +146,7 @@ void Game::SaveToFile(const std::string& fileName) const
 	}
 
 	file << m_board->ToString();
+	file<<"\n";
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
 }

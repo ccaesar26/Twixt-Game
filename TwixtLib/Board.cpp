@@ -143,7 +143,7 @@ std::string Board::ToString() const
 			}
 		}
 	}
-	result += "\n";
+	
 	return result;
 }
 

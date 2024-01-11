@@ -3,21 +3,21 @@
 #include "GameException.h"
 #include "Link.h"
 
-TEST(GameTest, GameCreation)
+TEST(GameTest1, GameCreation)
 {
 	std::shared_ptr game = IGame::CreateGame();
 
 	EXPECT_EQ(game==NULL,false );
 }
 
-TEST(GameTest, GameFirstTurn)
+TEST(GameTest1, GameFirstTurn)
 {
 	std::shared_ptr game = IGame::CreateGame();
 	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Red);
 	
 }
 	
-TEST(GameTest, GameSecondTurn)
+TEST(GameTest1, GameSecondTurn)
 {
 	std::shared_ptr game = IGame::CreateGame();
 	game->PlacePiece(Position(1, 1));
@@ -26,14 +26,14 @@ TEST(GameTest, GameSecondTurn)
 
 }
 
-TEST(GameTest, GamePiecePlace)
+TEST(GameTest1, GamePiecePlace)
 {
 		std::shared_ptr game = IGame::CreateGame();
 	game->PlacePiece(Position(1, 1));
 	EXPECT_EQ(game->GetPiecePtr(Position(1, 1))->GetColor(), EColor::Red);
 }
 	
-TEST(GameTest, GameReset)
+TEST(GameTest1, GameReset)
 {
     std::shared_ptr game = IGame::CreateGame();
     game->SwitchTurn();
@@ -42,3 +42,15 @@ TEST(GameTest, GameReset)
     EXPECT_EQ(game->GetCurrentPlayerColor(), game1->GetCurrentPlayerColor());
 
 }
+
+TEST(GameTest1, GameRese1t)
+{
+		std::shared_ptr game = IGame::CreateGame();
+	game->PlacePiece(Position(1, 1));
+	game->PlacePiece(Position(2, 3));
+	game->CreateLink(Position(1, 1), Position(2, 3));
+	std::string g ="TestInput.txt";
+	game->SaveToFile(g);
+	
+}
+
