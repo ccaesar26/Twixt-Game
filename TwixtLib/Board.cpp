@@ -350,6 +350,61 @@ bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRi
 	return foundLeftCol && foundRightCol;
 }
 
+bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const
+{
+	if (!IsPositionValid(pos)) {
+		return false;
+	}
+
+	std::stack<Position> stack;
+	std::set<Position> visited;
+
+	stack.push(pos);
+
+	bool foundStart = false;
+	bool foundEnd = false;
+
+	while (!stack.empty() && !(foundStart && foundEnd)) {
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0) {
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		if (playerColor == EColor::Red) {
+			if (currentPiece && currentPiece->GetPosition().row == targetStart) {
+				foundStart = true;
+			}
+
+			if (currentPiece && currentPiece->GetPosition().row == targetEnd) {
+				foundEnd = true;
+			}
+		}
+		else if (playerColor == EColor::Black) {
+			if (currentPiece && currentPiece->GetPosition().col == targetStart) {
+				foundStart = true;
+			}
+
+			if (currentPiece && currentPiece->GetPosition().col == targetEnd) {
+				foundEnd = true;
+			}
+		}
+
+		for (const auto& neighbor : currentPiece->GetNeighbors()) {
+			if (!visited.contains(neighbor->GetPosition())) {
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return foundStart && foundEnd;
+}
+
 ILinkPtr& Board::GetLinkBetween(Position pos1, Position pos2)
 {
 	for (auto& link : m_links)
@@ -386,6 +441,7 @@ bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 	IPiecePtr piece = link->GetPiece1();
 	EColor color = piece->GetColor();
 
+	/*
 	if (color == EColor::Red)
 	{
 		return CheckPathToRows(piece->GetPosition(), 0, m_size - 1);
@@ -394,7 +450,7 @@ bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 	if (color == EColor::Black) 
 	{
 		return CheckPathToCols(piece->GetPosition(), 0, m_size - 1);
-	}
-	
-	return false;
+	}*/
+
+	return CheckPath(piece->GetPosition(), 0, m_size - 1, color);
 }
