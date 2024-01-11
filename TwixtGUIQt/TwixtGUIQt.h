@@ -96,4 +96,6 @@ private:
     int m_clickCount;
     Position m_firstClick;
     Position m_secondClick;
+
+    bool m_isFirstTurn;
 };

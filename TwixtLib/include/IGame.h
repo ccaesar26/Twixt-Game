@@ -23,7 +23,7 @@ public:
 	virtual void PlacePiece(const Position& pos) = 0;
 	virtual void CreateLink(const Position& pos1, const Position& pos2) = 0;
 	virtual void RemoveLink(const Position& pos1, const Position& pos2) = 0;
-	virtual void SwitchTurn()=0;
+	virtual void SwitchTurn() = 0;
 	[[nodiscard]] virtual EColor GetCurrentPlayerColor() const = 0;
 	[[nodiscard]] virtual IPiecePtr GetPiecePtr(const Position& pos) const = 0;
 	[[nodiscard]] virtual bool IsGameOver() const = 0;
