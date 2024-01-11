@@ -116,11 +116,12 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 
 			m_gameLogic->CreateLink(m_firstClick, m_secondClick);
 
-			m_clickCount = 0;
+			m_clickCount = 1;
 		}
 	}
 	catch (const GameException&)
 	{
+		m_clickCount = 1;
 	}
 	catch (...)
 	{
