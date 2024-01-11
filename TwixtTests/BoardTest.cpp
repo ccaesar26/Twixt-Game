@@ -283,3 +283,13 @@ TEST_F(BoardTest, TestPegPlacedOnCorner)
     EXPECT_THROW(b1.PlacePiece(Position(23, 0), EColor::Red), GameException);
     
 }
+TEST_F(BoardTest, TestLinkOperators)
+{
+	Link link1 = Link(b1.At(Position(1, 1)), b1.At(Position(2, 3)), EColor::Black);
+    Link link2 = Link(b1.At(Position(2, 3)), b1.At(Position(3, 5)), EColor::Black);
+    Link link3 = link2;
+	EXPECT_EQ(link2==link3, true);
+    EXPECT_EQ(link1!=link2, true);
+    EXPECT_EQ(link1.GetColor(), EColor::Black);
+	
+}
