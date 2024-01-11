@@ -43,6 +43,7 @@ public:
 	void SaveToFile(const std::string& fileName) const override;
 	void NotifyPiecePlaced(const Position& pos) const;
 	void NotifyPiecesLinked(const Position& pos1, const Position& pos2) const;
+	void NotifyLinkRemoved(const Position& pos1, const Position& pos2) const;
 	void NotifyGameOver(EGameResult gameResult) const;
 	void NotifyGameRestarted() const;
 	bool IsFileValid(const std::string& fileName) const override;

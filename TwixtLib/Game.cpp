@@ -176,6 +176,17 @@ void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
 	}
 }
 
+void Game::NotifyLinkRemoved(const Position& pos1, const Position& pos2) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnLinkRemoved(pos1, pos2);
+		}
+	}
+}
+
 //switch the current player pointer to the other player
 void Game::SwitchTurn()
 {
