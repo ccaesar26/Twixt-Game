@@ -29,7 +29,7 @@ public:
 public slots:
 	//// UI event handlers
 	//void OnRestartButtonClicked();
-	//void OnSaveButtonClicked();
+	void OnSaveButtonClicked();
 	//void OnLoadButtonClicked();
 	//void OnQuitButtonClicked();
 

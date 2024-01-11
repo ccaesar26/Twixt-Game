@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QSizePolicy>
+#include <QFileDialog>
 
 #include "GameException.h"
 
@@ -71,6 +72,33 @@ void TwixtGUIQt::MapCoordinates()
 
 			m_board[i][j]->SetCenter(pos);
 		}
+	}
+}
+
+void TwixtGUIQt::OnSaveButtonClicked()
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+
+	QString fileName = QFileDialog::getSaveFileName(
+		this,
+		"Save game",
+		QDir::homePath(),
+		tr("Text File (*.txt);;All files (*.*)")
+	);
+
+	try
+	{
+		m_gameLogic->SaveToFile(fileName.toStdString());
+	}
+	catch (const GameException&)
+	{
+	}
+	catch (...)
+	{
+		throw std::runtime_error("Unknown exception");
 	}
 }
 
@@ -262,6 +290,7 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
 	// TODO: connect signals and slots
+	connect(m_saveButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnSaveButtonClicked);
 
 	// TODO: setStyleSheet
 
