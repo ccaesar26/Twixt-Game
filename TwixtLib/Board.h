@@ -47,9 +47,11 @@ public:
 
 	[[nodiscard]] std::string ToString() const override;
 
-	[[nodiscard]] bool CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const;
+	[[deprecated]] bool CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const;
 
-	[[nodiscard]] bool CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const;
+	[[deprecated]] bool CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const;
+
+	[[nodiscard]] bool CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const;
 
 	[[nodiscard]] ILinkPtr& GetLinkBetween(Position pos1, Position pos2) override;
 
