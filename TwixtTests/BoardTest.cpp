@@ -274,3 +274,12 @@ TEST_F(BoardTest, TestCheckIfPegPlacedOnWrongSides)
     EXPECT_THROW(b1.PlacePiece(Position(1, 0), EColor::Red), GameException);
     EXPECT_THROW(b1.PlacePiece(Position(1, 23), EColor::Red), GameException);
 }
+
+TEST_F(BoardTest, TestPegPlacedOnCorner)
+{
+    EXPECT_THROW(b1.PlacePiece(Position(0, 0), EColor::Black), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(23, 23), EColor::Black), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(0, 23), EColor::Red), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(23, 0), EColor::Red), GameException);
+    
+}
