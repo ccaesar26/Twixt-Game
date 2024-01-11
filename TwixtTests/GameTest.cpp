@@ -12,7 +12,15 @@ TEST(GameTest, GameCreation)
 TEST(GameTest, GameFirstTurn)
 {
 	std::shared_ptr game = IGame::CreateGame();
-	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Black);
+	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Red);
 	
 }
 	
+TEST(GameTest, GameSecondTurn)
+{
+	std::shared_ptr game = IGame::CreateGame();
+	game->PlacePiece(Position(1, 1));
+	game->SwitchTurn();
+	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Black);
+
+}
