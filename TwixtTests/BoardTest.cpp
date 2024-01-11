@@ -266,3 +266,11 @@ TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement3)
     EXPECT_EQ(b1.CheckIfWinningPlacement(link), true);
 
 }
+
+TEST_F(BoardTest, TestCheckIfPegPlacedOnWrongSides)
+{
+    EXPECT_THROW(b1.PlacePiece(Position(0, 1), EColor::Black), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(23, 1), EColor::Black), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(1, 0), EColor::Red), GameException);
+    EXPECT_THROW(b1.PlacePiece(Position(1, 23), EColor::Red), GameException);
+}
