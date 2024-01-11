@@ -169,14 +169,16 @@ TEST_F(BoardTest, TestFunctionGetLinkBetween2DifferentColors)
 TEST_F(BoardTest, TestUnlinkPieces)
 {
     b1.LinkPieces(Position(1, 1), Position(2, 3));
+    ILinkPtr link = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
     b1.UnlinkPieces(Position(1, 1), Position(2, 3));
-    EXPECT_EQ(b1.GetLinks().size(), 0);
+    EXPECT_EQ(link, NULL);
 }
 
 TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement)
 {
-    
-    EXPECT_EQ(b1.CheckIfWinningPlacement(Position(1,1),EColor::Black), false);
+    b1.LinkPieces(Position(1, 1), Position(2, 3));
+    ILinkPtr link = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
+    EXPECT_EQ(b1.CheckIfWinningPlacement(link), false);
 }
 
 TEST_F(BoardTest, TestLinkIntersection)
