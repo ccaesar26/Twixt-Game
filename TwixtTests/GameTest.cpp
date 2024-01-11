@@ -24,3 +24,10 @@ TEST(GameTest, GameSecondTurn)
 	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Black);
 
 }
+
+TEST(GameTest, GamePiecePlace)
+{
+		std::shared_ptr game = IGame::CreateGame();
+	game->PlacePiece(Position(1, 1));
+	EXPECT_EQ(game->GetPiecePtr(Position(1, 1))->GetColor(), EColor::Red);
+}
