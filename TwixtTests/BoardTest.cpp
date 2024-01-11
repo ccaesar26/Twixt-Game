@@ -142,8 +142,13 @@ TEST_F(BoardTest, TestFunctionGetLinks)
     b1.LinkPieces(Position(1, 1), Position(2, 3));
     b1.LinkPieces(Position(2, 3), Position(3, 5));
     b1.LinkPieces(Position(3, 5), Position(4, 7));
+    ILinkPtr link1 = b1.GetLinkBetween(Position(1, 1), Position(2, 3));
+    ILinkPtr link2 = b1.GetLinkBetween(Position(2, 3), Position(3, 5));
+    ILinkPtr link3 = b1.GetLinkBetween(Position(3, 5), Position(4, 7));
 
-    EXPECT_EQ(b1.GetLinks().size(), 3);
+    EXPECT_EQ(link1, b1.GetLinkBetween(Position(1, 1), Position(2, 3)));
+    EXPECT_EQ(link2, b1.GetLinkBetween(Position(2, 3), Position(3, 5)));
+    EXPECT_EQ(link3, b1.GetLinkBetween(Position(3, 5), Position(4, 7)));
 }
 
 TEST_F(BoardTest, TestFunctionGetLinkBetween)
