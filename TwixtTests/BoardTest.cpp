@@ -293,3 +293,4 @@ TEST_F(BoardTest, TestLinkOperators)
     EXPECT_EQ(link1.GetColor(), EColor::Black);
 	
 }
+

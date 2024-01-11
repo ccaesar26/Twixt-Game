@@ -146,6 +146,7 @@
     <ClCompile Include="BoardTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PegTest.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
