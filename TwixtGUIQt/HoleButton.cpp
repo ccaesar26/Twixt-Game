@@ -97,7 +97,7 @@ void HoleButton::UpdatePeg()
 
 	if (m_isSelected)
 	{
-		path += "_selected";
+		path += "_pressed";
 	}
 
 	path += ".png";
