@@ -39,6 +39,7 @@ public slots:
 	void OnEndTurnButtonClicked();
 
 	void OnHoleButtonClicked(const Position& pos);
+    void OnHoleButtonRightClicked(const Position& pos);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
@@ -50,6 +51,7 @@ private:
     void OnGameOver(const EGameResult& result) override;
     void OnGameRestarted() override;
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
+    void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
 
     // UI initializations
     void InitializeTitleLabel();

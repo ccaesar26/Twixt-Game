@@ -4,6 +4,10 @@
 #include <QPen>
 #include <QSizePolicy>
 #include <QFileDialog>
+#include <QApplication>
+
+#include <algorithm>
+#include <ranges>
 
 #include "GameException.h"
 
@@ -157,6 +161,40 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	}
 }
 
+void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+
+	try
+	{
+		m_clickCount++;
+		
+		if (m_clickCount == 2)
+		{
+			m_firstClick = pos;
+		}
+		else if (m_clickCount == 3)
+		{
+			m_secondClick = pos;
+
+			m_gameLogic->RemoveLink(m_firstClick, m_secondClick);
+
+			m_clickCount = 1;
+		}
+	}
+	catch (const GameException&)
+	{
+		m_clickCount = 1;
+	}
+	catch (...)
+	{
+		throw std::runtime_error("Unknown exception");
+	}
+}
+
 void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 {
 	MapCoordinates();
@@ -168,45 +206,47 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	QPainter painter{this};
 
 	auto colorConverter = [](const EColor color) -> QColor
+	{
+		switch (color)
 		{
-			switch (color)
-			{
-			case EColor::Red:
-				return Qt::red;
-			case EColor::Black:
-				return Qt::black;
-			default:
-				return Qt::white;
-			}
-		};
+		case EColor::Red:
+			return Qt::red;
+		case EColor::Black:
+			return Qt::black;
+		default:
+			return Qt::white;
+		}
+	};
 
 	const auto& board = m_board;
 	auto getLines = [board]() -> QVector<QPair<QLine, QColor>>
-		{
-			QVector<QPair<QLine, QColor>> lines{};
+	{
+		QVector<QPair<QLine, QColor>> lines{};
 
-			const auto& size = board.size();
+		const auto& size = board.size();
 
-			const auto upperLeftRed = (board[0][1]->GetCenter() + board[1][1]->GetCenter()) / 2;
-			const auto upperRightRed= (board[0][size - 2]->GetCenter() + board[1][size - 2]->GetCenter()) / 2;
+		const auto upperLeftRed = (board[0][1]->GetCenter() + board[1][1]->GetCenter()) / 2;
+		const auto upperRightRed = (board[0][size - 2]->GetCenter() + board[1][size - 2]->GetCenter()) / 2;
 
-			const auto lowerLeftRed = (board[size - 2][1]->GetCenter() + board[size - 1][1]->GetCenter()) / 2;
-			const auto lowerRightRed = (board[size - 2][size - 2]->GetCenter() + board[size - 1][size - 2]->GetCenter()) / 2;
+		const auto lowerLeftRed = (board[size - 2][1]->GetCenter() + board[size - 1][1]->GetCenter()) / 2;
+		const auto lowerRightRed = (board[size - 2][size - 2]->GetCenter() + board[size - 1][size - 2]->GetCenter()) /
+			2;
 
-			lines.emplaceBack(QLine{ upperLeftRed, upperRightRed }, Qt::red);
-			lines.emplaceBack(QLine{lowerLeftRed, lowerRightRed}, Qt::red);
+		lines.emplaceBack(QLine{upperLeftRed, upperRightRed}, Qt::red);
+		lines.emplaceBack(QLine{lowerLeftRed, lowerRightRed}, Qt::red);
 
-			const auto upperLeftBlack = (board[1][0]->GetCenter() + board[1][1]->GetCenter()) / 2;
-			const auto upperRightBlack = (board[1][size - 2]->GetCenter() + board[1][size - 1]->GetCenter()) / 2;
+		const auto upperLeftBlack = (board[1][0]->GetCenter() + board[1][1]->GetCenter()) / 2;
+		const auto upperRightBlack = (board[1][size - 2]->GetCenter() + board[1][size - 1]->GetCenter()) / 2;
 
-			const auto lowerLeftBlack = (board[size - 2][0]->GetCenter() + board[size - 2][1]->GetCenter()) / 2;
-			const auto lowerRightBlack = (board[size - 2][size - 2]->GetCenter() + board[size - 2][size - 1]->GetCenter()) / 2;
+		const auto lowerLeftBlack = (board[size - 2][0]->GetCenter() + board[size - 2][1]->GetCenter()) / 2;
+		const auto lowerRightBlack = (board[size - 2][size - 2]->GetCenter() + board[size - 2][size - 1]->GetCenter()) /
+			2;
 
-			lines.emplaceBack(QLine{upperLeftBlack, lowerLeftBlack }, Qt::black);
-			lines.emplaceBack(QLine{upperRightBlack, lowerRightBlack}, Qt::black);
+		lines.emplaceBack(QLine{upperLeftBlack, lowerLeftBlack}, Qt::black);
+		lines.emplaceBack(QLine{upperRightBlack, lowerRightBlack}, Qt::black);
 
-			return lines;
-		};
+		return lines;
+	};
 
 	for (const auto& [line, color] : getLines())
 	{
@@ -239,7 +279,25 @@ void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 	const QPoint center1 = m_board[pos1.row][pos1.col]->GetCenter();
 	const QPoint center2 = m_board[pos2.row][pos2.col]->GetCenter();
 
-	m_links.emplaceBack(QLine{ center1, center2 }, m_gameLogic->GetCurrentPlayerColor());
+	m_links.emplaceBack(QLine{center1, center2}, m_gameLogic->GetCurrentPlayerColor());
+
+	update();
+}
+
+void TwixtGUIQt::OnLinkRemoved(const Position& pos1, const Position& pos2)
+{
+	const QPoint center1 = m_board[pos1.row][pos1.col]->GetCenter();
+	const QPoint center2 = m_board[pos2.row][pos2.col]->GetCenter();
+
+	auto predicate = [center1, center2](const auto& link)
+	{
+		const QLine& line = link.first;
+		return (line.p1() == center1 && line.p2() == center2) ||
+			(line.p1() == center2 && line.p2() == center1);
+	};
+
+	const auto it = std::remove_if(m_links.begin(), m_links.end(), predicate);
+	m_links.erase(it, m_links.end());
 
 	update();
 }
@@ -353,6 +411,7 @@ void TwixtGUIQt::InitializeBoard()
 				m_board[i][j]->UpdatePeg();
 			}
 			connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
+			connect(m_board[i][j].data(), &HoleButton::RightClicked, this, &TwixtGUIQt::OnHoleButtonRightClicked);
 		}
 	}
 

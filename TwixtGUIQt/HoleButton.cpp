@@ -1,5 +1,7 @@
 #include "HoleButton.h"
 
+#include <QMouseEvent>
+
 namespace
 {
 	QString ColorToString(const EColor color)
@@ -58,9 +60,21 @@ QPoint HoleButton::GetCenter() const
 void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
+
 	if (isEnabled())
 	{
-		emit Clicked(m_position);
+		if (event->button() == Qt::RightButton)
+		{
+			// Handle right-click event here
+			// For example, show a context menu or perform a specific action
+
+			// Emit a signal or perform any other action you need
+			emit RightClicked(m_position);
+		}
+		else
+		{
+			emit Clicked(m_position);
+		}
 	}
 }
 

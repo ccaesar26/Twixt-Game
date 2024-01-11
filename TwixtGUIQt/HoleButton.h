@@ -1,5 +1,5 @@
 #pragma once
-#include <qpushbutton.h>
+#include <QPushButton>
 
 #include "EColor.h"
 #include "Position.h"
@@ -24,13 +24,14 @@ public:
 
     void SetCenter(const QPoint& center);
     QPoint GetCenter() const;
-	
+
     void mouseReleaseEvent(QMouseEvent* event) override;
 
     void UpdatePeg();
 
 signals:
     void Clicked(const Position& position);
+    void RightClicked(Position position);
 
 private:
     Position m_position;
