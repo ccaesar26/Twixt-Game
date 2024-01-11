@@ -198,3 +198,34 @@ TEST_F(BoardTest, TestLinkIntersection)
     EXPECT_THROW(b1.LinkPieces(Position(1, 4), Position(2, 2)), GameException);
 }
 
+
+TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement2)
+{
+    b1.PlacePiece(Position(0, 1), EColor::Black);
+    b1.PlacePiece(Position(2, 2), EColor::Black);
+    b1.PlacePiece(Position(4, 1), EColor::Black);
+    b1.PlacePiece(Position(6, 2), EColor::Black);
+    b1.PlacePiece(Position(8, 1), EColor::Black);
+    b1.PlacePiece(Position(10, 2), EColor::Black);
+    b1.PlacePiece(Position(12, 1), EColor::Black);
+    b1.PlacePiece(Position(14, 2), EColor::Black);
+    b1.PlacePiece(Position(16, 1), EColor::Black);
+    b1.PlacePiece(Position(18, 2), EColor::Black);
+    b1.PlacePiece(Position(20, 1), EColor::Black);
+    b1.PlacePiece(Position(22, 2), EColor::Black);
+    b1.PlacePiece(Position(23, 0), EColor::Black);
+    b1.LinkPieces(Position(0, 1), Position(2, 2));
+    b1.LinkPieces(Position(2, 2), Position(4, 1));
+    b1.LinkPieces(Position(4, 1), Position(6, 2));
+    b1.LinkPieces(Position(6, 2), Position(8, 1));
+    b1.LinkPieces(Position(8, 1), Position(10, 2));
+    b1.LinkPieces(Position(10, 2), Position(12, 1));
+    b1.LinkPieces(Position(12, 1), Position(14, 2));
+    b1.LinkPieces(Position(14, 2), Position(16, 1));
+    b1.LinkPieces(Position(16, 1), Position(18, 2));
+    b1.LinkPieces(Position(18, 2), Position(20, 1));
+    b1.LinkPieces(Position(20, 1), Position(22, 2));
+    b1.LinkPieces(Position(22, 2), Position(23, 0));
+	ILinkPtr link = b1.GetLinkBetween(Position(22, 2), Position(23, 0));
+	EXPECT_EQ(b1.CheckIfWinningPlacement(link), true);
+}
