@@ -36,7 +36,7 @@ public slots:
 	//void OnPlaceBridgeButtonClicked();
 	//void OnRemoveBridgeButtonClicked();
 	//void OnRequestDrawButtonClicked();
-	//void OnEndTurnButtonClicked();
+	void OnEndTurnButtonClicked();
 
 	void OnHoleButtonClicked(const Position& pos);
 
@@ -57,6 +57,9 @@ private:
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
     void InitializeBoard();
+
+    // UI Update methods
+    void UpdateCurrentPlayerLabel();
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
