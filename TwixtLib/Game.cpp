@@ -48,6 +48,7 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 	}
 
 	m_board->UnlinkPieces(pos1, pos2);
+	NotifyLinkRemoved(pos1, pos2);
 }
 
 void Game::Reset()
@@ -97,7 +98,7 @@ void Game::NotifyGameOver(EGameResult gameResult) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto sp = it->lock())
+		if (const auto& sp = it->lock())
 		{
 			sp->OnGameOver(gameResult);
 		}
@@ -108,7 +109,7 @@ void Game::NotifyGameRestarted() const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto sp = it->lock())
+		if (const auto& sp = it->lock())
 		{
 			sp->OnGameRestarted();
 		}
@@ -159,7 +160,7 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto sp& = it->lock())
+		if (const auto& sp = it->lock())
 		{
 			sp->OnPiecePlaced(pos);
 		}
@@ -170,7 +171,7 @@ void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto sp& = it->lock()){
+		if (const auto& sp = it->lock()){
 			sp->OnLinkPlaced(pos1, pos2);
 		}
 	}
@@ -180,7 +181,7 @@ void Game::NotifyLinkRemoved(const Position& pos1, const Position& pos2) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto sp& = it->lock())
+		if (const auto& sp = it->lock())
 		{
 			sp->OnLinkRemoved(pos1, pos2);
 		}
@@ -225,7 +226,7 @@ void Game::RemoveListener(IGameListener* listener)
 {
 	auto f = [listener](const IGameListenerWeakPtr& weak)
 	{
-		const auto sp = weak.lock();
+		const auto& sp = weak.lock();
 		return !sp || sp.get() == listener;
 	};
 
