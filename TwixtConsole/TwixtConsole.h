@@ -14,6 +14,7 @@ public:
 	virtual void OnPiecePlaced(const Position& pos) override;
 	virtual void OnGameOver(const EGameResult& result) override;
 	virtual void OnGameRestarted() override;
+	virtual void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
 	void printBoard();
 	void PlacePiece(Position& pos);
 	void PlaceBridge(Position& pos1, Position& pos2);

@@ -69,6 +69,10 @@ void TwixtConsole::OnGameRestarted()
 	printHelperMenu();
 }
 
+void TwixtConsole::OnLinkPlaced(const Position& pos1, const Position& pos2)
+{
+}
+
 void TwixtConsole::printBoard()
 {
 	for (size_t i = 0; i < 24; i++)

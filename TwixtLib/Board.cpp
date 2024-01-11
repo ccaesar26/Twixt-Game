@@ -163,6 +163,22 @@ void Board::PlacePiece(const Position pos, const EColor color)
 	{
 		throw GameException("Position is already occupied");
 	}
+	
+	if ((pos.row == 0 && pos.col == 0) || (pos.row == 0 && pos.col == m_size - 1) || (pos.row == m_size - 1 && pos.col == 0) || (pos.row == m_size - 1 && pos.col == m_size - 1))
+	{
+		throw GameException("Invalid position");
+	}
+	
+	if ((pos.row == 0 || pos.row == m_size - 1) && color == EColor::Black)
+	{
+		throw GameException("Invalid position");
+	}
+	
+	if ((pos.col == 0 || pos.col == m_size - 1) && color == EColor::Red)
+	{
+		throw GameException("Invalid position");
+	}
+
 	m_board[pos.row][pos.col] = IPiece::Produce(color, pos);
 }
 

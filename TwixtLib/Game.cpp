@@ -180,10 +180,10 @@ void Game::SwitchTurn()
 void Game::InitializeGame()
 {
 	m_board = IBoard::CreateBoard();
-	m_turn = EColor::Black;
+	m_turn = EColor::Red;
 	m_state = EGameState::Playing;
-	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
-	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
 }
 
 void Game::InitializeGame(const std::string& config)
@@ -200,8 +200,8 @@ void Game::InitializeGame(const std::string& config)
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
-	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
-	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
 }
 
 Game::Game()
