@@ -47,4 +47,5 @@ public:
 	void NotifyGameRestarted() const;
 	bool IsFileValid(const std::string& fileName) const override;
 	bool RegexValidate(const std::string& fileName) const override;
+	
 };

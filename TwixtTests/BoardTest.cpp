@@ -126,7 +126,7 @@ TEST_F(BoardTest, TestFunctionCheckPathToRows)
     b1.PlacePiece(Position(6, 8), EColor::Red);
     b1.LinkPieces(Position(4, 4), Position(5, 6));
     b1.LinkPieces(Position(5, 6), Position(6, 8));
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 5, 6), true);
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 8), true);
     EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 9), false);
     EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 3, 8), false);
 

@@ -8,4 +8,11 @@ TEST(GameTest, GameCreation)
 
 	EXPECT_EQ(game==NULL,false );
 }
+
+TEST(GameTest, GameFirstTurn)
+{
+	std::shared_ptr game = IGame::CreateGame();
+	EXPECT_EQ(game->GetCurrentPlayerColor(), EColor::Black);
+	
+}
 	
