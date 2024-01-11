@@ -56,9 +56,9 @@ void Game::Reset()
 	NotifyGameRestarted();
 }
 
-void Game::Restore(const std::string& config)
+void Game::Restore(const std::string& boardString, const std::string& turn, const std::string& state)
 {
-	InitializeGame(config);
+	InitializeGame(boardString, turn, state);
 }
 
 bool Game::IsDraw() const
@@ -79,9 +79,13 @@ void Game::LoadFromFile(const std::string& fileName)
 		throw GameException("Could not open file");
 	}
 
-	std::string config;
-	std::getline(file, config);
-	InitializeGame(config);
+	std::string boardString;
+	std::string turn;
+	std::string state;
+	std::getline(file, boardString);
+	std::getline(file, turn);
+	std::getline(file, state);
+	InitializeGame(boardString, turn, state);
 }
 
 bool Game::IsGameOver() const
@@ -146,7 +150,7 @@ void Game::SaveToFile(const std::string& fileName) const
 	}
 
 	file << m_board->ToString();
-	file<<"\n";
+	file << "\n";
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
 }
@@ -187,20 +191,11 @@ void Game::InitializeGame()
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
 }
 
-void Game::InitializeGame(const std::string& config)
+void Game::InitializeGame(const std::string& boardString, const std::string& turn, const std::string& state)
 {
-	std::string boardString;
-	size_t pos = 0;
-	while (config[pos] != '\n')
-	{
-		boardString += config[pos];
-		pos++;
-	}
-	pos++;
 	m_board = IBoard::CreateBoard(boardString);
-	m_turn = static_cast<EColor>(config[pos] - '0');
-	pos += 2;
-	m_state = static_cast<EGameState>(config[pos] - '0');
+	m_turn = static_cast<EColor>(turn[0] - '0');
+	m_state = static_cast<EGameState>(state[0] - '0');
 	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
 }
