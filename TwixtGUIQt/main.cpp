@@ -15,5 +15,7 @@ int main(int argc, char *argv[])
 
     w->show();
 
+    w->MapCoordinates();
+
     return QApplication::exec();
 }

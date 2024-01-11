@@ -16,25 +16,44 @@ void Game::PlacePiece(const Position& pos)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board.PlacePiece(pos, m_turn);
+	m_board->PlacePiece(pos, m_turn);
 	NotifyPiecePlaced(pos);
+}
 
-	if (m_board.CheckIfWinningPlacement(pos, m_turn))
+void Game::CreateLink(const Position& pos1, const Position& pos2)
+{
+	if (m_state != EGameState::Playing)
 	{
-		if (m_turn == EColor::Black)
-		{
-			NotifyGameOver(EGameResult::BlackWinner);
-		}
-		else if (m_turn == EColor::Red)
-		{
-			NotifyGameOver(EGameResult::RedWinner);
-		}
+		throw InvalidStateException("Game is not playing");
 	}
-	
+
+	m_board->LinkPieces(pos1, pos2);
+	NotifyPiecesLinked(pos1, pos2);
+
+	ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
+
+	if (m_board->CheckIfWinningPlacement(link))
+	{
+		EColor winnerColor = link->GetColor();
+		EGameResult gameResult = winnerColor == EColor::Black ? EGameResult::BlackWinner : EGameResult::RedWinner;
+		NotifyGameOver(gameResult);
+	}
+}
+
+void Game::RemoveLink(const Position& pos1, const Position& pos2)
+{
+	if (m_state != EGameState::Playing)
+	{
+		throw InvalidStateException("Game is not playing");
+	}
+
+	m_board->UnlinkPieces(pos1, pos2);
 }
 
 void Game::Reset()
 {
+	InitializeGame();
+	NotifyGameRestarted();
 }
 
 void Game::Restore(const std::string& config)
@@ -126,7 +145,7 @@ void Game::SaveToFile(const std::string& fileName) const
 		throw std::runtime_error("Failed to open file");
 	}
 
-	file << m_board.ToString();
+	file << m_board->ToString();
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
 }
@@ -142,23 +161,29 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 	}
 }
 
+void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (auto sp = it->lock()){
+			sp->OnLinkPlaced(pos1, pos2);
+		}
+	}
+}
+
 //switch the current player pointer to the other player
 void Game::SwitchTurn()
 {
 	m_turn = (m_turn == EColor::Black) ? EColor::Red : EColor::Black;
-	
-	std::swap(m_currentPlayer, m_nextPlayer);
 }
 
 void Game::InitializeGame()
 {
-	m_board = Board();
+	m_board = IBoard::CreateBoard();
 	m_turn = EColor::Black;
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
 	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
-	m_currentPlayer = m_player1.get();
-	m_nextPlayer = m_player2.get();
 }
 
 void Game::InitializeGame(const std::string& config)
@@ -171,14 +196,12 @@ void Game::InitializeGame(const std::string& config)
 		pos++;
 	}
 	pos++;
-	m_board = Board(boardString);
+	m_board = IBoard::CreateBoard(boardString);
 	m_turn = static_cast<EColor>(config[pos] - '0');
 	pos += 2;
 	m_state = static_cast<EGameState>(config[pos] - '0');
 	m_player1 = IPlayer::CreatePlayer(EColor::Black, "Player 1", m_board);
 	m_player2 = IPlayer::CreatePlayer(EColor::Red, "Player 2", m_board);
-	m_currentPlayer = (m_turn == EColor::Black) ? m_player1.get() : m_player2.get();
-	m_nextPlayer = (m_turn == EColor::Black) ? m_player2.get() : m_player1.get();
 }
 
 Game::Game()
@@ -203,26 +226,6 @@ void Game::RemoveListener(IGameListener* listener)
 	std::erase_if(m_listeners, f);
 }
 
-IPlayer* Game::GetPlayer1() const
-{
-	return m_player1.get();
-}
-
-IPlayer* Game::GetPlayer2() const
-{
-	return m_player2.get();
-}
-
-IPlayer* Game::GetCurrentPlayerPtr() const
-{
-	return m_currentPlayer;
-}
-
-IPlayer* Game::GetNextPlayerPtr() const
-{
-	return m_nextPlayer;
-}
-
 EColor Game::GetCurrentPlayerColor() const
 {
 	return m_turn;
@@ -230,5 +233,5 @@ EColor Game::GetCurrentPlayerColor() const
 
 IPiecePtr Game::GetPiecePtr(const Position& pos) const
 {
-	return m_board.At(pos);
+	return m_board->At(pos);
 }

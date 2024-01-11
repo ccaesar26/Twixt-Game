@@ -20,6 +20,8 @@ public:
 	
     void PlacePeg(EColor color);
     std::optional<EColor> GetColor() const;
+
+    void SetCenter(const QPoint& center);
 	
     void mouseReleaseEvent(QMouseEvent* event) override;
 
@@ -31,5 +33,6 @@ signals:
 private:
     Position m_position;
     std::optional<EColor> m_color;
+    QPoint m_center;
 };
 

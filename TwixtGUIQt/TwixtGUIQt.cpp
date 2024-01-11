@@ -33,6 +33,32 @@ void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
 	m_gameLogic = std::move(gameLogic);
 }
 
+void TwixtGUIQt::MapCoordinates()
+{
+    for (int i = 0; i < m_board.size(); ++i) 
+    {
+        for (int j = 0; j < m_board.size(); ++j)
+        {
+            if (i == 0 && j == 0 || i == m_board.size() - 1 && j == 0 
+                || i == 0 && j == m_board.size() - 1 || i == m_board.size() - 1 && j == m_board.size() - 1)
+			{
+				continue;
+			}
+
+            QPoint centerLocal = m_board[i][j]->rect().center();
+            QPoint centerGlobal = m_board[i][j]->mapToGlobal(centerLocal);
+
+            m_board[i][j]->SetCenter(centerGlobal);
+        }
+    }
+}
+
+void TwixtGUIQt::resizeEvent(QResizeEvent* event)
+{
+    MapCoordinates();
+	QMainWindow::resizeEvent(event);
+}
+
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 }
@@ -42,6 +68,10 @@ void TwixtGUIQt::OnGameOver(const EGameResult& result)
 }
 
 void TwixtGUIQt::OnGameRestarted()
+{
+}
+
+void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 {
 }
 

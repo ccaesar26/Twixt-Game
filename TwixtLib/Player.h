@@ -7,14 +7,14 @@ class Player final :
 {
 private:
 	std::vector<IPiecePtr> m_pegs;
-	std::vector<std::reference_wrapper<ILink>> m_links;
+	std::vector<ILinkWeakPtr> m_links;
 	EColor m_color;
 	std::string m_name;
-	IBoard& m_board;
+	IBoardWeakPtr m_board;
 public:
-	explicit Player(EColor color, std::string name, IBoard& board);
+	explicit Player(EColor color, std::string name, IBoardWeakPtr board);
 	[[nodiscard]] std::vector<IPiecePtr> GetPegs() const override;
-	[[nodiscard]] std::vector<std::reference_wrapper<ILink>> GetLinks() const override;
+	[[nodiscard]] std::vector<ILinkWeakPtr> GetLinks() const override;
 	[[nodiscard]] EColor GetColor() const override;
 	[[nodiscard]] std::string GetName() const override;
 	void AddPeg(Position pos);

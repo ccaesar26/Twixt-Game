@@ -9,6 +9,16 @@ IBoardPtr IBoard::CreateBoard()
 	return std::make_shared<Board>();
 }
 
+IBoardPtr IBoard::CreateBoard(int size)
+{
+	return std::make_shared<Board>(size);
+}
+
+IBoardPtr IBoard::CreateBoard(const std::string& config)
+{
+	return std::make_shared<Board>(config);
+}
+
 Board::Board(const int size) : m_size(size)
 {
 	m_board.resize(m_size);
@@ -167,7 +177,7 @@ bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position&
 
 void Board::LinkPieces(Position pos1, Position pos2)
 {
-if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
+	if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	{
 		throw GameException("Invalid position");
 	}
@@ -187,7 +197,7 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	}
 
 	//check if the two positions have pieces of a different color
-	if(m_board[pos1.row][pos1.col]->GetColor() != m_board[pos2.row][pos2.col]->GetColor())
+	if (m_board[pos1.row][pos1.col]->GetColor() != m_board[pos2.row][pos2.col]->GetColor())
 	{
 		throw GameException("Differently colored pieces");
 	}
@@ -195,13 +205,17 @@ if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	//check if the two positions are blocked by another link in the links vector
 	for (const auto& link : m_links)
 	{
-		if (DoSegmentsIntersect(pos1, pos2, link.GetPiece1()->GetPosition(), link.GetPiece2()->GetPosition()))
+		if (DoSegmentsIntersect(pos1, pos2, link->GetPiece1()->GetPosition(), link->GetPiece2()->GetPosition()))
 		{
 			throw GameException("Overlapping link");
 		}
 	}
 
-	AddLink(Link(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], m_board[pos1.row][pos1.col]->GetColor()));
+	EColor color = m_board[pos1.row][pos1.col]->GetColor();
+
+	ILinkPtr link = ILink::Produce(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], color);
+
+	AddLink(link);
 
 	m_board[pos1.row][pos1.col]->AddNeighbor(m_board[pos2.row][pos2.col]);
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
@@ -230,7 +244,7 @@ bool Board::IsPositionValid(const Position& pos) const
 	return pos.row >= 0 && pos.row < m_size && pos.col >= 0 && pos.col < m_size;
 }
 
-bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLowerRow) const
+bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const
 {
 	if (!IsPositionValid(pos)) {
 		return false;
@@ -275,7 +289,7 @@ bool Board::CheckPathToRows(const Position pos, int targetUpperRow, int targetLo
 	return foundUpperRow && foundLowerRow;
 }
 
-bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRightCol) const
+bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const
 {
 	if (!IsPositionValid(pos)){
 		return false;
@@ -320,17 +334,12 @@ bool Board::CheckPathToCols(const Position pos, int targetLeftCol, int targetRig
 	return foundLeftCol && foundRightCol;
 }
 
-const std::vector<Link>& Board::GetLinks() const
-{
-	return m_links;
-}
-
-Link& Board::GetLinkBetween(Position pos1, Position pos2)
+ILinkPtr& Board::GetLinkBetween(Position pos1, Position pos2)
 {
 	for (auto& link : m_links)
 	{
-		if ((link.GetPiece1()->GetPosition() == pos1 && link.GetPiece2()->GetPosition() == pos2) ||
-		(link.GetPiece1()->GetPosition() == pos2 && link.GetPiece2()->GetPosition() == pos1))
+		if ((link->GetPiece1()->GetPosition() == pos1 && link->GetPiece2()->GetPosition() == pos2) ||
+		(link->GetPiece1()->GetPosition() == pos2 && link->GetPiece2()->GetPosition() == pos1))
 		{
 			return link;
 		}
@@ -338,12 +347,12 @@ Link& Board::GetLinkBetween(Position pos1, Position pos2)
 	throw GameException("No link between the two pieces");
 }
 
-void Board::AddLink(const Link& link)
+void Board::AddLink(const ILinkPtr& link)
 {
 	m_links.push_back(link);
 }
 
-void Board::RemoveLink(const Link& link)
+void Board::RemoveLink(const ILinkPtr& link)
 {
 	for (auto it = m_links.begin(); it != m_links.end(); ++it)
 	{
@@ -356,7 +365,20 @@ void Board::RemoveLink(const Link& link)
 	throw GameException("Link not found");
 }
 
-bool Board::CheckIfWinningPlacement(Position pos, EColor currentPlayer) const
+bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 {
+	IPiecePtr piece = link->GetPiece1();
+	EColor color = piece->GetColor();
+
+	if (color == EColor::Red)
+	{
+		return CheckPathToRows(piece->GetPosition(), 0, m_size - 1);
+	}
+
+	if (color == EColor::Black) 
+	{
+		return CheckPathToCols(piece->GetPosition(), 0, m_size - 1);
+	}
+	
 	return false;
 }

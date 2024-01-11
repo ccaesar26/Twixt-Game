@@ -7,14 +7,16 @@
 #include <string>
 
 using IPlayerPtr = std::unique_ptr<class IPlayer>;
+using ILinkWeakPtr = std::weak_ptr<ILink>;
+using IBoardWeakPtr = std::weak_ptr<IBoard>;
 
 class IPlayer
 {
 public:
 	virtual ~IPlayer() = default;
-	static IPlayerPtr CreatePlayer(EColor color, std::string name, IBoard& board);
+	static IPlayerPtr CreatePlayer(EColor color, std::string name, IBoardWeakPtr board);
 	[[nodiscard]] virtual std::vector<IPiecePtr> GetPegs() const = 0;
-	[[nodiscard]] virtual std::vector<std::reference_wrapper<ILink>> GetLinks() const = 0;
+	[[nodiscard]] virtual std::vector<ILinkWeakPtr> GetLinks() const = 0;
 	[[nodiscard]] virtual EColor GetColor() const = 0;
 	[[nodiscard]] virtual std::string GetName() const = 0;
 };
