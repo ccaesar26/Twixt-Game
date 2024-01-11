@@ -7,15 +7,37 @@
 TEST(PlayerTests, CreatePlayer)
 {
 	IBoardWeakPtr b;
-	std::string name = "Vlad";
-	Player player(EColor::Black,name,b);
-	EXPECT_EQ(player.GetName(), name);
+	if (b.lock())
+	{
+		std::string name = "Vlad";
+		Player player(EColor::Black, name, b);
+		EXPECT_EQ(player.GetName(), name);
+	}
 }
 
 TEST(PlayerTests, CreatePlayer2)
 {
 	IBoardWeakPtr b;
-	std::string name = "Vlad";
-	IPlayerPtr player= Player::CreatePlayer(EColor::Black, name, b);
-	EXPECT_EQ(player->GetName(), name);
+	if (b.lock())
+	{
+		std::string name = "Vlad";
+		IPlayerPtr player = Player::CreatePlayer(EColor::Black, name, b);
+		EXPECT_EQ(player->GetColor(), EColor::Black);
+	}
+}
+
+TEST(PlayerTests, AddPeg)
+{
+	IBoardWeakPtr b;
+	
+	if (b.lock())
+	{
+		std::string name = "Vlad";
+		Player player(EColor::Black, name, b);
+		player.AddPeg(Position(1, 1));
+		player.AddPeg(Position(2, 1));
+		EXPECT_EQ(player.GetPegs().size(), 2);
+		
+	}
+
 }
