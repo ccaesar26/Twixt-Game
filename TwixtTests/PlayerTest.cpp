@@ -6,7 +6,10 @@
 
 TEST(PlayerTests, CreatePlayer)
 {
+
 	IBoardWeakPtr b;
+	IBoardPtr b1 = IBoard::CreateBoard();
+	b = b1;
 	if (b.lock())
 	{
 		std::string name = "Vlad";
@@ -18,6 +21,8 @@ TEST(PlayerTests, CreatePlayer)
 TEST(PlayerTests, CreatePlayer2)
 {
 	IBoardWeakPtr b;
+	IBoardPtr b1 = IBoard::CreateBoard();
+	b = b1;
 	if (b.lock())
 	{
 		std::string name = "Vlad";
@@ -29,7 +34,8 @@ TEST(PlayerTests, CreatePlayer2)
 TEST(PlayerTests, AddPeg)
 {
 	IBoardWeakPtr b;
-	
+	IBoardPtr b1 = IBoard::CreateBoard();
+	b = b1;
 	if (b.lock())
 	{
 		std::string name = "Vlad";
@@ -42,7 +48,9 @@ TEST(PlayerTests, AddPeg)
 
 TEST(PlayerTests, AddLink)
 {
-		IBoardWeakPtr b;
+	IBoardWeakPtr b;
+	IBoardPtr b1 = IBoard::CreateBoard();
+	b = b1;
 		if (b.lock())
 		{
 		std::string name = "Vlad";
@@ -57,6 +65,8 @@ TEST(PlayerTests, AddLink)
 TEST(PlayerTests, RemoveLink)
 {
 	IBoardWeakPtr b;
+	IBoardPtr b1 = IBoard::CreateBoard();
+	b = b1;
 	if (b.lock())
 	{
 		std::string name = "Vlad";
