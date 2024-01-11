@@ -42,6 +42,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 
 private:
     // IGameListener overrides
@@ -85,6 +86,8 @@ private:
     QVector<QVector<QSharedPointer<HoleButton>>> m_board;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
+
+    QVector<QLine> m_links;
 
     std::shared_ptr<IGame> m_gameLogic;
 

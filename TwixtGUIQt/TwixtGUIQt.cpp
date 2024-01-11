@@ -1,5 +1,9 @@
 #include "TwixtGUIQt.h"
 
+#include <QPainter>
+#include <QPen>
+#include <QSizePolicy>
+
 #include "GameException.h"
 
 namespace
@@ -38,6 +42,8 @@ TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	// Note: QMainWindow takes ownership of the widget pointer and deletes it at the appropriate time.
 	// See https://doc.qt.io/qt-6/qmainwindow.html#setCentralWidget
 	this->setCentralWidget(mainWidget);
+
+	this->setFixedSize(mainWidget->sizeHint());
 }
 
 void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
@@ -47,6 +53,7 @@ void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
 
 void TwixtGUIQt::MapCoordinates()
 {
+	QPoint topLeft = m_boardContainer->pos();
 	for (int i = 0; i < m_board.size(); ++i)
 	{
 		for (int j = 0; j < m_board.size(); ++j)
@@ -57,10 +64,12 @@ void TwixtGUIQt::MapCoordinates()
 				continue;
 			}
 
-			QPoint centerLocal = m_board[i][j]->rect().center();
-			QPoint centerGlobal = m_board[i][j]->mapToGlobal(centerLocal);
+			QPoint pos = m_board[i][j]->pos();
 
-			m_board[i][j]->SetCenter(centerGlobal);
+			pos.setX(pos.x() + topLeft.x() + 9);
+			pos.setY(pos.y() + topLeft.y() + 9);
+
+			m_board[i][j]->SetCenter(pos);
 		}
 	}
 }
@@ -125,6 +134,17 @@ void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 	QMainWindow::resizeEvent(event);
 }
 
+void TwixtGUIQt::paintEvent(QPaintEvent* event)
+{
+	QPainter painter{ this };
+	painter.setPen(QPen(Qt::black, 8));
+
+	for (const auto& line : m_links)
+	{
+		painter.drawLine(line);
+	}
+}
+
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 	m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());
@@ -140,6 +160,12 @@ void TwixtGUIQt::OnGameRestarted()
 
 void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 {
+	const QPoint center1 = m_board[pos1.row][pos1.col]->GetCenter();
+	const QPoint center2 = m_board[pos2.row][pos2.col]->GetCenter();
+
+	m_links.emplaceBack(center1, center2);
+
+	update();
 }
 
 void TwixtGUIQt::InitializeTitleLabel()
@@ -246,14 +272,14 @@ void TwixtGUIQt::InitializeBoard()
 			else
 			{
 				m_board[i][j] = QSharedPointer<HoleButton>::create(Position{i, j});
-				//m_board[i][j] = QSharedPointer<HoleButton>{ new HoleButton{ Position{i, j} } };
-				//m_board[i][j] = new HoleButton{ Position{i, j} };
 				m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
 				m_board[i][j]->UpdatePeg();
 			}
 			connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
 		}
 	}
+
+	//m_boardContainer->setFixedSize(760, 760);
 
 	m_boardContainer->setLayout(m_boardContainerLayout.data());
 	m_mainGridLayout->addWidget(m_boardContainer.data(), 0, 1, 4, 1);
