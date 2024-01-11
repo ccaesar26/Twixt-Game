@@ -139,17 +139,51 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	QPainter painter{this};
 
 	auto colorConverter = [](const EColor color) -> QColor
-	{
-		switch (color)
 		{
-		case EColor::Red:
-			return Qt::red;
-		case EColor::Black:
-			return Qt::black;
-		default:
-			return Qt::white;
-		}
-	};
+			switch (color)
+			{
+			case EColor::Red:
+				return Qt::red;
+			case EColor::Black:
+				return Qt::black;
+			default:
+				return Qt::white;
+			}
+		};
+
+	const auto& board = m_board;
+	auto getLines = [board]() -> QVector<QPair<QLine, QColor>>
+		{
+			QVector<QPair<QLine, QColor>> lines{};
+
+			const auto& size = board.size();
+
+			const auto upperLeftRed = (board[0][1]->GetCenter() + board[1][1]->GetCenter()) / 2;
+			const auto upperRightRed= (board[0][size - 2]->GetCenter() + board[1][size - 2]->GetCenter()) / 2;
+
+			const auto lowerLeftRed = (board[size - 2][1]->GetCenter() + board[size - 1][1]->GetCenter()) / 2;
+			const auto lowerRightRed = (board[size - 2][size - 2]->GetCenter() + board[size - 1][size - 2]->GetCenter()) / 2;
+
+			lines.emplaceBack(QLine{ upperLeftRed, upperRightRed }, Qt::red);
+			lines.emplaceBack(QLine{lowerLeftRed, lowerRightRed}, Qt::red);
+
+			const auto upperLeftBlack = (board[1][0]->GetCenter() + board[1][1]->GetCenter()) / 2;
+			const auto upperRightBlack = (board[1][size - 2]->GetCenter() + board[1][size - 1]->GetCenter()) / 2;
+
+			const auto lowerLeftBlack = (board[size - 2][0]->GetCenter() + board[size - 2][1]->GetCenter()) / 2;
+			const auto lowerRightBlack = (board[size - 2][size - 2]->GetCenter() + board[size - 2][size - 1]->GetCenter()) / 2;
+
+			lines.emplaceBack(QLine{upperLeftBlack, lowerLeftBlack }, Qt::black);
+			lines.emplaceBack(QLine{upperRightBlack, lowerRightBlack}, Qt::black);
+
+			return lines;
+		};
+
+	for (const auto& [line, color] : getLines())
+	{
+		painter.setPen(QPen{color, 2});
+		painter.drawLine(line);
+	}
 
 	for (const auto& [line, color] : m_links)
 	{
