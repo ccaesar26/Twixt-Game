@@ -30,12 +30,12 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	m_board->LinkPieces(pos1, pos2);
 	NotifyPiecesLinked(pos1, pos2);
 
-	ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
+	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
 
 	if (m_board->CheckIfWinningPlacement(link))
 	{
-		EColor winnerColor = link->GetColor();
-		EGameResult gameResult = winnerColor == EColor::Black ? EGameResult::BlackWinner : EGameResult::RedWinner;
+		const EColor winnerColor = link->GetColor();
+		const EGameResult gameResult = winnerColor == EColor::Black ? EGameResult::BlackWinner : EGameResult::RedWinner;
 		NotifyGameOver(gameResult);
 	}
 }
@@ -159,7 +159,7 @@ void Game::NotifyPiecePlaced(const Position& pos) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (auto sp = it->lock())
+		if (const auto sp& = it->lock())
 		{
 			sp->OnPiecePlaced(pos);
 		}
@@ -170,7 +170,7 @@ void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (auto sp = it->lock()){
+		if (const auto sp& = it->lock()){
 			sp->OnLinkPlaced(pos1, pos2);
 		}
 	}
@@ -180,7 +180,7 @@ void Game::NotifyLinkRemoved(const Position& pos1, const Position& pos2) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (auto sp = it->lock())
+		if (const auto sp& = it->lock())
 		{
 			sp->OnLinkRemoved(pos1, pos2);
 		}

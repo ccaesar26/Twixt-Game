@@ -34,7 +34,7 @@ std::string Player::GetName() const
 
 void Player::AddPeg(Position pos)
 {
-	if(auto board = m_board.lock())
+	if(auto const board& = m_board.lock())
 	{
 		board->PlacePiece(pos, m_color);
 		m_pegs.push_back(board->At(pos));
@@ -43,23 +43,23 @@ void Player::AddPeg(Position pos)
 
 void Player::AddLink(Position pos1, Position pos2)
 {
-	if(auto board = m_board.lock())
+	if(auto const board& = m_board.lock())
 	{
 		board->LinkPieces(pos1, pos2);
 		m_links.push_back(board->GetLinkBetween(pos1, pos2));
 	}
 }
 
-void Player::RemoveLink(Position pos1, Position pos2)
+void Player::RemoveLink(Position peg1, Position peg2)
 {
-	if(auto board = m_board.lock())
+	if(auto const board& = m_board.lock())
 	{
-		board->UnlinkPieces(pos1, pos2);
+		board->UnlinkPieces(peg1, peg2);
 		erase_if(m_links, [&](const ILinkWeakPtr& link)
 		{
-			if(auto linkPtr = link.lock())
+			if(auto const linkPtr& = link.lock())
 			{
-				return linkPtr->GetPiece1()->GetPosition() == pos1 && linkPtr->GetPiece2()->GetPosition() == pos2;
+				return linkPtr->GetPiece1()->GetPosition() == peg1 && linkPtr->GetPiece2()->GetPosition() == peg2;
 			}
 			return false;
 		});

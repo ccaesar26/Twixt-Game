@@ -184,10 +184,10 @@ void Board::PlacePiece(const Position pos, const EColor color)
 
 bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position& p3, const Position& p4)
 {
-	int d1 = (p3.col - p4.col) * (p1.row - p3.row) + (p3.row - p4.row) * (p3.col - p1.col);
-	int d2 = (p3.col - p4.col) * (p2.row - p3.row) + (p3.row - p4.row) * (p3.col - p2.col);
-	int d3 = (p1.col - p2.col) * (p3.row - p1.row) + (p1.row - p2.row) * (p1.col - p3.col);
-	int d4 = (p1.col - p2.col) * (p4.row - p1.row) + (p1.row - p2.row) * (p1.col - p4.col);
+	const int d1 = (p3.col - p4.col) * (p1.row - p3.row) + (p3.row - p4.row) * (p3.col - p1.col);
+	const int d2 = (p3.col - p4.col) * (p2.row - p3.row) + (p3.row - p4.row) * (p3.col - p2.col);
+	const int d3 = (p1.col - p2.col) * (p3.row - p1.row) + (p1.row - p2.row) * (p1.col - p3.col);
+	const int d4 = (p1.col - p2.col) * (p4.row - p1.row) + (p1.row - p2.row) * (p1.col - p4.col);
 	return d1 * d2 < 0 && d3 * d4 < 0;
 }
 
@@ -227,9 +227,9 @@ void Board::LinkPieces(Position pos1, Position pos2)
 		}
 	}
 
-	EColor color = m_board[pos1.row][pos1.col]->GetColor();
+	const EColor color = m_board[pos1.row][pos1.col]->GetColor();
 
-	ILinkPtr link = ILink::Produce(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], color);
+	const ILinkPtr link = ILink::Produce(m_board[pos1.row][pos1.col], m_board[pos2.row][pos2.col], color);
 
 	AddLink(link);
 
@@ -438,8 +438,8 @@ void Board::RemoveLink(const ILinkPtr& link)
 
 bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 {
-	IPiecePtr piece = link->GetPiece1();
-	EColor color = piece->GetColor();
+	const IPiecePtr piece = link->GetPiece1();
+	const EColor color = piece->GetColor();
 
 	/*
 	if (color == EColor::Red)
