@@ -123,7 +123,8 @@ TEST_F(BoardTest, TestFunctionLink)
 TEST_F(BoardTest, TestFunctionCheckPathToRows)
 {
     b1.PlacePiece(Position(5, 6), EColor::Red);
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 5, 6), true);
+    b1.LinkPieces(Position(4, 4), Position(5, 6));
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 5), true);
     EXPECT_EQ(b1.CheckPathToRows(Position(1, 1), 4, 4), false);
 
 }
@@ -194,4 +195,6 @@ TEST_F(BoardTest, TestLinkIntersection)
     b1.PlacePiece(Position(2, 2),EColor::Black);
     b1.PlacePiece(Position(1, 4),EColor::Black);
     EXPECT_THROW(b1.LinkPieces(Position(2, 2), Position(1, 4)), GameException);
+    EXPECT_THROW(b1.LinkPieces(Position(1, 4), Position(2, 2)), GameException);
 }
+
