@@ -124,11 +124,17 @@ TEST_F(BoardTest, TestFunctionCheckPathToRows)
 {
     b1.PlacePiece(Position(5, 6), EColor::Red);
     b1.PlacePiece(Position(6, 8), EColor::Red);
-    b1.LinkPieces(Position(4, 4), Position(5, 6));
+    b1.PlacePiece(Position(7, 7), EColor::Red);
+    b1.PlacePiece(Position(4, 8), EColor::Red);
+    b1.PlacePiece(Position(8, 9), EColor::Red);
     b1.LinkPieces(Position(5, 6), Position(6, 8));
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 8), true);
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 9), false);
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 3, 8), false);
+    b1.LinkPieces(Position(8, 9), Position(6, 8));
+    b1.LinkPieces(Position(5, 6), Position(7, 7));
+    b1.LinkPieces(Position(4, 4), Position(5, 6));
+    b1.LinkPieces(Position(5, 6), Position(4, 8));
+    EXPECT_EQ(b1.CheckPath(Position(5, 6), 4, 8, EColor::Red), true);
+    EXPECT_EQ(b1.CheckPath(Position(4, 4), 4, 9, EColor::Red), false);
+    EXPECT_EQ(b1.CheckPath(Position(4, 4), 3, 8, EColor::Red), false);
 
 }
 
@@ -138,9 +144,9 @@ TEST_F(BoardTest, TestFunctionCheckPathToCols)
     b1.LinkPieces(Position(1, 1), Position(2, 3));
     b1.LinkPieces(Position(2, 3), Position(3, 5));
 
-    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 1, 5), true);
-    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 0, 5), false);
-    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 1, 6), false);
+    EXPECT_EQ(b1.CheckPath(Position(1, 1), 1, 5, EColor::Black), true);
+    EXPECT_EQ(b1.CheckPath(Position(1, 1), 0, 5, EColor::Black), false);
+    EXPECT_EQ(b1.CheckPath(Position(1, 1), 1, 6, EColor::Black), false);
 }
 
 TEST_F(BoardTest, TestFunctionGetLinks)
@@ -217,7 +223,7 @@ TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement2)
     b1.PlacePiece(Position(18, 2), EColor::Red);
     b1.PlacePiece(Position(20, 1), EColor::Red);
     b1.PlacePiece(Position(22, 2), EColor::Red);
-    b1.PlacePiece(Position(23, 0), EColor::Red);
+    b1.PlacePiece(Position(23, 4), EColor::Red);
     b1.LinkPieces(Position(0, 1), Position(2, 2));
     b1.LinkPieces(Position(2, 2), Position(4, 1));
     b1.LinkPieces(Position(4, 1), Position(6, 2));
@@ -229,8 +235,8 @@ TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement2)
     b1.LinkPieces(Position(16, 1), Position(18, 2));
     b1.LinkPieces(Position(18, 2), Position(20, 1));
     b1.LinkPieces(Position(20, 1), Position(22, 2));
-    b1.LinkPieces(Position(22, 2), Position(23, 0));
-	ILinkPtr link = b1.GetLinkBetween(Position(22, 2), Position(23, 0));
+    b1.LinkPieces(Position(22, 2), Position(23, 4));
+	ILinkPtr link = b1.GetLinkBetween(Position(0, 1), Position(2, 2));
 	EXPECT_EQ(b1.CheckIfWinningPlacement(link), true);
 }
 
