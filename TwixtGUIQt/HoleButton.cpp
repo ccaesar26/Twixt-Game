@@ -50,6 +50,11 @@ void HoleButton::SetCenter(const QPoint& center)
 	m_center = center;
 }
 
+QPoint HoleButton::GetCenter() const
+{
+	return m_center;
+}
+
 void HoleButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);

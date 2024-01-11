@@ -84,4 +84,8 @@ private:
     QSharedPointer<QGridLayout> m_mainGridLayout;
 
     std::shared_ptr<IGame> m_gameLogic;
+
+    int m_clickCount;
+    Position m_firstClick;
+    Position m_secondClick;
 };

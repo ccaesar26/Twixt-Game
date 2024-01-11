@@ -23,6 +23,7 @@ public:
     std::optional<EColor> GetColor() const;
 
     void SetCenter(const QPoint& center);
+    QPoint GetCenter() const;
 	
     void mouseReleaseEvent(QMouseEvent* event) override;
 

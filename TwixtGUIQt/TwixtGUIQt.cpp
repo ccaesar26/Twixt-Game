@@ -17,6 +17,8 @@ TwixtGUIQt::TwixtGUIQt(QWidget *parent)
 
     mainWidget->setLayout(m_mainGridLayout.data());
 
+    m_clickCount = 0;
+
     // Note: QMainWindow takes ownership of the widget pointer and deletes it at the appropriate time.
     // See https://doc.qt.io/qt-6/qmainwindow.html#setCentralWidget
     this->setCentralWidget(mainWidget);
@@ -53,9 +55,28 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	{
 		return;
 	}
+
     try
     {
-        m_gameLogic->PlacePiece(pos);
+		m_clickCount++;
+
+		if (m_clickCount == 1)
+		{
+            m_gameLogic->PlacePiece(pos);
+		}
+        else if (m_clickCount == 2)
+        {
+            m_firstClick = pos;
+        }
+        else if (m_clickCount == 3)
+		{
+			m_secondClick = pos;
+
+			m_gameLogic->CreateLink(m_firstClick, m_secondClick);
+
+			m_clickCount = 0;
+		}
+
     }
     catch (const GameException&)
     {
