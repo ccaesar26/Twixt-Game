@@ -123,9 +123,12 @@ TEST_F(BoardTest, TestFunctionLink)
 TEST_F(BoardTest, TestFunctionCheckPathToRows)
 {
     b1.PlacePiece(Position(5, 6), EColor::Red);
+    b1.PlacePiece(Position(6, 8), EColor::Red);
     b1.LinkPieces(Position(4, 4), Position(5, 6));
-    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 5), true);
-    EXPECT_EQ(b1.CheckPathToRows(Position(1, 1), 4, 4), false);
+    b1.LinkPieces(Position(5, 6), Position(6, 8));
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 5, 6), true);
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 4, 9), false);
+    EXPECT_EQ(b1.CheckPathToRows(Position(4, 4), 3, 8), false);
 
 }
 
@@ -135,8 +138,9 @@ TEST_F(BoardTest, TestFunctionCheckPathToCols)
     b1.LinkPieces(Position(1, 1), Position(2, 3));
     b1.LinkPieces(Position(2, 3), Position(3, 5));
 
-    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 3, 5), true);
-    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 4, 4), false);
+    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 1, 5), true);
+    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 0, 5), false);
+    EXPECT_EQ(b1.CheckPathToCols(Position(1, 1), 1, 6), false);
 }
 
 TEST_F(BoardTest, TestFunctionGetLinks)
@@ -201,19 +205,19 @@ TEST_F(BoardTest, TestLinkIntersection)
 
 TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement2)
 {
-    b1.PlacePiece(Position(0, 1), EColor::Black);
-    b1.PlacePiece(Position(2, 2), EColor::Black);
-    b1.PlacePiece(Position(4, 1), EColor::Black);
-    b1.PlacePiece(Position(6, 2), EColor::Black);
-    b1.PlacePiece(Position(8, 1), EColor::Black);
-    b1.PlacePiece(Position(10, 2), EColor::Black);
-    b1.PlacePiece(Position(12, 1), EColor::Black);
-    b1.PlacePiece(Position(14, 2), EColor::Black);
-    b1.PlacePiece(Position(16, 1), EColor::Black);
-    b1.PlacePiece(Position(18, 2), EColor::Black);
-    b1.PlacePiece(Position(20, 1), EColor::Black);
-    b1.PlacePiece(Position(22, 2), EColor::Black);
-    b1.PlacePiece(Position(23, 0), EColor::Black);
+    b1.PlacePiece(Position(0, 1), EColor::Red);
+    b1.PlacePiece(Position(2, 2), EColor::Red);
+    b1.PlacePiece(Position(4, 1), EColor::Red);
+    b1.PlacePiece(Position(6, 2), EColor::Red);
+    b1.PlacePiece(Position(8, 1), EColor::Red);
+    b1.PlacePiece(Position(10, 2), EColor::Red);
+    b1.PlacePiece(Position(12, 1), EColor::Red);
+    b1.PlacePiece(Position(14, 2), EColor::Red);
+    b1.PlacePiece(Position(16, 1), EColor::Red);
+    b1.PlacePiece(Position(18, 2), EColor::Red);
+    b1.PlacePiece(Position(20, 1), EColor::Red);
+    b1.PlacePiece(Position(22, 2), EColor::Red);
+    b1.PlacePiece(Position(23, 0), EColor::Red);
     b1.LinkPieces(Position(0, 1), Position(2, 2));
     b1.LinkPieces(Position(2, 2), Position(4, 1));
     b1.LinkPieces(Position(4, 1), Position(6, 2));
@@ -228,4 +232,37 @@ TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement2)
     b1.LinkPieces(Position(22, 2), Position(23, 0));
 	ILinkPtr link = b1.GetLinkBetween(Position(22, 2), Position(23, 0));
 	EXPECT_EQ(b1.CheckIfWinningPlacement(link), true);
+}
+
+TEST_F(BoardTest, TestFunctionCheckIfWinningPlacement3)
+{
+   
+    b1.PlacePiece(Position(1, 0), EColor::Black);
+    b1.PlacePiece(Position(2, 2), EColor::Black);
+    b1.PlacePiece(Position(1, 4), EColor::Black);
+    b1.PlacePiece(Position(2, 6), EColor::Black);
+    b1.PlacePiece(Position(1, 8), EColor::Black);
+    b1.PlacePiece(Position(2, 10), EColor::Black);
+    b1.PlacePiece(Position(1, 12), EColor::Black);
+    b1.PlacePiece(Position(2, 14), EColor::Black);
+    b1.PlacePiece(Position(1, 16), EColor::Black);
+    b1.PlacePiece(Position(2, 18), EColor::Black);
+    b1.PlacePiece(Position(1, 20), EColor::Black);
+    b1.PlacePiece(Position(2, 22), EColor::Black);
+    b1.PlacePiece(Position(4, 23), EColor::Black);
+    b1.LinkPieces(Position(1, 0), Position(2, 2));
+    b1.LinkPieces(Position(2, 2), Position(1, 4));
+    b1.LinkPieces(Position(1, 4), Position(2, 6));
+    b1.LinkPieces(Position(2, 6), Position(1, 8));
+    b1.LinkPieces(Position(1, 8), Position(2, 10));
+    b1.LinkPieces(Position(2, 10), Position(1, 12));
+    b1.LinkPieces(Position(1, 12), Position(2, 14));
+    b1.LinkPieces(Position(2, 14), Position(1, 16));
+    b1.LinkPieces(Position(1, 16), Position(2, 18));
+    b1.LinkPieces(Position(2, 18), Position(1, 20));
+    b1.LinkPieces(Position(1, 20), Position(2, 22));
+    b1.LinkPieces(Position(2, 22), Position(4, 23));
+    ILinkPtr link = b1.GetLinkBetween(Position(2, 22), Position(4, 23));
+    EXPECT_EQ(b1.CheckIfWinningPlacement(link), true);
+
 }
