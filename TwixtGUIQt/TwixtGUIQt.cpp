@@ -136,11 +136,24 @@ void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 
 void TwixtGUIQt::paintEvent(QPaintEvent* event)
 {
-	QPainter painter{ this };
-	painter.setPen(QPen(Qt::black, 8));
+	QPainter painter{this};
 
-	for (const auto& line : m_links)
+	auto colorConverter = [](const EColor color) -> QColor
 	{
+		switch (color)
+		{
+		case EColor::Red:
+			return Qt::red;
+		case EColor::Black:
+			return Qt::black;
+		default:
+			return Qt::white;
+		}
+	};
+
+	for (const auto& [line, color] : m_links)
+	{
+		painter.setPen(QPen{colorConverter(color), 8});
 		painter.drawLine(line);
 	}
 }
@@ -163,7 +176,7 @@ void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 	const QPoint center1 = m_board[pos1.row][pos1.col]->GetCenter();
 	const QPoint center2 = m_board[pos2.row][pos2.col]->GetCenter();
 
-	m_links.emplaceBack(center1, center2);
+	m_links.emplaceBack(QLine{ center1, center2 }, m_gameLogic->GetCurrentPlayerColor());
 
 	update();
 }

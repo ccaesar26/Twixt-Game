@@ -87,7 +87,7 @@ private:
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 
-    QVector<QLine> m_links;
+    QVector<QPair<QLine, EColor>> m_links;
 
     std::shared_ptr<IGame> m_gameLogic;
 
