@@ -5,30 +5,44 @@
 #include <QSizePolicy>
 #include <QFileDialog>
 #include <QApplication>
+#include <QMessageBox>
 
 #include <algorithm>
 #include <ranges>
 
 #include "GameException.h"
+#include "ConverterLibrary.h"
 
-namespace
-{
-	QString ColorToString(const EColor color)
-	{
-		switch (color)
-		{
-		case EColor::Red:
-			return "red";
-		case EColor::Black:
-			return "black";
-		default:
-			return "";
-		}
-	}
-}
+//namespace
+//{
+//	QString ColorToString(const EColor color, const bool capitalize = false)
+//	{
+//		if (capitalize)
+//		{
+//			switch (color)
+//			{
+//			case EColor::Red:
+//				return "Red";
+//			case EColor::Black:
+//				return "Black";
+//			default:
+//				return "";
+//			}
+//		}
+//		switch (color)
+//		{
+//		case EColor::Red:
+//			return "red";
+//		case EColor::Black:
+//			return "black";
+//		default:
+//			return "";
+//		}
+//	}
+//}
 
 TwixtGUIQt::TwixtGUIQt(QWidget* parent)
-	: QMainWindow(parent)
+	: QMainWindow{parent}, m_clickCount{0}, m_isFirstTurn{true}
 {
 	const auto mainWidget = new QWidget{};
 	m_mainGridLayout = QSharedPointer<QGridLayout>{new QGridLayout{}};
@@ -41,8 +55,6 @@ TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	InitializeBoard();
 
 	mainWidget->setLayout(m_mainGridLayout.data());
-
-	m_clickCount = 0;
 
 	// Note: QMainWindow takes ownership of the widget pointer and deletes it at the appropriate time.
 	// See https://doc.qt.io/qt-6/qmainwindow.html#setCentralWidget
@@ -58,7 +70,7 @@ void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
 
 void TwixtGUIQt::MapCoordinates()
 {
-	QPoint topLeft = m_boardContainer->pos();
+	const QPoint topLeft = m_boardContainer->pos();
 	for (int i = 0; i < m_board.size(); ++i)
 	{
 		for (int j = 0; j < m_board.size(); ++j)
@@ -79,6 +91,11 @@ void TwixtGUIQt::MapCoordinates()
 	}
 }
 
+void TwixtGUIQt::OnRestartButtonClicked()
+{
+	m_gameLogic->Reset();
+}
+
 void TwixtGUIQt::OnSaveButtonClicked()
 {
 	if (m_gameLogic->IsGameOver())
@@ -86,7 +103,7 @@ void TwixtGUIQt::OnSaveButtonClicked()
 		return;
 	}
 
-	QString fileName = QFileDialog::getSaveFileName(
+	const QString fileName = QFileDialog::getSaveFileName(
 		this,
 		"Save game",
 		QDir::homePath(),
@@ -106,6 +123,29 @@ void TwixtGUIQt::OnSaveButtonClicked()
 	}
 }
 
+void TwixtGUIQt::OnLoadButtonClicked()
+{
+
+	const QString fileName = QFileDialog::getOpenFileName(
+		this,
+		"Load game",
+		QDir::homePath(),
+		tr("Text File (*.txt);;All files (*.*)")
+	);
+
+	try
+	{
+		m_gameLogic->LoadFromFile(fileName.toStdString());
+	}
+	catch (const GameException&)
+	{
+	}
+	catch (...)
+	{
+		//throw std::runtime_error("Unknown exception");
+	}
+}
+
 void TwixtGUIQt::OnEndTurnButtonClicked()
 {
 	if (m_gameLogic->IsGameOver())
@@ -113,10 +153,27 @@ void TwixtGUIQt::OnEndTurnButtonClicked()
 		return;
 	}
 
+	m_endTurnButton->setEnabled(false);
+
 	try
 	{
-		m_clickCount = 0;
+		if (m_isFirstTurn)
+		{
+			m_isFirstTurn = false;
+
+			QMessageBox::StandardButton reply = QMessageBox::question(
+				this,
+				"Swap Colors",
+				"You're playing as Black.\nDo you want to swap colors and be red?",
+				QMessageBox::Yes | QMessageBox::No
+			);
+		}
+
 		m_gameLogic->SwitchTurn();
+
+		m_clickCount = 0;
+
+		UpdateCurrentPlayerLabel();
 	}
 	catch (const GameException&)
 	{
@@ -153,7 +210,7 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	}
 	catch (const GameException&)
 	{
-		m_clickCount = 1;
+		m_clickCount--;
 	}
 	catch (...)
 	{
@@ -171,7 +228,7 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 	try
 	{
 		m_clickCount++;
-		
+
 		if (m_clickCount == 2)
 		{
 			m_firstClick = pos;
@@ -214,7 +271,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 		case EColor::Black:
 			return Qt::black;
 		default:
-			return Qt::white;
+			throw std::runtime_error("Unknown color");
 		}
 	};
 
@@ -264,6 +321,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 	m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());
+	m_endTurnButton->setEnabled(true);
 }
 
 void TwixtGUIQt::OnGameOver(const EGameResult& result)
@@ -272,6 +330,26 @@ void TwixtGUIQt::OnGameOver(const EGameResult& result)
 
 void TwixtGUIQt::OnGameRestarted()
 {
+	for (int i = 0; i < m_board.size(); ++i)
+	{
+		for (int j = 0; j < m_board.size(); ++j)
+		{
+			if (i == 0 && j == 0 || i == m_board.size() - 1 && j == 0
+				|| i == 0 && j == m_board.size() - 1 || i == m_board.size() - 1 && j == m_board.size() - 1)
+			{
+				continue;
+			}
+
+			m_board[i][j]->ResetPeg();
+		}
+	}
+
+	m_links.clear();
+
+	m_clickCount = 0;
+	m_isFirstTurn = true;
+
+	UpdateCurrentPlayerLabel();
 }
 
 void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
@@ -348,7 +426,10 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
 	// TODO: connect signals and slots
+	connect(m_restartButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRestartButtonClicked);
 	connect(m_saveButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnSaveButtonClicked);
+	connect(m_loadButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnLoadButtonClicked);
+	connect(m_quitButton.data(), &QPushButton::clicked, qApp, &QApplication::quit);
 
 	// TODO: setStyleSheet
 
@@ -373,6 +454,8 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 
 	// TODO: connect signals and slots
 	connect(m_endTurnButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnEndTurnButtonClicked);
+
+	m_endTurnButton->setEnabled(false);
 
 	// TODO: setStyleSheet
 
@@ -408,6 +491,12 @@ void TwixtGUIQt::InitializeBoard()
 			{
 				m_board[i][j] = QSharedPointer<HoleButton>::create(Position{i, j});
 				m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
+
+				if (m_gameLogic != nullptr && m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+				{
+					m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
+				}
+
 				m_board[i][j]->UpdatePeg();
 			}
 			connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
@@ -423,5 +512,6 @@ void TwixtGUIQt::InitializeBoard()
 
 void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
-	m_currentPlayerLabel->setText("Current player\n" + ColorToString(m_gameLogic->GetCurrentPlayerColor()));
+	m_currentPlayerLabel->setText(
+		"Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
 }

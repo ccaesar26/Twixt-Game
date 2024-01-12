@@ -142,7 +142,11 @@ void Game::LoadFromFile(const std::string& fileName)
 	std::getline(file, boardString);
 	std::getline(file, turn);
 	std::getline(file, state);
+	boardString += "\n";
+	turn += "\n";
+	state += "\n";
 	InitializeGame(boardString, turn, state);
+	NotifyGameRestarted();
 }
 
 bool Game::IsGameOver() const
