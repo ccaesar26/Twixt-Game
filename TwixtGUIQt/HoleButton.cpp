@@ -42,6 +42,12 @@ void HoleButton::SetPeg(EColor color)
 	UpdatePeg();
 }
 
+void HoleButton::ResetPeg()
+{
+	m_color = std::nullopt;
+	UpdatePeg();
+}
+
 std::optional<EColor> HoleButton::GetColor() const
 {
 	return m_color;

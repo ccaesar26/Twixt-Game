@@ -91,6 +91,11 @@ void TwixtGUIQt::MapCoordinates()
 	}
 }
 
+void TwixtGUIQt::OnRestartButtonClicked()
+{
+	m_gameLogic->Reset();
+}
+
 void TwixtGUIQt::OnSaveButtonClicked()
 {
 	if (m_gameLogic->IsGameOver())
@@ -302,6 +307,26 @@ void TwixtGUIQt::OnGameOver(const EGameResult& result)
 
 void TwixtGUIQt::OnGameRestarted()
 {
+	for (int i = 0; i < m_board.size(); ++i)
+	{
+		for (int j = 0; j < m_board.size(); ++j)
+		{
+			if (i == 0 && j == 0 || i == m_board.size() - 1 && j == 0
+				|| i == 0 && j == m_board.size() - 1 || i == m_board.size() - 1 && j == m_board.size() - 1)
+			{
+				continue;
+			}
+
+			m_board[i][j]->ResetPeg();
+		}
+	}
+
+	m_links.clear();
+
+	m_clickCount = 0;
+	m_isFirstTurn = true;
+
+	UpdateCurrentPlayerLabel();
 }
 
 void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
@@ -378,6 +403,7 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
 	// TODO: connect signals and slots
+	connect(m_restartButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRestartButtonClicked);
 	connect(m_saveButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnSaveButtonClicked);
 
 	// TODO: setStyleSheet
@@ -455,5 +481,6 @@ void TwixtGUIQt::InitializeBoard()
 
 void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
-	m_currentPlayerLabel->setText("Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
+	m_currentPlayerLabel->setText(
+		"Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
 }

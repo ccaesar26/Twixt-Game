@@ -19,6 +19,7 @@ public:
     HoleButton& operator=(HoleButton&& other) noexcept;
 	
     void SetPeg(EColor color);
+    void ResetPeg();
 
     std::optional<EColor> GetColor() const;
 
