@@ -40,7 +40,7 @@ public:
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
 	std::pair<Position, std::vector<std::pair<Position, Position>>> Recommend() override;
 	void Reset() override;
-	void Restore(const std::string& boardString, const std::string& turn, const std::string& state) override;
+	void Restore(const std::string& boardString, const std::string& turn, const std::string& state);
 	void SaveToFile(const std::string& fileName) const override;
 	void NotifyPiecePlaced(const Position& pos) const;
 	void NotifyPiecesLinked(const Position& pos1, const Position& pos2) const;
@@ -48,6 +48,8 @@ public:
 	void NotifyGameOver(EGameResult gameResult) const;
 	void NotifyGameRestarted() const;
 	bool IsFileValid(const std::string& fileName) const override;
-	bool RegexValidate(const std::string& fileName) const override;
-	
+	bool RegexValidate(const std::string& fileName) const;
+	void RequestDraw() override;
+	void NotifyDrawRequested(EColor m_turn) const;
+
 };

@@ -198,6 +198,28 @@ bool Game::RegexValidate(const std::string& fileName) const
 	}
 }
 
+void Game::RequestDraw()
+{
+	if (m_state != EGameState::Playing)
+	{
+		throw InvalidStateException("Game is not playing");
+	}
+
+	m_state = EGameState::Draw;
+	NotifyGameOver(EGameResult::Draw);
+}
+
+void Game::NotifyDrawRequested(EColor m_turn) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (const auto& sp = it->lock())
+		{
+			sp->OnDrawRequested(m_turn);
+		}
+	}
+}
+
 void Game::SaveToFile(const std::string& fileName) const
 {
 	std::ofstream file(fileName);
