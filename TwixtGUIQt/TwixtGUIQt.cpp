@@ -11,34 +11,35 @@
 #include <ranges>
 
 #include "GameException.h"
+#include "ConverterLibrary.h"
 
-namespace
-{
-	QString ColorToString(const EColor color, const bool capitalize = false)
-	{
-		if (capitalize)
-		{
-			switch (color)
-			{
-			case EColor::Red:
-				return "Red";
-			case EColor::Black:
-				return "Black";
-			default:
-				return "";
-			}
-		}
-		switch (color)
-		{
-		case EColor::Red:
-			return "red";
-		case EColor::Black:
-			return "black";
-		default:
-			return "";
-		}
-	}
-}
+//namespace
+//{
+//	QString ColorToString(const EColor color, const bool capitalize = false)
+//	{
+//		if (capitalize)
+//		{
+//			switch (color)
+//			{
+//			case EColor::Red:
+//				return "Red";
+//			case EColor::Black:
+//				return "Black";
+//			default:
+//				return "";
+//			}
+//		}
+//		switch (color)
+//		{
+//		case EColor::Red:
+//			return "red";
+//		case EColor::Black:
+//			return "black";
+//		default:
+//			return "";
+//		}
+//	}
+//}
 
 TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	: QMainWindow{parent}, m_clickCount{0}, m_isFirstTurn{true}
@@ -461,5 +462,5 @@ void TwixtGUIQt::InitializeBoard()
 
 void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
-	m_currentPlayerLabel->setText("Current player\n" + ColorToString(m_gameLogic->GetCurrentPlayerColor(), true));
+	m_currentPlayerLabel->setText("Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
 }
