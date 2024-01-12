@@ -2,21 +2,7 @@
 
 #include <QMouseEvent>
 
-namespace
-{
-	QString ColorToString(const EColor color)
-	{
-		switch (color)
-		{
-		case EColor::Red:
-			return "red";
-		case EColor::Black:
-			return "black";
-		default:
-			return "white";
-		}
-	}
-}
+#include "ConverterLibrary.h"
 
 HoleButton::HoleButton(const Position& position, QWidget* parent)
 	: QPushButton(parent)
@@ -94,7 +80,7 @@ void HoleButton::UpdatePeg()
 
 	if (m_color.has_value())
 	{
-		path += ColorToString(m_color.value());
+		path += ColorToString(static_cast<int>(m_color.value()));
 	}
 	else
 	{

@@ -63,6 +63,7 @@ private:
 
     // Style methods
     void SetFont();
+    void SetStyle(QWidget* widget, const QString& styleSheetPath);
 
 private:
     QSharedPointer<QLabel> m_titleLabel;

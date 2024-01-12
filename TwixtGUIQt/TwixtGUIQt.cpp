@@ -14,34 +14,6 @@
 #include "GameException.h"
 #include "ConverterLibrary.h"
 
-//namespace
-//{
-//	QString ColorToString(const EColor color, const bool capitalize = false)
-//	{
-//		if (capitalize)
-//		{
-//			switch (color)
-//			{
-//			case EColor::Red:
-//				return "Red";
-//			case EColor::Black:
-//				return "Black";
-//			default:
-//				return "";
-//			}
-//		}
-//		switch (color)
-//		{
-//		case EColor::Red:
-//			return "red";
-//		case EColor::Black:
-//			return "black";
-//		default:
-//			return "";
-//		}
-//	}
-//}
-
 TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	: QMainWindow{parent}, m_clickCount{0}, m_isFirstTurn{true}
 {
@@ -442,6 +414,7 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	connect(m_quitButton.data(), &QPushButton::clicked, qApp, &QApplication::quit);
 
 	// TODO: setStyleSheet
+	SetStyle(m_controlButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_controlButtonsContainer->setLayout(m_controlButtonsContainerLayout.data());
 	m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 1, 1);
@@ -528,4 +501,12 @@ void TwixtGUIQt::SetFont()
 	const QString family = QFontDatabase::applicationFontFamilies(id).at(0);
 	const QFont font{ family };
 	this->setFont(font);
+}
+
+void TwixtGUIQt::SetStyle(QWidget* widget, const QString& styleSheetPath)
+{
+	QFile styleFile{ styleSheetPath };
+	styleFile.open(QFile::ReadOnly);
+	const QString styleSheet = QLatin1String(styleFile.readAll());
+	widget->setStyleSheet(styleSheet);
 }
