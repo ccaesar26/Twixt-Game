@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QApplication>
 #include <QMessageBox>
+#include <QFontDatabase>
 
 #include <algorithm>
 #include <ranges>
@@ -61,6 +62,8 @@ TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	this->setCentralWidget(mainWidget);
 
 	this->setFixedSize(mainWidget->sizeHint());
+
+	SetFont();
 }
 
 void TwixtGUIQt::SetGameLogic(std::shared_ptr<IGame>&& gameLogic)
@@ -517,4 +520,12 @@ void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
 	m_currentPlayerLabel->setText(
 		"Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
+}
+
+void TwixtGUIQt::SetFont()
+{
+	const int id = QFontDatabase::addApplicationFont("fonts/Poppins-Regular.ttf");
+	const QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+	const QFont font{ family };
+	this->setFont(font);
 }

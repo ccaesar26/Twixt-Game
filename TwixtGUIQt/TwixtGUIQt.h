@@ -61,6 +61,9 @@ private:
     // UI Update methods
     void UpdateCurrentPlayerLabel();
 
+    // Style methods
+    void SetFont();
+
 private:
     QSharedPointer<QLabel> m_titleLabel;
     QSharedPointer<QLabel> m_currentPlayerLabel;
