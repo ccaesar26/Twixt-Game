@@ -136,19 +136,12 @@ void TwixtGUIQt::OnEndTurnButtonClicked()
 			QMessageBox::StandardButton reply = QMessageBox::question(
 				this,
 				"Swap Colors",
-				"Do you want to swap colors?",
+				"You're playing as Black.\nDo you want to swap colors and be red?",
 				QMessageBox::Yes | QMessageBox::No
 			);
+		}
 
-			if (reply == QMessageBox::Yes)
-			{
-				m_gameLogic->SwitchTurn();
-			}
-		}
-		else
-		{
-			m_gameLogic->SwitchTurn();
-		}
+		m_gameLogic->SwitchTurn();
 
 		m_clickCount = 0;
 
