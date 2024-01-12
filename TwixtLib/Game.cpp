@@ -202,14 +202,13 @@ bool Game::RegexValidate(const std::string& fileName) const
 	}
 }
 
-void Game::RequestDraw()
+void Game::RequestDraw(EColor color) const
 {
 	if (m_state != EGameState::Playing)
 	{
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_state = EGameState::Draw;
 	NotifyGameOver(EGameResult::Draw);
 }
 

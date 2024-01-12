@@ -47,9 +47,9 @@ public:
 	void NotifyLinkRemoved(const Position& pos1, const Position& pos2) const;
 	void NotifyGameOver(EGameResult gameResult) const;
 	void NotifyGameRestarted() const;
-	bool IsFileValid(const std::string& fileName) const override;
+	bool IsFileValid(const std::string& fileName) const;
 	bool RegexValidate(const std::string& fileName) const;
-	void RequestDraw() override;
+	void RequestDraw(EColor current_player) const override;
 	void NotifyDrawRequested(EColor m_turn) const;
 
 };
