@@ -22,7 +22,7 @@ private:
 	IPlayerPtr m_player2;
 
 	void InitializeGame();
-	void InitializeGame(const std::string& boardString, const std::string& turn, const std::string& state);
+	void InitializeGame(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state);
 
 public:
 	void SwitchTurn() override;
@@ -40,7 +40,7 @@ public:
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
 	std::pair<Position, std::vector<std::pair<Position, Position>>> Recommend() override;
 	void Reset() override;
-	void Restore(const std::string& boardString, const std::string& turn, const std::string& state);
+	void Restore(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state);
 	void SaveToFile(const std::string& fileName) const override;
 	void NotifyPiecePlaced(const Position& pos) const;
 	void NotifyPiecesLinked(const Position& pos1, const Position& pos2) const;

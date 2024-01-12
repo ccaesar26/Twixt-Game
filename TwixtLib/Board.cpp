@@ -14,9 +14,9 @@ IBoardPtr IBoard::CreateBoard(int size)
 	return std::make_shared<Board>(size);
 }
 
-IBoardPtr IBoard::CreateBoard(const std::string& config)
+IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks)
 {
-	return std::make_shared<Board>(config);
+	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks);
 }
 
 Board::Board(const int size) : m_size(size)
@@ -32,9 +32,9 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
-Board::Board(const std::string& boardString, int size)
+Board::Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size)
 {
-	size_t pos = 0;
+	int pos = 0;
 	m_board.resize(size);
 	while (boardString[pos] != '\n')
 	{
@@ -51,6 +51,21 @@ Board::Board(const std::string& boardString, int size)
 		}
 		pos++;
 	}
+	//the links are read from the file in the format: "row1 col1 row2 col2 row3 col3 row4 col4 ... \n"
+	//so we use a stringstream to read the links
+	std::stringstream ss1(playerOneLinks);
+	std::stringstream ss2(playerTwoLinks);
+
+	int row1, col1, row2, col2;
+	while (ss1 >> row1 >> col1 >> row2 >> col2)
+	{
+		LinkPieces(Position(row1, col1), Position(row2, col2));
+	}
+	while (ss2 >> row1 >> col1 >> row2 >> col2)
+	{
+		LinkPieces(Position(row1, col1), Position(row2, col2));
+	}
+
 	m_size = size;
 }
 
@@ -145,6 +160,23 @@ std::string Board::ToString() const
 		}
 	}
 	
+	return result;
+}
+
+std::string Board::LinksToString(EColor playerColor) const
+{
+	//return a string containing all the links of a player on the board
+	//the string will be in the format: "row1 col1 row2 col2 row3 col3 row4 col4 ... \n"
+
+	std::string result;
+	for(const auto& link : m_links)
+	{
+		if (link->GetColor() == playerColor)
+		{
+			result += std::to_string(link->GetPiece1()->GetPosition().row) + " " + std::to_string(link->GetPiece1()->GetPosition().col) + " " + std::to_string(link->GetPiece2()->GetPosition().row) + " " + std::to_string(link->GetPiece2()->GetPosition().col) + " ";
+		}
+	}
+
 	return result;
 }
 
@@ -280,7 +312,7 @@ bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetL
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0) {
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true) {
 			continue;
 		}
 
@@ -325,7 +357,7 @@ bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRi
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0){
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true){
 			continue;
 		}
 
@@ -369,7 +401,7 @@ bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColo
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0) {
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true) {
 			continue;
 		}
 
@@ -430,7 +462,7 @@ std::vector<Position> Board::GetChain(const Position& start) const
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0)
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true)
 		{
 			continue;
 		}

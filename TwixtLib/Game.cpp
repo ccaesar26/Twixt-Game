@@ -113,9 +113,9 @@ void Game::Reset()
 	NotifyGameRestarted();
 }
 
-void Game::Restore(const std::string& boardString, const std::string& turn, const std::string& state)
+void Game::Restore(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)
 {
-	InitializeGame(boardString, turn, state);
+	InitializeGame(boardString, playerOneLinks, playerTwoLinks, turn, state);
 }
 
 bool Game::IsDraw() const
@@ -137,15 +137,21 @@ void Game::LoadFromFile(const std::string& fileName)
 	}
 
 	std::string boardString;
+	std::string playerOneLinks;
+	std::string playerTwoLinks;
 	std::string turn;
 	std::string state;
 	std::getline(file, boardString);
+	std::getline(file, playerOneLinks);
+	std::getline(file, playerTwoLinks);
 	std::getline(file, turn);
 	std::getline(file, state);
 	boardString += "\n";
+	playerOneLinks += "\n";
+	playerTwoLinks += "\n";
 	turn += "\n";
 	state += "\n";
-	InitializeGame(boardString, turn, state);
+	InitializeGame(boardString, playerOneLinks, playerTwoLinks, turn, state);
 	NotifyGameRestarted();
 }
 
@@ -231,8 +237,9 @@ void Game::SaveToFile(const std::string& fileName) const
 		throw std::runtime_error("Failed to open file");
 	}
 
-	file << m_board->ToString();
-	file << "\n";
+	file << m_board->ToString() << "\n";
+	file << m_board->LinksToString(EColor::Red) << "\n";
+	file << m_board->LinksToString(EColor::Black) << "\n";
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
 }
@@ -284,9 +291,9 @@ void Game::InitializeGame()
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
 }
 
-void Game::InitializeGame(const std::string& boardString, const std::string& turn, const std::string& state)
+void Game::InitializeGame(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)
 {
-	m_board = IBoard::CreateBoard(boardString);
+	m_board = IBoard::CreateBoard(boardString, playerOneLinks, playerTwoLinks);
 	m_turn = static_cast<EColor>(turn[0] - '0');
 	m_state = static_cast<EGameState>(state[0] - '0');
 	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);

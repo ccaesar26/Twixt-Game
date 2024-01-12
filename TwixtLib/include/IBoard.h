@@ -17,7 +17,7 @@ public:
 
 	static IBoardPtr CreateBoard();
 	static IBoardPtr CreateBoard(int size);
-	static IBoardPtr CreateBoard(const std::string& config);
+	static IBoardPtr CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks);
 
 	virtual void PlacePiece(Position pos, EColor color) = 0;
 
@@ -33,5 +33,7 @@ public:
 
 	[[nodiscard]] virtual std::string ToString() const = 0;
 
-	[[nosdiscard]] virtual std::set<std::vector<Position>> GetChains(EColor playerColor) const = 0;
+	[[nodiscard]] virtual std::string LinksToString(EColor playerColor) const = 0;
+
+	[[nodiscard]] virtual std::set<std::vector<Position>> GetChains(EColor playerColor) const = 0;
 };
