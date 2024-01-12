@@ -32,4 +32,5 @@ public:
 	virtual void LoadFromFile(const std::string& fileName) = 0;
 	virtual void SaveToFile(const std::string& fileName) const = 0;
 	virtual bool IsFileValid(const std::string& fileName) const = 0;
+	virtual void RequestDraw() = 0;
 };
