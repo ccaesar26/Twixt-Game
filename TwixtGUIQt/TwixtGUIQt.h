@@ -31,10 +31,7 @@ public slots:
 	void OnRestartButtonClicked();
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
-	//void OnQuitButtonClicked();
 
-	//void OnPlaceBridgeButtonClicked();
-	//void OnRemoveBridgeButtonClicked();
 	//void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
 
@@ -78,8 +75,6 @@ private:
 
     QSharedPointer<QWidget> m_actionsButtonsContainer;
     QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
-    QSharedPointer<QPushButton> m_placeBridgeButton;
-    QSharedPointer<QPushButton> m_removeBridgeButton;
     QSharedPointer<QPushButton> m_requestDrawButton;
     QSharedPointer<QPushButton> m_endTurnButton;
 

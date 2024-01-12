@@ -340,7 +340,14 @@ void TwixtGUIQt::OnGameRestarted()
 				continue;
 			}
 
-			m_board[i][j]->ResetPeg();
+			if (m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+			{
+				m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
+			}
+			else
+			{
+				m_board[i][j]->ResetPeg();
+			}
 		}
 	}
 
@@ -439,16 +446,12 @@ void TwixtGUIQt::InitializeGameControlButtons()
 
 void TwixtGUIQt::InitializeGameActionsButtons()
 {
-	m_placeBridgeButton = QSharedPointer<QPushButton>{new QPushButton{"Place bridge"}};
-	m_removeBridgeButton = QSharedPointer<QPushButton>{new QPushButton{"Remove bridge"}};
 	m_requestDrawButton = QSharedPointer<QPushButton>{new QPushButton{"Request draw"}};
 	m_endTurnButton = QSharedPointer<QPushButton>{new QPushButton{"End turn"}};
 
 	m_actionsButtonsContainer = QSharedPointer<QWidget>{new QWidget{}};
 	m_actionsButtonsContainerLayout = QSharedPointer<QGridLayout>{new QGridLayout{}};
 
-	m_actionsButtonsContainerLayout->addWidget(m_placeBridgeButton.data(), 0, 0);
-	m_actionsButtonsContainerLayout->addWidget(m_removeBridgeButton.data(), 1, 0);
 	m_actionsButtonsContainerLayout->addWidget(m_requestDrawButton.data(), 2, 0);
 	m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
 
