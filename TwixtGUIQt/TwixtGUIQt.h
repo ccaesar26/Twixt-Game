@@ -52,6 +52,7 @@ private:
     void OnGameRestarted() override;
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
     void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
+    void OnDrawRequested(EColor current_player) override;
 
     // UI initializations
     void InitializeTitleLabel();

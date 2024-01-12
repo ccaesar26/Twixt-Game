@@ -76,6 +76,7 @@ bool IsValidMove(const Position& move)
 {
 	// Check if the move is a legal move and linking the new peg won't intersect with other links.
 	// Return true if the move is valid, false otherwise.
+	return false;
 }
 
 std::pair<Position, std::vector<std::pair<Position, Position>>> Game::Recommend()
