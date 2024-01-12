@@ -2,6 +2,7 @@
 
 #include "Position.h"
 #include "EGameResult.h"
+#include "EColor.h"
 
 #include <memory>
 
@@ -17,4 +18,5 @@ public:
 	virtual void OnLinkRemoved(const Position& pos1, const Position& pos2) = 0;
 	virtual void OnGameOver(const EGameResult& result) = 0;
 	virtual void OnGameRestarted() = 0;
+	virtual void OnDrawRequested(EColor current_player) = 0;
 };
