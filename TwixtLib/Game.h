@@ -38,6 +38,7 @@ public:
 	void PlacePiece(const Position& pos) override;
 	void CreateLink(const Position& pos1, const Position& pos2) override;
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
+	std::pair<Position, std::vector<std::pair<Position, Position>>> Recommend() override;
 	void Reset() override;
 	void Restore(const std::string& boardString, const std::string& turn, const std::string& state) override;
 	void SaveToFile(const std::string& fileName) const override;

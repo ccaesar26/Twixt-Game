@@ -405,6 +405,77 @@ bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColo
 	return foundStart && foundEnd;
 }
 
+std::vector<Position> Board::GetChain(const Position& start) const
+{
+	//make sure the position is valid
+	if (!IsPositionValid(start))
+	{
+		throw GameException("Invalid position");
+	}
+	//make sure the position is occupied
+	if (m_board[start.row][start.col] == nullptr)
+	{
+		throw GameException("Position is not occupied");
+	}
+	//do a dfs and return all the positions that are connected to the start position
+	std::vector<Position> result;
+	std::stack<Position> stack;
+    std::set<Position> visited;
+
+	stack.push(start);
+
+	while (!stack.empty())
+	{
+		Position currentPos = stack.top();
+		stack.pop();
+
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) > 0)
+		{
+			continue;
+		}
+
+		visited.insert(currentPos);
+
+		const IPiecePtr currentPiece = At(currentPos);
+
+		result.push_back(currentPos);
+
+		for (const auto& neighbor : currentPiece->GetNeighbors())
+		{
+			if (!visited.contains(neighbor->GetPosition()))
+			{
+				stack.push(neighbor->GetPosition());
+			}
+		}
+	}
+
+	return result;
+}
+
+std::set<std::vector<Position>> Board::GetChains(EColor playerColor) const
+{
+	//return all the chains on the board
+	std::set<std::vector<Position>> result;
+	std::set<Position> visited;
+	for (int i = 0; i < m_size; i++)
+	{
+		for (int j = 0; j < m_size; j++)
+		{
+			const Position pos(i, j);
+			if (m_board[i][j] != nullptr && visited.contains(pos) == 0 && m_board[i][j]->GetColor() == playerColor)
+			{
+				std::vector<Position> chain = GetChain(pos);
+				result.insert(chain);
+				for (const auto& pos : chain)
+				{
+					visited.insert(pos);
+				}
+			}
+		}
+	}
+	return result;
+}
+
 ILinkPtr& Board::GetLinkBetween(Position pos1, Position pos2)
 {
 	for (auto& link : m_links)

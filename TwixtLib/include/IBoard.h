@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <string>
+#include <set>
 
 using IBoardPtr = std::shared_ptr<class IBoard>;
 
@@ -31,4 +32,6 @@ public:
 	[[nodiscard]] virtual ILinkPtr& GetLinkBetween(Position pos1, Position pos2) = 0;
 
 	[[nodiscard]] virtual std::string ToString() const = 0;
+
+	[[nosdiscard]] virtual std::set<std::vector<Position>> GetChains(EColor playerColor) const = 0;
 };

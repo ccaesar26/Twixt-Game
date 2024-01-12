@@ -53,6 +53,10 @@ public:
 
 	[[nodiscard]] bool CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const;
 
+	[[nodiscard]] std::vector<Position> GetChain(const Position& start) const;
+
+	[[nodiscard]] std::set<std::vector<Position>> GetChains(EColor playerColor) const override;
+
 	[[nodiscard]] ILinkPtr& GetLinkBetween(Position pos1, Position pos2) override;
 
 	void AddLink(const ILinkPtr& link);
