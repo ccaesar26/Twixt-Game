@@ -466,6 +466,12 @@ void TwixtGUIQt::InitializeBoard()
 			{
 				m_board[i][j] = QSharedPointer<HoleButton>::create(Position{i, j});
 				m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
+
+				if (m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+				{
+					m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
+				}
+
 				m_board[i][j]->UpdatePeg();
 			}
 			connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
