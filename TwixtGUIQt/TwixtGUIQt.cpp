@@ -368,6 +368,8 @@ void TwixtGUIQt::InitializeTitleLabel()
 	m_titleLabel->setText("Twixt");
 
 	// TODO: setAlignment, setStyleSheet
+	m_titleLabel->setObjectName("titleLabel");
+	SetStyle(m_titleLabel.data(), "stylesheets/TitleLabel.css");
 
 	m_mainGridLayout->addWidget(m_titleLabel.data(), 0, 0, 1, 1);
 }
@@ -378,6 +380,8 @@ void TwixtGUIQt::InitializeCurrentPlayerLabel()
 	m_currentPlayerLabel->setText("Current player\nRed");
 
 	// TODO: setAlignment, setStyleSheet
+	m_currentPlayerLabel->setObjectName("currentPlayerLabel");
+	SetStyle(m_currentPlayerLabel.data(), "stylesheets/Label.css");
 
 	m_mainGridLayout->addWidget(m_currentPlayerLabel.data(), 0, 2, 1, 1);
 }
@@ -407,7 +411,6 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	m_controlButtonsContainerLayout->addWidget(m_loadButton.data(), 2, 0);
 	m_controlButtonsContainerLayout->addWidget(m_quitButton.data(), 3, 0);
 
-	// TODO: connect signals and slots
 	connect(m_restartButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRestartButtonClicked);
 	connect(m_saveButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnSaveButtonClicked);
 	connect(m_loadButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnLoadButtonClicked);
@@ -437,6 +440,7 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 	m_endTurnButton->setEnabled(false);
 
 	// TODO: setStyleSheet
+	SetStyle(m_actionsButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());
 	m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 1, 1);
