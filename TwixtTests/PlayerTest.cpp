@@ -57,7 +57,7 @@ TEST(PlayerTests, AddLink)
 		Player player(EColor::Black, name, b);
 		player.AddPeg(Position(1, 1));
 		player.AddPeg(Position(2, 3));
-		player.AddLink(Position(1, 1), Position(2, 3));
+		player.AddLink(Position(1, 1));
 		EXPECT_EQ(player.GetLinks().size(), 1);
 	    }
 }
@@ -73,8 +73,8 @@ TEST(PlayerTests, RemoveLink)
 		Player player(EColor::Black, name, b);
 		player.AddPeg(Position(1, 1));
 		player.AddPeg(Position(2, 3));
-		player.AddLink(Position(1, 1), Position(2, 3));
-		player.RemoveLink(Position(1, 1), Position(2, 3));
+		player.AddLink(Position(1, 1));
+		player.RemoveLink(Position(1, 1));
 		EXPECT_EQ(player.GetLinks().size(), 0);
 	}
 }

@@ -539,24 +539,25 @@ void Board::RemoveLink(const ILinkPtr& link)
 	throw GameException("Link not found");
 }
 
-void Board::SetMaxPegs(int count)
+std::vector<ILinkPtr> Board::GetLinks() const
 {
-	m_maxPegs = count;
+	return m_links;
 }
 
-int Board::GetMaxPegs() const
+std::vector<IPiecePtr> Board::GetPieces() const
 {
-	return m_maxPegs;
-}
-
-void Board::SetMaxLinks(int count)
-{
-	m_maxLinks = count;
-}
-
-int Board::GetMaxLinks() const
-{
-	return m_maxLinks;
+	std::vector<IPiecePtr> result;
+	for (auto row : m_board)
+	{
+		for (auto piece : row)
+		{
+			if (piece != nullptr)
+			{
+				result.push_back(piece);
+			}
+		}
+	}
+	return result;
 }
 
 bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const

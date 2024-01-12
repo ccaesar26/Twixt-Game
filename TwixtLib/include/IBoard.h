@@ -36,4 +36,8 @@ public:
 	[[nodiscard]] virtual std::string LinksToString(EColor playerColor) const = 0;
 
 	[[nodiscard]] virtual std::set<std::vector<Position>> GetChains(EColor playerColor) const = 0;
+
+	[[nodiscard]] virtual std::vector<ILinkPtr> GetLinks() const = 0;
+
+	[[nodiscard]] virtual std::vector<IPiecePtr> GetPieces() const = 0;
 };
