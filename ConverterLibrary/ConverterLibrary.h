@@ -7,3 +7,5 @@
 #endif
 
 extern "C" CONVERTERLIBRARY_API  const char* ColorToString(const int color, const bool capitalize = false);
+
+extern "C" CONVERTERLIBRARY_API  const char* GameResultToString( const int result);
