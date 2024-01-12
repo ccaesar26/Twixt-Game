@@ -30,7 +30,7 @@ public slots:
 	//// UI event handlers
 	void OnRestartButtonClicked();
 	void OnSaveButtonClicked();
-	//void OnLoadButtonClicked();
+	void OnLoadButtonClicked();
 	//void OnQuitButtonClicked();
 
 	//void OnPlaceBridgeButtonClicked();
@@ -91,7 +91,7 @@ private:
 
     QVector<QPair<QLine, EColor>> m_links;
 
-    std::shared_ptr<IGame> m_gameLogic;
+    std::shared_ptr<IGame> m_gameLogic = nullptr;
 
     int m_clickCount;
     Position m_firstClick;

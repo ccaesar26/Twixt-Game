@@ -123,6 +123,29 @@ void TwixtGUIQt::OnSaveButtonClicked()
 	}
 }
 
+void TwixtGUIQt::OnLoadButtonClicked()
+{
+
+	const QString fileName = QFileDialog::getOpenFileName(
+		this,
+		"Load game",
+		QDir::homePath(),
+		tr("Text File (*.txt);;All files (*.*)")
+	);
+
+	try
+	{
+		m_gameLogic->LoadFromFile(fileName.toStdString());
+	}
+	catch (const GameException&)
+	{
+	}
+	catch (...)
+	{
+		//throw std::runtime_error("Unknown exception");
+	}
+}
+
 void TwixtGUIQt::OnEndTurnButtonClicked()
 {
 	if (m_gameLogic->IsGameOver())
@@ -405,6 +428,8 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	// TODO: connect signals and slots
 	connect(m_restartButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRestartButtonClicked);
 	connect(m_saveButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnSaveButtonClicked);
+	connect(m_loadButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnLoadButtonClicked);
+	connect(m_quitButton.data(), &QPushButton::clicked, qApp, &QApplication::quit);
 
 	// TODO: setStyleSheet
 
@@ -467,7 +492,7 @@ void TwixtGUIQt::InitializeBoard()
 				m_board[i][j] = QSharedPointer<HoleButton>::create(Position{i, j});
 				m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
 
-				if (m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+				if (m_gameLogic != nullptr && m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
 				{
 					m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
 				}

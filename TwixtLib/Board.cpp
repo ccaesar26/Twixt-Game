@@ -35,6 +35,7 @@ Board::Board(const int size) : m_size(size)
 Board::Board(const std::string& boardString, int size)
 {
 	size_t pos = 0;
+	m_board.resize(size);
 	while (boardString[pos] != '\n')
 	{
 		if (boardString[pos] == ' ')
