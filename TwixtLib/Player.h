@@ -11,8 +11,10 @@ private:
 	EColor m_color;
 	std::string m_name;
 	IBoardWeakPtr m_board;
+	int m_maxPegs;
+	int m_maxLinks;
 public:
-	explicit Player(EColor color, std::string name, IBoardWeakPtr board);
+	explicit Player(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links);
 	[[nodiscard]] std::vector<IPiecePtr> GetPegs() const override;
 	[[nodiscard]] std::vector<ILinkWeakPtr> GetLinks() const override;
 	[[nodiscard]] EColor GetColor() const override;

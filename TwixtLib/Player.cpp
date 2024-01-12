@@ -1,15 +1,17 @@
 #include "Player.h"
 #include <memory>
 
-IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr board)
+IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links)
 {
-	return std::make_unique<Player>(color, name, board);
+	return std::make_unique<Player>(color, name, board, pegs, links);
 }
 
-Player::Player(EColor color, std::string name, IBoardWeakPtr board) :
+Player::Player(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links) :
 	m_color{ color },
 	m_name{ std::move(name) },
-	m_board{ board }
+	m_board{ board },
+	m_maxPegs{ pegs },
+	m_maxLinks{ links }
 {}
 
 std::vector<IPiecePtr> Player::GetPegs() const

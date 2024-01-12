@@ -49,7 +49,7 @@ public:
 	void NotifyGameRestarted() const;
 	bool IsFileValid(const std::string& fileName) const;
 	bool RegexValidate(const std::string& fileName) const;
-	void RequestDraw(EColor current_player) const override;
+	void RequestDraw(EColor color) const override;
 	void NotifyDrawRequested(EColor m_turn) const;
 
 };

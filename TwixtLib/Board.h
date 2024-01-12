@@ -65,8 +65,19 @@ public:
 	void AddLink(const ILinkPtr& link);
 
 	void RemoveLink(const ILinkPtr& link);
+
+	void SetMaxPegs(int count);
+
+	void SetMaxLinks(int count);
+
+	[[nodiscard]] int GetMaxPegs() const;
+
+	[[nodiscard]] int GetMaxLinks() const;
 private:
 	int m_size;
+	int m_maxPegs = 50;
+	int m_maxLinks = 50;
 	std::vector<std::vector<IPiecePtr>> m_board;
 	std::vector<ILinkPtr> m_links;
+
 };

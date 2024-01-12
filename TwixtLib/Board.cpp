@@ -540,6 +540,26 @@ void Board::RemoveLink(const ILinkPtr& link)
 	throw GameException("Link not found");
 }
 
+void Board::SetMaxPegs(int count)
+{
+	m_maxPegs = count;
+}
+
+int Board::GetMaxPegs() const
+{
+	return m_maxPegs;
+}
+
+void Board::SetMaxLinks(int count)
+{
+	m_maxLinks = count;
+}
+
+int Board::GetMaxLinks() const
+{
+	return m_maxLinks;
+}
+
 bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const
 {
 	const IPiecePtr piece = link->GetPiece1();

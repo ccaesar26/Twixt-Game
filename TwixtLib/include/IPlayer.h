@@ -14,7 +14,7 @@ class IPlayer
 {
 public:
 	virtual ~IPlayer() = default;
-	static IPlayerPtr CreatePlayer(EColor color, std::string name, IBoardWeakPtr board);
+	static IPlayerPtr CreatePlayer(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links);
 	[[nodiscard]] virtual std::vector<IPiecePtr> GetPegs() const = 0;
 	[[nodiscard]] virtual std::vector<ILinkWeakPtr> GetLinks() const = 0;
 	[[nodiscard]] virtual EColor GetColor() const = 0;
