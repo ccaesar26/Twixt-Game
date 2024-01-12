@@ -300,3 +300,10 @@ TEST_F(BoardTest, TestLinkOperators)
 	
 }
 
+TEST_F(BoardTest, TestOperator)
+{
+   
+    Board b2 = b1;
+    EXPECT_EQ(b2.At(Position(1, 1))->GetColor(), EColor::Black);
+}
+
