@@ -19,4 +19,9 @@ public:
 	[[nodiscard]] virtual std::vector<ILinkWeakPtr> GetLinks() const = 0;
 	[[nodiscard]] virtual EColor GetColor() const = 0;
 	[[nodiscard]] virtual std::string GetName() const = 0;
+	virtual void AddPeg(IPiecePtr peg) = 0;
+	virtual void AddLink(ILinkPtr link) = 0;
+	virtual void RemoveLink(ILinkPtr link) = 0;
+	[[nodiscard]] virtual int GetLimitPegs() const = 0;
+	[[nodiscard]] virtual int GetLimitLinks() const = 0;
 };
