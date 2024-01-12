@@ -362,6 +362,21 @@ void TwixtGUIQt::OnLinkRemoved(const Position& pos1, const Position& pos2)
 	update();
 }
 
+void TwixtGUIQt::OnDrawRequested(EColor current_player)
+{
+	QMessageBox::StandardButton reply = QMessageBox::question(
+		this,
+		"Draw Request",
+		"Player " + QString(ColorToString(static_cast<int>(current_player), true)) + " requested a draw.\nDo you accept?",
+		QMessageBox::Yes | QMessageBox::No
+	);
+
+	if (reply == QMessageBox::Yes)
+	{
+		//m_gameLogic->SetDraw();
+	}
+}
+
 void TwixtGUIQt::InitializeTitleLabel()
 {
 	m_titleLabel = QSharedPointer<QLabel>{new QLabel{}};

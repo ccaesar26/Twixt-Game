@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 class Board final :
 	public IBoard
@@ -14,7 +15,7 @@ class Board final :
 public:
 	explicit Board(int size = 24);
 
-	Board(const std::string& boardString, int size = 24);
+	Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size = 24);
 
 	// Rule of 5: Destructor
 	~Board() override = default;
@@ -47,11 +48,17 @@ public:
 
 	[[nodiscard]] std::string ToString() const override;
 
+	[[nodiscard]] std::string LinksToString(EColor playerColor) const;
+
 	[[deprecated]] bool CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const;
 
 	[[deprecated]] bool CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const;
 
 	[[nodiscard]] bool CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const;
+
+	[[nodiscard]] std::vector<Position> GetChain(const Position& start) const;
+
+	[[nodiscard]] std::set<std::vector<Position>> GetChains(EColor playerColor) const override;
 
 	[[nodiscard]] ILinkPtr& GetLinkBetween(Position pos1, Position pos2) override;
 
