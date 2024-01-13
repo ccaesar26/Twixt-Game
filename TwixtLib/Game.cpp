@@ -100,8 +100,6 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board->UnlinkPieces(pos1, pos2);
-	NotifyLinkRemoved(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
 
@@ -113,6 +111,10 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 	{
 		m_player2->RemoveLink(link);
 	}
+
+	m_board->UnlinkPieces(pos1, pos2);
+	NotifyLinkRemoved(pos1, pos2);
+
 }
 
 void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
@@ -333,7 +335,7 @@ void Game::SwitchTurn()
 
 void Game::InitializeGame()
 {
-	m_board = IBoard::CreateBoard(12);
+	m_board = IBoard::CreateBoard(24);
 	m_turn = EColor::Red;
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
