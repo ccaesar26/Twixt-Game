@@ -276,7 +276,7 @@ void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Posi
 	}
 }
 
-std::pair<Position, Position> Game::Recommend()
+void Game::Recommend()
 {
 	// 1. DFS to Identify Chains
 	std::set<std::vector<Position>> chains = m_board->GetChains(m_turn);
@@ -284,13 +284,10 @@ std::pair<Position, Position> Game::Recommend()
 	std::vector<std::vector<Position>> sortedChains;
 	EvaluateAndSortChains(chains, sortedChains);
 
-	std::vector<Position> improvingChain;
-	std::pair<Position, Position> improvingLink;
-
 	// 2. Identify Improvable Chains
-	std::tie(improvingChain, improvingLink) = FindImprovableChain(sortedChains);
+	auto [improvingChain, improvingLink] = FindImprovableChain(sortedChains);
 
-	return improvingLink;
+	NotifyHintRecommended(improvingLink);
 }
 
 void Game::Reset()
@@ -472,6 +469,17 @@ void Game::NotifyLinkRemoved(const Position& pos1, const Position& pos2) const
 		if (const auto& sp = it->lock())
 		{
 			sp->OnLinkRemoved(pos1, pos2);
+		}
+	}
+}
+
+void Game::NotifyHintRecommended(std::pair<Position, Position> link) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (const auto& sp = it->lock())
+		{
+			sp->OnHintRecommended(link);
 		}
 	}
 }
