@@ -151,3 +151,64 @@ TEST(OnLinkRemoved, IllegalLinkRemove1)
 	{
 	}
 }
+
+
+TEST(OnGameOver, GameOver1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::RedWinner))
+		.Times(1);
+	game.PlacePiece(Position(0, 3));
+	game.PlacePiece(Position(1, 1));
+	game.PlacePiece(Position(2, 3));
+	game.PlacePiece(Position(3, 1));
+	game.PlacePiece(Position(4, 3));
+	game.PlacePiece(Position(5, 1));
+	game.PlacePiece(Position(6, 3));
+	game.PlacePiece(Position(7, 1));
+	game.PlacePiece(Position(8, 3));
+	game.PlacePiece(Position(9, 1));
+	game.PlacePiece(Position(10, 3));
+	game.PlacePiece(Position(11, 1));
+	game.PlacePiece(Position(12, 3));
+	game.PlacePiece(Position(13, 1));
+	game.PlacePiece(Position(14, 3));
+	game.PlacePiece(Position(15, 1));
+	game.PlacePiece(Position(16, 3));
+	game.PlacePiece(Position(17, 1));
+	game.PlacePiece(Position(18, 3));
+	game.PlacePiece(Position(19, 1));
+	game.PlacePiece(Position(20, 3));
+	game.PlacePiece(Position(21, 1));
+	game.PlacePiece(Position(22, 3));
+	game.PlacePiece(Position(23, 1));
+	game.CreateLink(Position(1, 1), Position(0, 3));
+	game.CreateLink(Position(1, 1), Position(2, 3));
+	game.CreateLink(Position(3, 1), Position(2, 3));
+	game.CreateLink(Position(3, 1), Position(4, 3));
+	game.CreateLink(Position(5, 1), Position(4, 3));
+	game.CreateLink(Position(5, 1), Position(6, 3));
+	game.CreateLink(Position(7, 1), Position(6, 3));
+	game.CreateLink(Position(7, 1), Position(8, 3));
+	game.CreateLink(Position(9, 1), Position(8, 3));
+	game.CreateLink(Position(9, 1), Position(10, 3));
+	game.CreateLink(Position(11, 1), Position(10, 3));
+	game.CreateLink(Position(11, 1), Position(12, 3));
+	game.CreateLink(Position(13, 1), Position(12, 3));
+	game.CreateLink(Position(13, 1), Position(14, 3));
+	game.CreateLink(Position(15, 1), Position(14, 3));
+	game.CreateLink(Position(15, 1), Position(16, 3));
+	game.CreateLink(Position(17, 1), Position(16, 3));
+	game.CreateLink(Position(17, 1), Position(18, 3));
+	game.CreateLink(Position(19, 1), Position(18, 3));
+	game.CreateLink(Position(19, 1), Position(20, 3));
+	game.CreateLink(Position(21, 1), Position(20, 3));
+	game.CreateLink(Position(21, 1), Position(22, 3));
+	game.CreateLink(Position(23, 1), Position(22, 3));
+	
+}
