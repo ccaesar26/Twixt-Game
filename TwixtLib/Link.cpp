@@ -5,9 +5,9 @@ ILinkPtr ILink::Produce(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor
 	return std::make_shared<Link>(piece1, piece2, color);
 }
 
-Link::Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color) :
-	m_piece1{ piece1 },
-	m_piece2{ piece2 },
+Link::Link(IPiecePtr piece1, IPiecePtr piece2, EColor color) :
+	m_piece1{std::move(piece1)},
+	m_piece2{std::move(piece2)},
 	m_color{ color }
 {}
 

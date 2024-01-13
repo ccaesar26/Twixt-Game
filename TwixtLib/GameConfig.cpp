@@ -46,6 +46,8 @@ GameConfig::GameConfig(const std::string& fileName)
 			case 7:
 				m_playerLinkLimit = std::stoi(line);
 				break;
+			default:
+				break;
 		}
 		currentLine++;
 	}
