@@ -54,3 +54,18 @@ TEST(GameTest1, GameSave)
 	
 }
 
+TEST(GameTest1, GameLoad)
+{
+	std::shared_ptr game = IGame::CreateGame();
+	game->PlacePiece(Position(1, 1));
+	game->PlacePiece(Position(2, 3));
+	game->CreateLink(Position(1, 1), Position(2, 3));
+	std::string g = "TestInput.txt";
+	game->SaveToFile(g);
+	std::shared_ptr game1 = IGame::CreateGame();
+	game1->LoadFromFile(g);
+	EXPECT_EQ(game->GetCurrentPlayerColor(), game1->GetCurrentPlayerColor());
+	EXPECT_EQ(game->GetPiecePtr(Position(1, 1))->GetColor(), game1->GetPiecePtr(Position(1, 1))->GetColor());
+	EXPECT_EQ(game->GetPiecePtr(Position(2, 3))->GetColor(), game1->GetPiecePtr(Position(2, 3))->GetColor());
+	
+}
