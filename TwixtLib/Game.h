@@ -46,7 +46,7 @@ public:
 	void PlacePiece(const Position& pos) override;
 	void CreateLink(const Position& pos1, const Position& pos2) override;
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
-	std::pair<Position, Position> Recommend() override;
+	void Recommend() override;
 	void EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains);
 	int CalculateMinCumulativeDistance(const std::vector<Position>& chain);
 	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains);
@@ -58,6 +58,7 @@ public:
 	void NotifyPiecePlaced(const Position& pos) const;
 	void NotifyPiecesLinked(const Position& pos1, const Position& pos2) const;
 	void NotifyLinkRemoved(const Position& pos1, const Position& pos2) const;
+	void NotifyHintRecommended(std::pair<Position, Position> link) const;
 	void NotifyGameOver(EGameResult gameResult) const;
 	void NotifyGameRestarted() const;
 	void NotifyGameLoaded() const;

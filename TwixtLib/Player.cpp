@@ -1,7 +1,8 @@
 #include "Player.h"
 #include <memory>
+#include <utility>
 
-IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links)
+IPlayerPtr IPlayer::CreatePlayer(EColor color, const std::string& name, const IBoardWeakPtr& board, int pegs, int links)
 {
 	return std::make_unique<Player>(color, name, board, pegs, links);
 }
@@ -9,7 +10,7 @@ IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr b
 Player::Player(EColor color, std::string name, IBoardWeakPtr board, int limitPegs, int limitLinks) :
 	m_color{ color },
 	m_name{ std::move(name) },
-	m_board{ board },
+	m_board{std::move(board)},
 	m_limitPegs{ limitPegs },
 	m_limitLinks{ limitLinks },
 	m_availablePegs{ limitPegs },

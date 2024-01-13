@@ -22,7 +22,7 @@ public:
 	virtual void PlacePiece(const Position& pos) = 0;
 	virtual void CreateLink(const Position& pos1, const Position& pos2) = 0;
 	virtual void RemoveLink(const Position& pos1, const Position& pos2) = 0;
-	virtual std::pair<Position, Position> Recommend() = 0;
+	virtual void Recommend() = 0;
 	virtual void SwitchTurn()=0;
 	[[nodiscard]] virtual EColor GetCurrentPlayerColor() const = 0;
 	[[nodiscard]] virtual IPiecePtr GetPiecePtr(const Position& pos) const = 0;

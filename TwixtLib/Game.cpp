@@ -174,6 +174,37 @@ std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprov
 		{
 			std::vector<Position> potentialNeighbors = m_board->GetPotentialNeighbours(extreme);
 
+			//from the potential neighbors, remove the ones that do not improve the length of the chain (vertical or horizontal depending on m_turn)
+			//meaning we only keep the ones that are closer to either the top or the bottom (or left or right) of the board than the extreme piece
+
+			if (m_turn == EColor::Red)
+			{
+				//if the extreme piece is closer to the top of the board than the bottom, remove the potential neighbors that are closer to the bottom than the extreme piece
+				if (extreme.row < m_board->GetSize() - extreme.row)
+				{
+					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.row > extreme.row; }), potentialNeighbors.end());
+				}
+				//if the extreme piece is closer to the bottom of the board than the top, remove the potential neighbors that are closer to the top than the extreme piece
+				else
+				{
+					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.row < extreme.row; }), potentialNeighbors.end());
+				}
+			}
+			else
+			{
+				//if the extreme piece is closer to the left of the board than the right, remove the potential neighbors that are closer to the right than the extreme piece
+				if (extreme.col < m_board->GetSize() - extreme.col)
+				{
+					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.col > extreme.col; }), potentialNeighbors.end());
+				}
+				//if the extreme piece is closer to the right of the board than the left, remove the potential neighbors that are closer to the left than the extreme piece
+				else
+				{
+					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.col < extreme.col; }), potentialNeighbors.end());
+				}
+			}
+
+
 			for (const auto& potentialNeighbor : potentialNeighbors)
 			{
 				if (std::find(chain.begin(), chain.end(), potentialNeighbor) == chain.end())
@@ -245,7 +276,7 @@ void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Posi
 	}
 }
 
-std::pair<Position, Position> Game::Recommend()
+void Game::Recommend()
 {
 	// 1. DFS to Identify Chains
 	std::set<std::vector<Position>> chains = m_board->GetChains(m_turn);
@@ -253,13 +284,10 @@ std::pair<Position, Position> Game::Recommend()
 	std::vector<std::vector<Position>> sortedChains;
 	EvaluateAndSortChains(chains, sortedChains);
 
-	std::vector<Position> improvingChain;
-	std::pair<Position, Position> improvingLink;
-
 	// 2. Identify Improvable Chains
-	std::tie(improvingChain, improvingLink) = FindImprovableChain(sortedChains);
+	auto [improvingChain, improvingLink] = FindImprovableChain(sortedChains);
 
-	return improvingLink;
+	NotifyHintRecommended(improvingLink);
 }
 
 void Game::Reset()
@@ -441,6 +469,17 @@ void Game::NotifyLinkRemoved(const Position& pos1, const Position& pos2) const
 		if (const auto& sp = it->lock())
 		{
 			sp->OnLinkRemoved(pos1, pos2);
+		}
+	}
+}
+
+void Game::NotifyHintRecommended(std::pair<Position, Position> link) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (const auto& sp = it->lock())
+		{
+			sp->OnHintRecommended(link);
 		}
 	}
 }
