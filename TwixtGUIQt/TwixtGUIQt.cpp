@@ -208,6 +208,11 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	UpdateErrorLabel("");
 	UpdateHintLabel("");
 
+	if (m_clickCount > 2)
+	{
+		m_clickCount = 1;
+	}
+
 	try
 	{
 		if (m_clickCount == 0)
@@ -359,6 +364,20 @@ void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 
 void TwixtGUIQt::OnGameOver(const EGameResult& result)
 {
+	const QString gameResult = GameResultToString(static_cast<int>(result));
+	if (const QMessageBox::StandardButton reply = QMessageBox::question(
+		this,
+		"Game Over",
+		gameResult + ".\nDo you want to play again?",
+		QMessageBox::Yes | QMessageBox::No
+	); reply == QMessageBox::Yes)
+	{
+		m_gameLogic->Reset();
+	}
+	else
+	{
+		qApp->quit();
+	}
 }
 
 void TwixtGUIQt::OnGameRestarted()
