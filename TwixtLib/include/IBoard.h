@@ -42,4 +42,6 @@ public:
 	[[nodiscard]] virtual std::vector<IPiecePtr> GetPieces() const = 0;
 
 	[[nodiscard]] virtual int GetSize() const = 0;
+
+	[[nodiscard]] virtual std::vector<Position> GetPotentialNeighbours(const Position& pos) = 0;
 };

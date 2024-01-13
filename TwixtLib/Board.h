@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 class Board final :
 	public IBoard
@@ -34,6 +35,8 @@ public:
 	Board& operator=(Board&& other) noexcept;
 
 	void PlacePiece(Position pos, EColor color) override;
+
+	std::vector<Position> GetPotentialNeighbours(const Position& pos) override;
 
 	void LinkPieces(Position pos1, Position pos2) override;
 

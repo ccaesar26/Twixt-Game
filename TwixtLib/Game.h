@@ -46,7 +46,11 @@ public:
 	void PlacePiece(const Position& pos) override;
 	void CreateLink(const Position& pos1, const Position& pos2) override;
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
-	std::pair<Position, std::vector<std::pair<Position, Position>>> Recommend() override;
+	std::pair<Position, Position> Recommend() override;
+	void EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains);
+	int CalculateMinCumulativeDistance(const std::vector<Position>& chain);
+	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains);
+	void GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces);
 	void Reset() override;
 	void Restore(const GameConfig& config);
 	void SaveToFile(const std::string& fileName) const override;
