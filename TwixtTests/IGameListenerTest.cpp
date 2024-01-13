@@ -140,6 +140,7 @@ TEST(OnLinkRemoved, IllegalLinkRemove1)
 	game.AddListener(listener);
 
 	game.PlacePiece(Position(1, 1));
+	game.SwitchTurn();
 	game.PlacePiece(Position(2, 3));
 	EXPECT_CALL(*listener, OnLinkRemoved(Position(1, 1), Position(2, 3)))
 		.Times(0);

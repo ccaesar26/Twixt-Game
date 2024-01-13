@@ -14,9 +14,9 @@ IBoardPtr IBoard::CreateBoard(int size)
 	return std::make_shared<Board>(size);
 }
 
-IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks)
+IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size)
 {
-	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks);
+	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks, size);
 }
 
 Board::Board(const int size) : m_size(size)

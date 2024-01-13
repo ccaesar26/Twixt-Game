@@ -100,8 +100,6 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 		throw InvalidStateException("Game is not playing");
 	}
 
-	m_board->UnlinkPieces(pos1, pos2);
-	NotifyLinkRemoved(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
 
@@ -113,6 +111,10 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 	{
 		m_player2->RemoveLink(link);
 	}
+
+	m_board->UnlinkPieces(pos1, pos2);
+	NotifyLinkRemoved(pos1, pos2);
+
 }
 
 void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
@@ -178,9 +180,9 @@ void Game::Reset()
 	NotifyGameRestarted();
 }
 
-void Game::Restore(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)
+void Game::Restore(const GameConfig& config)
 {
-	InitializeGame(boardString, playerOneLinks, playerTwoLinks, turn, state);
+	InitializeGame(config);
 }
 
 bool Game::IsDraw() const
@@ -195,28 +197,9 @@ bool Game::IsWon() const
 
 void Game::LoadFromFile(const std::string& fileName)
 {
-	std::ifstream file(fileName);
-	if (!file.is_open())
-	{
-		throw GameException("Could not open file");
-	}
+	const GameConfig gameConfig(fileName);
 
-	std::string boardString;
-	std::string playerOneLinks;
-	std::string playerTwoLinks;
-	std::string turn;
-	std::string state;
-	std::getline(file, boardString);
-	std::getline(file, playerOneLinks);
-	std::getline(file, playerTwoLinks);
-	std::getline(file, turn);
-	std::getline(file, state);
-	boardString += "\n";
-	playerOneLinks += "\n";
-	playerTwoLinks += "\n";
-	turn += "\n";
-	state += "\n";
-	InitializeGame(boardString, playerOneLinks, playerTwoLinks, turn, state);
+	InitializeGame(gameConfig);
 	NotifyGameRestarted();
 }
 
@@ -302,11 +285,14 @@ void Game::SaveToFile(const std::string& fileName) const
 		throw std::runtime_error("Failed to open file");
 	}
 
+	file << m_board->GetSize() << "\n";
 	file << m_board->ToString() << "\n";
 	file << m_board->LinksToString(EColor::Red) << "\n";
 	file << m_board->LinksToString(EColor::Black) << "\n";
 	file << static_cast<int>(m_turn) << "\n";
 	file << static_cast<int>(m_state) << "\n";
+	file << m_player1->GetLimitPegs() << "\n";
+	file << m_player1->GetLimitLinks() << "\n";
 }
 
 void Game::NotifyPiecePlaced(const Position& pos) const
@@ -349,20 +335,20 @@ void Game::SwitchTurn()
 
 void Game::InitializeGame()
 {
-	m_board = IBoard::CreateBoard();
+	m_board = IBoard::CreateBoard(24);
 	m_turn = EColor::Red;
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
 }
 
-void Game::InitializeGame(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)
+void Game::InitializeGame(const GameConfig& config)
 {
-	m_board = IBoard::CreateBoard(boardString, playerOneLinks, playerTwoLinks);
-	m_turn = static_cast<EColor>(turn[0] - '0');
-	m_state = static_cast<EGameState>(state[0] - '0');
-	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
-	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
+	m_board = IBoard::CreateBoard(config.GetBoardString(), config.GetPlayerOneLinks(), config.GetPlayerTwoLinks(), config.GetBoardSize());
+	m_turn = static_cast<EColor>(config.GetTurn()[0] - '0');
+	m_state = static_cast<EGameState>(config.GetState()[0] - '0');
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, config.GetPlayerPegLimit(), config.GetPlayerLinkLimit());
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, config.GetPlayerPegLimit(), config.GetPlayerLinkLimit());
 	std::vector<IPiecePtr> pieces = m_board->GetPieces();
 	std::vector<ILinkPtr> links = m_board->GetLinks();
 	for (auto it = pieces.begin(); it != pieces.end(); ++it)
