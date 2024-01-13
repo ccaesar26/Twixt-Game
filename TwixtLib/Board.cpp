@@ -233,6 +233,40 @@ bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position&
 	return d1 * d2 < 0 && d3 * d4 < 0;
 }
 
+std::vector<Position> Board::GetPotentialNeighbours(const Position& pos)
+{
+	std::vector<Position> result;
+	//we check all the positions that are a chess knight move away from the given position
+	result.emplace_back(Position(pos.row - 2, pos.col - 1));
+	result.emplace_back(Position(pos.row - 2, pos.col + 1));
+	result.emplace_back(Position(pos.row - 1, pos.col - 2));
+	result.emplace_back(Position(pos.row - 1, pos.col + 2));
+	result.emplace_back(Position(pos.row + 1, pos.col - 2));
+	result.emplace_back(Position(pos.row + 1, pos.col + 2));
+	result.emplace_back(Position(pos.row + 2, pos.col - 1));
+	result.emplace_back(Position(pos.row + 2, pos.col + 1));
+
+	//now we remove the positions that are outside the board
+	result.erase(std::remove_if(result.begin(), result.end(), [this](const Position& pos) {return !IsPositionValid(pos); }), result.end());
+
+	//we remove the positions that are already occupied
+	result.erase(std::remove_if(result.begin(), result.end(), [this](const Position& pos) {return m_board[pos.row][pos.col] != nullptr; }), result.end());
+
+	//we remove the positions that are blocked by a link
+	result.erase(std::remove_if(result.begin(), result.end(),
+		[this, pos](const Position& pos2) {
+			return std::any_of(m_links.begin(), m_links.end(),
+			[this, pos, pos2](const ILinkPtr& link) {
+					return DoSegmentsIntersect(pos, pos2,
+					link->GetPiece1()->GetPosition(),
+					link->GetPiece2()->GetPosition());
+				});
+		}),
+		result.end());
+
+	return result;
+}
+
 void Board::LinkPieces(Position pos1, Position pos2)
 {
 	if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)

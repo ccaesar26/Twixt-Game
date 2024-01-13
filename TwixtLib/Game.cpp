@@ -117,57 +117,149 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 	NotifyLinkRemoved(pos1, pos2);
 }
 
-void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
+void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains)
 {
-	std::vector<Position> visited;
+	// Custom comparator for sorting based on the least cumulative distance
+	auto compareChains = [this](const std::vector<Position>& chain1, const std::vector<Position>& chain2) {
+		int minDistanceChain1 = CalculateMinCumulativeDistance(chain1);
+		int minDistanceChain2 = CalculateMinCumulativeDistance(chain2);
+		return minDistanceChain1 < minDistanceChain2;
+		};
 
-	// Iterate through all the pieces on the board.
+	// Copy chains to a vector and sort them using the custom comparator
+	sortedChains.assign(chains.begin(), chains.end());
+	std::sort(sortedChains.begin(), sortedChains.end(), compareChains);
 }
 
-void EvaluateAndSelectBestChain(const std::vector<std::vector<Position>>& chains, std::vector<Position>& bestChain)
+int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain)
 {
-	// Evaluate each chain based on length and proximity to edges.
-	// Select the chain with the best combination of criteria.
-	// Update the 'bestChain' vector with the selected chain.
+	// Calculate and return the minimum cumulative distance for a given chain
+	int minCummulatedDistance = INT_MAX;
+
+	for (const auto& position : chain)
+	{
+		int distance;
+		if (m_turn == EColor::Red)
+		{
+			const int topDifference = position.row;
+			const int bottomDifference = m_board->GetSize() - position.row;
+			distance = topDifference + bottomDifference;
+		}
+		else
+		{
+			const int leftDifference = position.col;
+			const int rightDifference = m_board->GetSize() - position.col;
+			distance = leftDifference + rightDifference;
+		}
+
+		if (distance < minCummulatedDistance)
+		{
+			minCummulatedDistance = distance;
+		}
+	}
+
+	return minCummulatedDistance;
 }
 
-void IdentifyBestMoveForChain(const std::vector<Position>& bestChain, Position& bestMove)
+std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains)
 {
-	// Identify potential moves that bring the chain closer to the edges.
-	// Update the 'bestMove' with the selected move.
+	for (const auto& chain : sortedChains)
+	{
+		// Get all extreme pieces of the chain based on the current player's color
+		std::vector<Position> extremePieces;
+		GetExtremePieces(chain, extremePieces);
+
+		// Check if any of the extreme pieces have potential neighbors that can be added to the chain
+		for (const auto& extreme : extremePieces)
+		{
+			std::vector<Position> potentialNeighbors = m_board->GetPotentialNeighbours(extreme);
+
+			for (const auto& potentialNeighbor : potentialNeighbors)
+			{
+				if (std::find(chain.begin(), chain.end(), potentialNeighbor) == chain.end())
+				{
+					// Potential neighbor is not already part of the chain, so it can be added
+					return std::make_pair(chain, std::make_pair(extreme, potentialNeighbor)); // This chain can be improved
+				}
+			}
+		}
+	}
+
+	// No improvable chain found
+	return std::make_pair(std::vector<Position>(), std::make_pair(Position(), Position()));
+}
+void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces)
+{
+	// Determine extreme pieces based on the current player's color
+	if (m_turn == EColor::Red)
+	{
+		int minRow = INT_MAX;
+		int maxRow = -1;
+
+		for (const auto& position : chain)
+		{
+			if (position.row < minRow)
+			{
+				minRow = position.row;
+			}
+
+			if (position.row > maxRow)
+			{
+				maxRow = position.row;
+			}
+		}
+
+		for (const auto& position : chain)
+		{
+			if (position.row == minRow || position.row == maxRow)
+			{
+				extremePieces.push_back(position);
+			}
+		}
+	}
+	else
+	{
+		int minCol = INT_MAX;
+		int maxCol = -1;
+
+		for (const auto& position : chain)
+		{
+			if (position.col < minCol)
+			{
+				minCol = position.col;
+			}
+
+			if (position.col > maxCol)
+			{
+				maxCol = position.col;
+			}
+		}
+
+		for (const auto& position : chain)
+		{
+			if (position.col == minCol || position.col == maxCol)
+			{
+				extremePieces.push_back(position);
+			}
+		}
+	}
 }
 
-bool IsValidMove(const Position& move)
-{
-	// Check if the move is a legal move and linking the new peg won't intersect with other links.
-	// Return true if the move is valid, false otherwise.
-	return false;
-}
-
-std::pair<Position, std::vector<std::pair<Position, Position>>> Game::Recommend()
+std::pair<Position, Position> Game::Recommend()
 {
 	// 1. DFS to Identify Chains
-	std::vector<std::vector<Position>> chains;
-	IdentifyChainsDFS(chains);
+	std::set<std::vector<Position>> chains = m_board->GetChains(m_turn);
 
-	// 2. Evaluate Chains
-	// 3. Select Best Chain
-	std::vector<Position> bestChain;
-	EvaluateAndSelectBestChain(chains, bestChain);
+	std::vector<std::vector<Position>> sortedChains;
+	EvaluateAndSortChains(chains, sortedChains);
 
-	// 4. Identify Best Move
-	Position bestMove;
-	IdentifyBestMoveForChain(bestChain, bestMove);
+	std::vector<Position> improvingChain;
+	std::pair<Position, Position> improvingLink;
 
-	// 5. Check Validity of Moves
-	if (IsValidMove(bestMove))
-	{
-		// 6. Recommend Best Move
-		return std::make_pair(bestMove, std::vector<std::pair<Position, Position>>());
-	}
-	// Handle the case when no valid moves are found.
-	// You might want to explore other options or return a special value.
-	return std::make_pair(Position(-1, -1), std::vector<std::pair<Position, Position>>());
+	// 2. Identify Improvable Chains
+	std::tie(improvingChain, improvingLink) = FindImprovableChain(sortedChains);
+
+	return improvingLink;
 }
 
 void Game::Reset()
