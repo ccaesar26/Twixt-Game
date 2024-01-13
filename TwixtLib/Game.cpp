@@ -266,7 +266,7 @@ void Game::RequestDraw(EColor currentPlayer) const
 	NotifyGameOver(EGameResult::Draw);
 }
 
-void Game::NotifyDrawRequested(EColor m_turn) const
+void Game::NotifyDrawRequested() const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
@@ -275,6 +275,11 @@ void Game::NotifyDrawRequested(EColor m_turn) const
 			sp->OnDrawRequested(m_turn);
 		}
 	}
+}
+
+void Game::ReconfigureGame(const int boardSize,const int maxPegs,const int maxLinks)
+{
+	InitializeGame(boardSize, maxPegs, maxLinks);
 }
 
 void Game::SaveToFile(const std::string& fileName) const
@@ -293,6 +298,17 @@ void Game::SaveToFile(const std::string& fileName) const
 	file << static_cast<int>(m_state) << "\n";
 	file << m_player1->GetLimitPegs() << "\n";
 	file << m_player1->GetLimitLinks() << "\n";
+}
+
+void Game::NotifyBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (const auto& sp = it->lock())
+		{
+			sp->OnBoardChanged(newSize, newMaxPegs, newMaxLinks);
+		}
+	}
 }
 
 void Game::NotifyPiecePlaced(const Position& pos) const
@@ -340,6 +356,15 @@ void Game::InitializeGame()
 	m_state = EGameState::Playing;
 	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
+}
+
+void Game::InitializeGame(int boardSize, int maxPegs, int maxLinks)
+{
+	m_board = IBoard::CreateBoard(boardSize);
+	m_turn = EColor::Red;
+	m_state = EGameState::Playing;
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, maxPegs, maxLinks);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, maxPegs, maxLinks);
 }
 
 void Game::InitializeGame(const GameConfig& config)

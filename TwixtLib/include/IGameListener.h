@@ -13,6 +13,7 @@ class IGameListener
 {
 public:
 	virtual ~IGameListener() = default;
+	virtual void OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) = 0;
 	virtual void OnPiecePlaced(const Position& pos) = 0;
 	virtual void OnLinkPlaced(const Position& pos1, const Position& pos2) = 0;
 	virtual void OnLinkRemoved(const Position& pos1, const Position& pos2) = 0;

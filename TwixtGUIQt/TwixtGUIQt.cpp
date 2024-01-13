@@ -351,6 +351,11 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	}
 }
 
+void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
+{
+	//TODO: implement
+}
+
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 	m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());

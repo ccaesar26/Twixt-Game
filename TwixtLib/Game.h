@@ -24,6 +24,7 @@ private:
 	GameConfig m_gameConfig;
 
 	void InitializeGame();
+	void InitializeGame(int boardSize, int maxPegs, int maxLinks);
 	void InitializeGame(const GameConfig& config);
 
 public:
@@ -49,6 +50,7 @@ public:
 	void Reset() override;
 	void Restore(const GameConfig& config);
 	void SaveToFile(const std::string& fileName) const override;
+	void NotifyBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) const;
 	void NotifyPiecePlaced(const Position& pos) const;
 	void NotifyPiecesLinked(const Position& pos1, const Position& pos2) const;
 	void NotifyLinkRemoved(const Position& pos1, const Position& pos2) const;
@@ -57,6 +59,7 @@ public:
 	bool IsFileValid(const std::string& fileName) const;
 	bool RegexValidate(const std::string& fileName) const;
 	void RequestDraw(EColor currentPlayer) const override;
-	void NotifyDrawRequested(EColor m_turn) const;
+	void NotifyDrawRequested() const;
+	void ReconfigureGame(int boardSize, int maxPegs, int maxLinks) override;
 
 };
