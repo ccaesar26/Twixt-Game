@@ -95,7 +95,6 @@ void TwixtGUIQt::OnSaveButtonClicked()
 
 void TwixtGUIQt::OnLoadButtonClicked()
 {
-
 	const QString fileName = QFileDialog::getOpenFileName(
 		this,
 		"Load game",
@@ -114,6 +113,25 @@ void TwixtGUIQt::OnLoadButtonClicked()
 	catch (...)
 	{
 		throw std::runtime_error("Unknown exception");
+	}
+}
+
+void TwixtGUIQt::OnGetHintButtonClicked()
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+
+	const auto [pos, links] = m_gameLogic->Recommend();
+
+	UpdateHintLabel("Hint: " + QString::fromStdString(std::to_string(pos.row)) + " " +
+		QString::fromStdString(std::to_string(pos.col)));
+
+	for (const auto& [pos1, pos2] : links)
+	{
+		m_board[pos1.row][pos1.col]->Select();
+		m_board[pos2.row][pos2.col]->Select();
 	}
 }
 
@@ -406,7 +424,8 @@ void TwixtGUIQt::OnDrawRequested(EColor current_player)
 	QMessageBox::StandardButton reply = QMessageBox::question(
 		this,
 		"Draw Request",
-		"Player " + QString(ColorToString(static_cast<int>(current_player), true)) + " requested a draw.\nDo you accept?",
+		"Player " + QString(ColorToString(static_cast<int>(current_player), true)) +
+		" requested a draw.\nDo you accept?",
 		QMessageBox::Yes | QMessageBox::No
 	);
 
@@ -457,15 +476,17 @@ void TwixtGUIQt::InitializeErrorLabel()
 	m_errorLabel->setObjectName("errorLabel");
 	SetStyle(m_errorLabel.data(), "stylesheets/Label.css");
 
-	m_mainGridLayout->addWidget(m_errorLabel.data(), 1, 0, 1, 1);
+	m_mainGridLayout->addWidget(m_errorLabel.data(), 1, 2, 1, 1);
 }
 
 void TwixtGUIQt::InitializeHintLabel()
 {
 	m_hintLabel = QSharedPointer<QLabel>{new QLabel{}};
-	m_hintLabel->setText("hint");
+	m_hintLabel->setText("");
 
 	// TODO: setAlignment, setStyleSheet
+	m_hintLabel->setObjectName("hintLabel");
+	SetStyle(m_hintLabel.data(), "stylesheets/Label.css");
 
 	m_mainGridLayout->addWidget(m_hintLabel.data(), 2, 2, 1, 1);
 }
@@ -498,16 +519,19 @@ void TwixtGUIQt::InitializeGameControlButtons()
 
 void TwixtGUIQt::InitializeGameActionsButtons()
 {
+	m_getHintButton = QSharedPointer<QPushButton>{new QPushButton{"Get Hint"}};
 	m_requestDrawButton = QSharedPointer<QPushButton>{new QPushButton{"Request draw"}};
 	m_endTurnButton = QSharedPointer<QPushButton>{new QPushButton{"End turn"}};
 
 	m_actionsButtonsContainer = QSharedPointer<QWidget>{new QWidget{}};
 	m_actionsButtonsContainerLayout = QSharedPointer<QGridLayout>{new QGridLayout{}};
 
+	m_actionsButtonsContainerLayout->addWidget(m_getHintButton.data(), 1, 0);
 	m_actionsButtonsContainerLayout->addWidget(m_requestDrawButton.data(), 2, 0);
 	m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
 
 	// TODO: connect signals and slots
+	connect(m_getHintButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnGetHintButtonClicked);
 	connect(m_requestDrawButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRequestDrawButtonClicked);
 	connect(m_endTurnButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnEndTurnButtonClicked);
 
@@ -577,17 +601,22 @@ void TwixtGUIQt::UpdateErrorLabel(QString error)
 	m_errorLabel->setText(error);
 }
 
+void TwixtGUIQt::UpdateHintLabel(QString hint)
+{
+	m_hintLabel->setText(hint);
+}
+
 void TwixtGUIQt::SetFont()
 {
 	const int id = QFontDatabase::addApplicationFont("fonts/Poppins-Regular.ttf");
 	const QString family = QFontDatabase::applicationFontFamilies(id).at(0);
-	const QFont font{ family };
+	const QFont font{family};
 	this->setFont(font);
 }
 
 void TwixtGUIQt::SetStyle(QWidget* widget, const QString& styleSheetPath)
 {
-	QFile styleFile{ styleSheetPath };
+	QFile styleFile{styleSheetPath};
 	styleFile.open(QFile::ReadOnly);
 	const QString styleSheet = QLatin1String(styleFile.readAll());
 	widget->setStyleSheet(styleSheet);

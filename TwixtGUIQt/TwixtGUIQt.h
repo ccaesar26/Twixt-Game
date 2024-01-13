@@ -32,6 +32,7 @@ public slots:
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
 
+    void OnGetHintButtonClicked();
 	void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
 
@@ -65,6 +66,7 @@ private:
     // UI Update methods
     void UpdateCurrentPlayerLabel();
     void UpdateErrorLabel(QString error);
+    void UpdateHintLabel(QString hint);
 
     // Style methods
     void SetFont();
@@ -85,6 +87,7 @@ private:
 
     QSharedPointer<QWidget> m_actionsButtonsContainer;
     QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
+    QSharedPointer<QPushButton> m_getHintButton;
     QSharedPointer<QPushButton> m_requestDrawButton;
     QSharedPointer<QPushButton> m_endTurnButton;
 
