@@ -138,16 +138,11 @@ void TwixtGUIQt::OnGetHintButtonClicked()
 		return;
 	}
 
-	const auto [pos, links] = m_gameLogic->Recommend();
+	const auto [pegPositions, linkPosition] = m_gameLogic->Recommend();
 
-	const auto hintString = ConcatenateStrings("Hint: ", std::to_string(pos.row), " ", std::to_string(pos.col));
+	auto hintString = ConcatenateStrings("Hint\nPeg: ", std::to_string(pegPositions.row), " ", std::to_string(pegPositions.col), "\n");
+	hintString = ConcatenateStrings(hintString, "Link: ", std::to_string(linkPosition.row), " ", std::to_string(linkPosition.col));
 	UpdateHintLabel(QString::fromStdString(hintString));
-
-	for (const auto& [pos1, pos2] : links)
-	{
-		m_board[pos1.row][pos1.col]->Select();
-		m_board[pos2.row][pos2.col]->Select();
-	}
 }
 
 void TwixtGUIQt::OnRequestDrawButtonClicked()
