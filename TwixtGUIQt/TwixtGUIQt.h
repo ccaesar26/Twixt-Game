@@ -54,6 +54,7 @@ private:
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
     void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
     void OnDrawRequested(EColor current_player) override;
+    void OnHintRecommended(std::pair<Position, Position> link) override;
 
     // UI initializations
     void InitializeUI();
@@ -65,11 +66,14 @@ private:
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
     void InitializeBoard();
+    void InitializeStats();
 
     // UI Update methods
     void UpdateCurrentPlayerLabel();
     void UpdateErrorLabel(QString error);
     void UpdateHintLabel(QString hint);
+
+    void ClearHint();
 
     // Style methods
     void SetFont();
@@ -98,6 +102,10 @@ private:
     QSharedPointer<QWidget> m_boardContainer;
     QSharedPointer<QGridLayout> m_boardContainerLayout;
     QVector<QVector<QSharedPointer<HoleButton>>> m_board;
+
+    QSharedPointer<QWidget> m_statsContainer;
+    QSharedPointer<QGridLayout> m_statsContainerLayout;
+    QSharedPointer<QLabel> m_statsLabel;
 
     QSharedPointer<QGridLayout> m_mainGridLayout;
 

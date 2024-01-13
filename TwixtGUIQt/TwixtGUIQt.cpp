@@ -138,11 +138,7 @@ void TwixtGUIQt::OnGetHintButtonClicked()
 		return;
 	}
 
-	const auto [pegPositions, linkPosition] = m_gameLogic->Recommend();
-
-	auto hintString = ConcatenateStrings("Hint\nPeg: ", std::to_string(pegPositions.row), " ", std::to_string(pegPositions.col), "\n");
-	hintString = ConcatenateStrings(hintString, "Link: ", std::to_string(linkPosition.row), " ", std::to_string(linkPosition.col));
-	UpdateHintLabel(QString::fromStdString(hintString));
+	m_gameLogic->Recommend();
 }
 
 void TwixtGUIQt::OnRequestDrawButtonClicked()
@@ -171,6 +167,7 @@ void TwixtGUIQt::OnEndTurnButtonClicked()
 	}
 
 	m_endTurnButton->setEnabled(false);
+	m_getHintButton->setEnabled(true);
 
 	try
 	{
@@ -195,6 +192,8 @@ void TwixtGUIQt::OnEndTurnButtonClicked()
 	catch (const GameException&)
 	{
 	}
+
+	ClearHint();
 }
 
 void TwixtGUIQt::OnChangeConfigurationButtonClicked()
@@ -222,7 +221,6 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	auto action = Action::None;
 
 	UpdateErrorLabel("");
-	UpdateHintLabel("");
 
 	if (m_clickCount > 2)
 	{
@@ -362,7 +360,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	for (const auto& position : m_hint)
 	{
 		const auto center = m_board[position.row][position.col]->GetCenter();
-		painter.setPen(QPen{ Qt::blue, 12 });
+		painter.setPen(QPen{ Qt::cyan, 12 });
 		painter.drawEllipse(center, 6, 6);
 	}
 
@@ -387,7 +385,16 @@ void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 	m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());
+
 	m_endTurnButton->setEnabled(true);
+	m_getHintButton->setEnabled(false);
+
+	if (!m_hint.empty())
+	{
+		m_hint.pop_back();
+	}
+	
+	update();
 }
 
 void TwixtGUIQt::OnGameOver(const EGameResult& result)
@@ -475,6 +482,8 @@ void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 
 	m_links.emplaceBack(QLine{center1, center2}, m_gameLogic->GetCurrentPlayerColor());
 
+	ClearHint();
+
 	update();
 }
 
@@ -511,6 +520,39 @@ void TwixtGUIQt::OnDrawRequested(EColor current_player)
 	}
 }
 
+void TwixtGUIQt::OnHintRecommended(std::pair<Position, Position> link)
+{
+	m_hint.clear();
+
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+
+	if (link.first == link.second)
+	{
+		return;
+	}
+
+	m_hint.push_back(link.first);
+	m_hint.push_back(link.second);
+
+	const auto& newPegPosition = link.second;
+	const auto& linkPegPosition = link.first;
+
+	const auto hintString = ConcatenateStrings(
+		"Hint:\n",
+		"Place a peg at position ",
+		"(", std::to_string(newPegPosition.row), ", ", std::to_string(newPegPosition.col), ")",
+		" and link it to the peg from position ",
+		"(", std::to_string(linkPegPosition.row), ", ", std::to_string(linkPegPosition.col), ")",
+		"."
+	);
+	UpdateHintLabel(QString::fromStdString(hintString));
+
+	update();
+}
+
 void TwixtGUIQt::InitializeUI()
 {
 	SetStyle(this, "stylesheets/MainWindow.css");
@@ -522,6 +564,7 @@ void TwixtGUIQt::InitializeUI()
 	InitializeErrorLabel();
 	InitializeHintLabel();
 	InitializeBoard();
+	InitializeStats();
 }
 
 void TwixtGUIQt::InitializeTitleLabel()
@@ -592,7 +635,7 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	SetStyle(m_controlButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_controlButtonsContainer->setLayout(m_controlButtonsContainerLayout.data());
-	m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 1, 1);
+	m_mainGridLayout->addWidget(m_controlButtonsContainer.data(), 3, 0, 2, 1);
 }
 
 void TwixtGUIQt::InitializeGameActionsButtons()
@@ -621,7 +664,7 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 	SetStyle(m_actionsButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());
-	m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 1, 1);
+	m_mainGridLayout->addWidget(m_actionsButtonsContainer.data(), 3, 2, 2, 1);
 }
 
 void TwixtGUIQt::InitializeBoard()
@@ -671,6 +714,28 @@ void TwixtGUIQt::InitializeBoard()
 	m_mainGridLayout->addWidget(m_boardContainer.data(), 0, 1, 4, 1);
 }
 
+void TwixtGUIQt::InitializeStats()
+{
+	m_statsContainer = QSharedPointer<QWidget>{new QWidget{}};
+	m_statsContainerLayout = QSharedPointer<QGridLayout>{new QGridLayout{}};
+
+	m_statsLabel = QSharedPointer<QLabel>{new QLabel{}};
+	m_statsLabel->setText(QString::fromStdString(ConcatenateStrings(
+		"Red pegs:\t", "50 / 50\t\t\t",
+		"Black pegs:\t", "50 / 50\n",
+		"Red links:\t", "50 / 50\t\t\t",
+		"Black links:\t", "50 / 50"
+	)));
+
+	m_statsContainerLayout->addWidget(m_statsLabel.data(), 0, 0);
+
+	m_statsLabel->setObjectName("statsLabel");
+	SetStyle(m_statsContainer.data(), "stylesheets/Label.css");
+
+	m_statsContainer->setLayout(m_statsContainerLayout.data());
+	m_mainGridLayout->addWidget(m_statsContainer.data(), 4, 1, 1, 1);
+}
+
 void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
 	m_currentPlayerLabel->setText(
@@ -687,9 +752,17 @@ void TwixtGUIQt::UpdateHintLabel(QString hint)
 	m_hintLabel->setText(hint);
 }
 
+void TwixtGUIQt::ClearHint()
+{
+	m_hint.clear();
+	UpdateHintLabel("");
+	update();
+}
+
 void TwixtGUIQt::SetFont()
 {
 	const int id = QFontDatabase::addApplicationFont("fonts/Poppins-Regular.ttf");
+	QFontDatabase::addApplicationFont("fonts/Poppins-Bold.ttf");
 	const QString family = QFontDatabase::applicationFontFamilies(id).at(0);
 	const QFont font{family};
 	this->setFont(font);
