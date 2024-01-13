@@ -11,7 +11,9 @@ Player::Player(EColor color, std::string name, IBoardWeakPtr board, int limitPeg
 	m_name{ std::move(name) },
 	m_board{ board },
 	m_limitPegs{ limitPegs },
-	m_limitLinks{ limitLinks }
+	m_limitLinks{ limitLinks },
+	m_availablePegs{ limitPegs },
+	m_availableLinks { limitLinks }
 {}
 
 std::vector<IPiecePtr> Player::GetPegs() const
@@ -39,7 +41,7 @@ void Player::AddPeg(IPiecePtr peg)
 	if(m_limitPegs>0)
 	{
 		m_pegs.push_back(std::move(peg));
-		m_limitPegs--;
+		m_availablePegs--;
 	}
 }
 
@@ -49,13 +51,13 @@ void Player::AddLink(ILinkPtr link)
 	{
 		ILinkWeakPtr weakLink = link;
 		m_links.push_back(std::move(weakLink));
-		m_limitLinks--;
+		m_availableLinks--;
 	}
 }
 
 void Player::RemoveLink(ILinkPtr link)
 {
-	m_limitLinks++;
+	m_availableLinks++;
 	std::erase_if(m_links, [link](const ILinkWeakPtr& linkWeak) {
 		//increase the link limit
 		return linkWeak.lock() == link;
@@ -70,4 +72,14 @@ int Player::GetLimitPegs() const
 int Player::GetLimitLinks() const
 {
 	return m_limitLinks;
+}
+
+int Player::GetAvailablePegs() const
+{
+		return m_availablePegs;
+}
+
+int Player::GetAvailableLinks() const
+{
+		return m_availableLinks;
 }
