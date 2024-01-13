@@ -20,5 +20,4 @@ public:
 	[[nodiscard]] virtual void AddNeighbor(IPiecePtr piece) = 0;
 	[[nodiscard]] virtual void RemoveNeighbor(IPiecePtr piece) = 0;
 	[[nodiscard]] virtual Position GetPosition() const = 0;
-	[[nodiscard]] virtual std::vector<IPiecePtr> GetPotentialNeighbors() const = 0;
 };
