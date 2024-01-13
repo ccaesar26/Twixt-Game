@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameConfig.h" />
     <ClInclude Include="include\EColor.h" />
     <ClInclude Include="include\EGameResult.h" />
     <ClInclude Include="include\EGameState.h" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Board.h" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="include\GameException.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModule</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>

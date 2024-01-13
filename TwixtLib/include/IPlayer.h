@@ -24,4 +24,6 @@ public:
 	virtual void RemoveLink(ILinkPtr link) = 0;
 	[[nodiscard]] virtual int GetLimitPegs() const = 0;
 	[[nodiscard]] virtual int GetLimitLinks() const = 0;
+	[[nodiscard]] virtual int GetAvailablePegs() const = 0;
+	[[nodiscard]] virtual int GetAvailableLinks() const = 0;
 };

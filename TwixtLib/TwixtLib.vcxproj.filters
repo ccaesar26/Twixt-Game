@@ -57,6 +57,9 @@
     <ClInclude Include="include\ILink.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="GameConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Peg.cpp">
@@ -78,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Link.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

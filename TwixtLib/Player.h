@@ -13,6 +13,8 @@ private:
 	IBoardWeakPtr m_board;
 	int m_limitPegs;
 	int m_limitLinks;
+	int m_availablePegs;
+	int m_availableLinks;
 public:
 	explicit Player(EColor color, std::string name, IBoardWeakPtr board, int limitPegs, int limitLinks);
 	[[nodiscard]] std::vector<IPiecePtr> GetPegs() const override;
@@ -24,4 +26,6 @@ public:
 	void RemoveLink(ILinkPtr link) override;
 	[[nodiscard]] int GetLimitPegs() const override;
 	[[nodiscard]] int GetLimitLinks() const override;
+	[[nodiscard]] int GetAvailablePegs() const override;
+	[[nodiscard]] int GetAvailableLinks() const override;
 };

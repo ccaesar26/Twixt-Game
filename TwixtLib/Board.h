@@ -4,6 +4,7 @@
 #include "EColor.h"
 #include "IPiece.h"
 #include "ILink.h"
+#include "GameConfig.h"
 
 #include <vector>
 #include <string>
@@ -44,7 +45,7 @@ public:
 
 	[[nodiscard]] bool CheckIfWinningPlacement(const ILinkPtr& link) const override;
 
-	[[nodiscard]] int GetSize() const;
+	[[nodiscard]] int GetSize() const override;
 
 	[[nodiscard]] std::string ToString() const override;
 
