@@ -204,6 +204,14 @@ void TwixtGUIQt::OnEndTurnButtonClicked()
 	}
 }
 
+void TwixtGUIQt::OnChangeConfigurationButtonClicked()
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+}
+
 void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 {
 	if (m_gameLogic->IsGameOver())
@@ -591,6 +599,7 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 {
 	m_getHintButton = QSharedPointer<QPushButton>{new QPushButton{"Get Hint"}};
 	m_requestDrawButton = QSharedPointer<QPushButton>{new QPushButton{"Request draw"}};
+	m_changeConfiguration = QSharedPointer<QPushButton>{new QPushButton{"Change configuration"}};
 	m_endTurnButton = QSharedPointer<QPushButton>{new QPushButton{"End turn"}};
 
 	m_actionsButtonsContainer = QSharedPointer<QWidget>{new QWidget{}};
@@ -598,11 +607,13 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 
 	m_actionsButtonsContainerLayout->addWidget(m_getHintButton.data(), 1, 0);
 	m_actionsButtonsContainerLayout->addWidget(m_requestDrawButton.data(), 2, 0);
-	m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
+	m_actionsButtonsContainerLayout->addWidget(m_changeConfiguration.data(), 3, 0);
+	m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 4, 0);
 
 	// TODO: connect signals and slots
 	connect(m_getHintButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnGetHintButtonClicked);
 	connect(m_requestDrawButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRequestDrawButtonClicked);
+
 	connect(m_endTurnButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnEndTurnButtonClicked);
 
 	m_endTurnButton->setEnabled(false);

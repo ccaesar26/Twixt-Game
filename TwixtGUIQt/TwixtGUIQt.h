@@ -35,6 +35,7 @@ public slots:
     void OnGetHintButtonClicked();
 	void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
+    void OnChangeConfigurationButtonClicked();
 
 	void OnHoleButtonClicked(const Position& pos);
     void OnHoleButtonRightClicked(const Position& pos);
@@ -91,6 +92,7 @@ private:
     QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
     QSharedPointer<QPushButton> m_getHintButton;
     QSharedPointer<QPushButton> m_requestDrawButton;
+    QSharedPointer<QPushButton> m_changeConfiguration;
     QSharedPointer<QPushButton> m_endTurnButton;
 
     QSharedPointer<QWidget> m_boardContainer;
