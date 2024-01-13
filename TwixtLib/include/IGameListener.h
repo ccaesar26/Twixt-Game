@@ -19,5 +19,6 @@ public:
 	virtual void OnLinkRemoved(const Position& pos1, const Position& pos2) = 0;
 	virtual void OnGameOver(const EGameResult& result) = 0;
 	virtual void OnGameRestarted() = 0;
+	virtual void OnGameLoaded() = 0;
 	virtual void OnDrawRequested(EColor current_player) = 0;
 };

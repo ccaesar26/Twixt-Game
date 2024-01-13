@@ -23,7 +23,7 @@ void Game::PlacePiece(const Position& pos)
 	{
 		throw InvalidStateException("Player 1 has no pieces left");
 	}
-	else if (m_turn == m_player2->GetColor() && m_player2->GetLimitPegs() < 1)
+	if (m_turn == m_player2->GetColor() && m_player2->GetLimitPegs() < 1)
 	{
 		throw InvalidStateException("Player 2 has no pieces left");
 	}
@@ -55,7 +55,8 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	{
 		throw GameException("Player 1 has no links left");
 	}
-	else if (m_turn == m_player2->GetColor() && m_player2->GetLimitLinks() < 1)	{
+	if (m_turn == m_player2->GetColor() && m_player2->GetLimitLinks() < 1)
+	{
 		throw GameException("Player 2 has no links left");
 	}
 
@@ -66,7 +67,7 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	}
 
 	//check if the player's color coincides with the pieces at pos1 and pos2
-	if(m_board->At(pos1)->GetColor() != m_turn || m_board->At(pos2)->GetColor() != m_turn)
+	if (m_board->At(pos1)->GetColor() != m_turn || m_board->At(pos2)->GetColor() != m_turn)
 	{
 		throw GameException("Player's color does not coincide with the pieces at pos1 and pos2");
 	}
@@ -75,7 +76,7 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	NotifyPiecesLinked(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
-	
+
 	if (m_turn == m_player1->GetColor())
 	{
 		m_player1->AddLink(link);
@@ -114,7 +115,6 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 
 	m_board->UnlinkPieces(pos1, pos2);
 	NotifyLinkRemoved(pos1, pos2);
-
 }
 
 void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
@@ -122,7 +122,6 @@ void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
 	std::vector<Position> visited;
 
 	// Iterate through all the pieces on the board.
-	
 }
 
 void EvaluateAndSelectBestChain(const std::vector<std::vector<Position>>& chains, std::vector<Position>& bestChain)
@@ -166,12 +165,9 @@ std::pair<Position, std::vector<std::pair<Position, Position>>> Game::Recommend(
 		// 6. Recommend Best Move
 		return std::make_pair(bestMove, std::vector<std::pair<Position, Position>>());
 	}
-	else
-	{
-		// Handle the case when no valid moves are found.
-		// You might want to explore other options or return a special value.
-		return std::make_pair(Position(-1, -1), std::vector<std::pair<Position, Position>>());
-	}
+	// Handle the case when no valid moves are found.
+	// You might want to explore other options or return a special value.
+	return std::make_pair(Position(-1, -1), std::vector<std::pair<Position, Position>>());
 }
 
 void Game::Reset()
@@ -199,8 +195,11 @@ void Game::LoadFromFile(const std::string& fileName)
 {
 	const GameConfig gameConfig(fileName);
 
-	InitializeGame(gameConfig);
 	NotifyGameRestarted();
+
+	InitializeGame(gameConfig);
+
+	NotifyGameLoaded();
 }
 
 bool Game::IsGameOver() const
@@ -230,6 +229,17 @@ void Game::NotifyGameRestarted() const
 	}
 }
 
+void Game::NotifyGameLoaded() const
+{
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
+	{
+		if (const auto& sp = it->lock())
+		{
+			sp->OnGameLoaded();
+		}
+	}
+}
+
 bool Game::IsFileValid(const std::string& fileName) const
 {
 	std::ifstream file(fileName);
@@ -239,24 +249,23 @@ bool Game::IsFileValid(const std::string& fileName) const
 	{
 		return false;
 	}
-	
+
 	std::getline(file, config);
-	
+
 	return RegexValidate(config);
 }
 
 bool Game::RegexValidate(const std::string& fileName) const
 {
 	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
-	if (std::regex_match(fileName, regexPattern)) {
+	if (std::regex_match(fileName, regexPattern))
+	{
 		return true;
 	}
-	else {
-		return false;
-	}
+	return false;
 }
 
-void Game::RequestDraw(EColor currentPlayer) const
+void Game::EndInDraw() const
 {
 	if (m_state != EGameState::Playing)
 	{
@@ -277,7 +286,7 @@ void Game::NotifyDrawRequested() const
 	}
 }
 
-void Game::ReconfigureGame(const int boardSize,const int maxPegs,const int maxLinks)
+void Game::ReconfigureGame(const int boardSize, const int maxPegs, const int maxLinks)
 {
 	InitializeGame(boardSize, maxPegs, maxLinks);
 }
@@ -326,7 +335,8 @@ void Game::NotifyPiecesLinked(const Position& pos1, const Position& pos2) const
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if (const auto& sp = it->lock()){
+		if (const auto& sp = it->lock())
+		{
 			sp->OnLinkPlaced(pos1, pos2);
 		}
 	}
@@ -369,11 +379,18 @@ void Game::InitializeGame(int boardSize, int maxPegs, int maxLinks)
 
 void Game::InitializeGame(const GameConfig& config)
 {
-	m_board = IBoard::CreateBoard(config.GetBoardString(), config.GetPlayerOneLinks(), config.GetPlayerTwoLinks(), config.GetBoardSize());
+	m_board = IBoard::CreateBoard(config.GetBoardString(), config.GetPlayerOneLinks(), config.GetPlayerTwoLinks(),
+	                              config.GetBoardSize(), [this](const Position pos1, const Position pos2, const EColor color)
+	                              {
+									  m_turn = color;
+		                              NotifyPiecesLinked(pos1, pos2);
+	                              });
 	m_turn = static_cast<EColor>(config.GetTurn()[0] - '0');
 	m_state = static_cast<EGameState>(config.GetState()[0] - '0');
-	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, config.GetPlayerPegLimit(), config.GetPlayerLinkLimit());
-	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, config.GetPlayerPegLimit(), config.GetPlayerLinkLimit());
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, config.GetPlayerPegLimit(),
+	                                  config.GetPlayerLinkLimit());
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, config.GetPlayerPegLimit(),
+	                                  config.GetPlayerLinkLimit());
 	std::vector<IPiecePtr> pieces = m_board->GetPieces();
 	std::vector<ILinkPtr> links = m_board->GetLinks();
 	for (auto it = pieces.begin(); it != pieces.end(); ++it)
@@ -438,10 +455,7 @@ int Game::GetPegsLimitNumber(EColor playerColor)
 	{
 		return m_player1->GetLimitPegs();
 	}
-	else
-	{
-		return m_player2->GetLimitPegs();
-	}
+	return m_player2->GetLimitPegs();
 }
 
 int Game::GetLinksLimitNumber(EColor playerColor)
@@ -450,10 +464,7 @@ int Game::GetLinksLimitNumber(EColor playerColor)
 	{
 		return m_player1->GetLimitLinks();
 	}
-	else
-	{
-		return m_player2->GetLimitLinks();
-	}
+	return m_player2->GetLimitLinks();
 }
 
 int Game::GetAvailableLinksNumber(EColor playerColor) const
@@ -462,10 +473,7 @@ int Game::GetAvailableLinksNumber(EColor playerColor) const
 	{
 		return m_player1->GetAvailableLinks();
 	}
-	else
-	{
-		return m_player2->GetAvailableLinks();
-	}
+	return m_player2->GetAvailableLinks();
 }
 
 int Game::GetAvailablePegsNumber(EColor playerColor) const
@@ -474,10 +482,7 @@ int Game::GetAvailablePegsNumber(EColor playerColor) const
 	{
 		return m_player1->GetAvailablePegs();
 	}
-	else
-	{
-		return m_player2->GetAvailablePegs();
-	}
+	return m_player2->GetAvailablePegs();
 }
 
 int Game::GetBoardSize() const

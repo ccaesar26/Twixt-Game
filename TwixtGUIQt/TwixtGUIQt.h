@@ -49,6 +49,7 @@ private:
     void OnPiecePlaced(const Position& pos) override;
     void OnGameOver(const EGameResult& result) override;
     void OnGameRestarted() override;
+    void OnGameLoaded() override;
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
     void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
     void OnDrawRequested(EColor current_player) override;

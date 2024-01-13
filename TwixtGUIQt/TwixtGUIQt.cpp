@@ -14,6 +14,21 @@
 #include "GameException.h"
 #include "ConverterLibrary.h"
 
+namespace
+{
+	template <typename T>
+	std::string ConcatenateStrings(const T& str)
+	{
+		return str;
+	}
+
+	template <typename T, typename... Args>
+	std::string ConcatenateStrings(const T& first, const Args&... rest)
+	{
+		return std::string(first) + ConcatenateStrings(rest...);
+	}
+}
+
 TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	: QMainWindow{parent}, m_clickCount{0}, m_isFirstTurn{true}
 {
@@ -125,8 +140,8 @@ void TwixtGUIQt::OnGetHintButtonClicked()
 
 	const auto [pos, links] = m_gameLogic->Recommend();
 
-	UpdateHintLabel("Hint: " + QString::fromStdString(std::to_string(pos.row)) + " " +
-		QString::fromStdString(std::to_string(pos.col)));
+	const auto hintString = ConcatenateStrings("Hint: ", std::to_string(pos.row), " ", std::to_string(pos.col));
+	UpdateHintLabel(QString::fromStdString(hintString));
 
 	for (const auto& [pos1, pos2] : links)
 	{
@@ -151,7 +166,7 @@ void TwixtGUIQt::OnRequestDrawButtonClicked()
 
 	if (reply == QMessageBox::Yes)
 	{
-		m_gameLogic->RequestDraw(m_gameLogic->GetCurrentPlayerColor());
+		m_gameLogic->EndInDraw();
 	}
 }
 
@@ -416,6 +431,35 @@ void TwixtGUIQt::OnGameRestarted()
 	UpdateCurrentPlayerLabel();
 }
 
+void TwixtGUIQt::OnGameLoaded()
+{
+	for (int i = 0; i < m_board.size(); ++i)
+	{
+		for (int j = 0; j < m_board.size(); ++j)
+		{
+			if (i == 0 && j == 0 || i == m_board.size() - 1 && j == 0
+				|| i == 0 && j == m_board.size() - 1 || i == m_board.size() - 1 && j == m_board.size() - 1)
+			{
+				continue;
+			}
+
+			if (m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+			{
+				m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
+				m_isFirstTurn = false;
+			}
+			else
+			{
+				m_board[i][j]->ResetPeg();
+			}
+		}
+	}
+
+	m_clickCount = 0;
+
+	UpdateCurrentPlayerLabel();
+}
+
 void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 {
 	const QPoint center1 = m_board[pos1.row][pos1.col]->GetCenter();
@@ -446,17 +490,16 @@ void TwixtGUIQt::OnLinkRemoved(const Position& pos1, const Position& pos2)
 
 void TwixtGUIQt::OnDrawRequested(EColor current_player)
 {
-	QMessageBox::StandardButton reply = QMessageBox::question(
+	if (const QMessageBox::StandardButton reply = QMessageBox::question(
 		this,
 		"Draw Request",
-		"Player " + QString(ColorToString(static_cast<int>(current_player), true)) +
-		" requested a draw.\nDo you accept?",
+		QString::fromStdString(ConcatenateStrings(
+			"Player ", QString(ColorToString(static_cast<int>(current_player), true)).toStdString(),
+			" requested a draw.\nDo you accept?")),
 		QMessageBox::Yes | QMessageBox::No
-	);
-
-	if (reply == QMessageBox::Yes)
+	); reply == QMessageBox::Yes)
 	{
-		//m_gameLogic->SetDraw();
+		m_gameLogic->EndInDraw();
 	}
 }
 

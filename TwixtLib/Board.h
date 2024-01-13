@@ -16,7 +16,8 @@ class Board final :
 public:
 	explicit Board(int size = 24);
 
-	Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size = 24);
+	Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size = 24, const std::
+		function<void(Position pos1, Position pos2, EColor color)>& notificationCallback = [](const Position p1, const Position p2, const EColor color){});
 
 	// Rule of 5: Destructor
 	~Board() override = default;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "IPiece.h"
 #include "ILink.h"
 #include "Position.h"
@@ -17,7 +19,9 @@ public:
 
 	static IBoardPtr CreateBoard();
 	static IBoardPtr CreateBoard(int size);
-	static IBoardPtr CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size);
+	static IBoardPtr CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size, const std::
+	                             function<void(const Position pos1, const Position pos2, const EColor color)>&
+	                             notificationCallback);
 
 	virtual void PlacePiece(Position pos, EColor color) = 0;
 

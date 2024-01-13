@@ -1,4 +1,7 @@
 #include "Board.h"
+
+#include <functional>
+
 #include "GameException.h"
 #include <stack>
 #include "Peg.h"
@@ -14,9 +17,11 @@ IBoardPtr IBoard::CreateBoard(int size)
 	return std::make_shared<Board>(size);
 }
 
-IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size)
+IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size, const std::
+                              function<void(const Position pos1, const Position pos2, const EColor color)>&
+                              notificationCallback)
 {
-	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks, size);
+	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks, size, notificationCallback);
 }
 
 Board::Board(const int size) : m_size(size)
@@ -32,7 +37,8 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
-Board::Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size)
+Board::Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size, const std::
+	function<void(Position pos1, Position pos2, EColor color)>& notificationCallback)
 {
 	int pos = 0;
 	m_board.resize(size);
@@ -61,10 +67,14 @@ Board::Board(const std::string& boardString, const std::string& playerOneLinks, 
 	while (ss1 >> row1 >> col1 >> row2 >> col2)
 	{
 		LinkPieces(Position(row1, col1), Position(row2, col2));
+		const auto color = m_board[row1][col1]->GetColor();
+		notificationCallback(Position(row1, col1), Position(row2, col2), color);
 	}
 	while (ss2 >> row1 >> col1 >> row2 >> col2)
 	{
 		LinkPieces(Position(row1, col1), Position(row2, col2));
+		const auto color = m_board[row1][col1]->GetColor();
+		notificationCallback(Position(row1, col1), Position(row2, col2), color);
 	}
 }
 

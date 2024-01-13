@@ -261,7 +261,7 @@ TEST(OnGameOver, GameOver3)
 	game.SwitchTurn();
 	EXPECT_CALL(*listener, OnGameOver(EGameResult::Draw))
 		.Times(1);
-	game.RequestDraw(EColor::Black);
+	game.EndInDraw();
 }	
 
 TEST(OnGameRestarted, GameRestarted1)

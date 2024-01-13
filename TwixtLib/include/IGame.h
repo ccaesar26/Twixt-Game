@@ -36,6 +36,6 @@ public:
 	[[nodiscard]] virtual bool IsWon() const = 0;
 	virtual void LoadFromFile(const std::string& fileName) = 0;
 	virtual void SaveToFile(const std::string& fileName) const = 0;
-	virtual void RequestDraw(EColor currentPlayer) const = 0;
+	virtual void EndInDraw() const = 0;
 	virtual void ReconfigureGame(int boardSize, int maxPegs, int maxLinks) = 0;
 };

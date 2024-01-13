@@ -56,10 +56,11 @@ public:
 	void NotifyLinkRemoved(const Position& pos1, const Position& pos2) const;
 	void NotifyGameOver(EGameResult gameResult) const;
 	void NotifyGameRestarted() const;
+	void NotifyGameLoaded() const;
+	void NotifyDrawRequested() const;
 	bool IsFileValid(const std::string& fileName) const;
 	bool RegexValidate(const std::string& fileName) const;
-	void RequestDraw(EColor currentPlayer) const override;
-	void NotifyDrawRequested() const;
+	void EndInDraw() const override;
 	void ReconfigureGame(int boardSize, int maxPegs, int maxLinks) override;
 
 };
