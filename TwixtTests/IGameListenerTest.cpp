@@ -262,3 +262,16 @@ TEST(OnGameOver, GameOver3)
 		.Times(1);
 	game.RequestDraw(EColor::Black);
 }	
+
+TEST(OnGameRestarted, GameRestarted1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+	game.SwitchTurn();
+	EXPECT_CALL(*listener, OnGameRestarted())
+		.Times(1);
+	game.Reset();
+}
