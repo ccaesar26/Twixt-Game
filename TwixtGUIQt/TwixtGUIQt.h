@@ -31,11 +31,9 @@ public slots:
 	void OnRestartButtonClicked();
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
-	//void OnQuitButtonClicked();
 
-	//void OnPlaceBridgeButtonClicked();
-	//void OnRemoveBridgeButtonClicked();
-	//void OnRequestDrawButtonClicked();
+    void OnGetHintButtonClicked();
+	void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
 
 	void OnHoleButtonClicked(const Position& pos);
@@ -55,8 +53,11 @@ private:
     void OnDrawRequested(EColor current_player) override;
 
     // UI initializations
+    void InitializeUI();
+
     void InitializeTitleLabel();
 	void InitializeCurrentPlayerLabel();
+    void InitializeErrorLabel();
     void InitializeHintLabel();
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
@@ -64,10 +65,17 @@ private:
 
     // UI Update methods
     void UpdateCurrentPlayerLabel();
+    void UpdateErrorLabel(QString error);
+    void UpdateHintLabel(QString hint);
+
+    // Style methods
+    void SetFont();
+    void SetStyle(QWidget* widget, const QString& styleSheetPath);
 
 private:
     QSharedPointer<QLabel> m_titleLabel;
     QSharedPointer<QLabel> m_currentPlayerLabel;
+    QSharedPointer<QLabel> m_errorLabel;
     QSharedPointer<QLabel> m_hintLabel;
 
     QSharedPointer<QWidget> m_controlButtonsContainer;
@@ -79,8 +87,7 @@ private:
 
     QSharedPointer<QWidget> m_actionsButtonsContainer;
     QSharedPointer<QGridLayout> m_actionsButtonsContainerLayout;
-    QSharedPointer<QPushButton> m_placeBridgeButton;
-    QSharedPointer<QPushButton> m_removeBridgeButton;
+    QSharedPointer<QPushButton> m_getHintButton;
     QSharedPointer<QPushButton> m_requestDrawButton;
     QSharedPointer<QPushButton> m_endTurnButton;
 

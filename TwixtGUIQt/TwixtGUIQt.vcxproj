@@ -123,6 +123,11 @@
   <ItemGroup>
     <QtMoc Include="HoleButton.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="stylesheets\Button.css" />
+    <None Include="stylesheets\Label.css" />
+    <None Include="stylesheets\TitleLabel.css" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
