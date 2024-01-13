@@ -212,3 +212,40 @@ TEST(OnGameOver, GameOver1)
 	game.CreateLink(Position(23, 1), Position(22, 3));
 	
 }
+
+TEST(OnGameOver, GameOver2)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+	game.SwitchTurn();
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::BlackWinner))
+		.Times(1);
+	game.PlacePiece(Position(1, 0));
+	game.PlacePiece(Position(2, 2));
+	game.PlacePiece(Position(1, 4));
+	game.PlacePiece(Position(2, 6));
+	game.PlacePiece(Position(1, 8));
+	game.PlacePiece(Position(2, 10));
+	game.PlacePiece(Position(1, 12));
+	game.PlacePiece(Position(2, 14));
+	game.PlacePiece(Position(1, 16));
+	game.PlacePiece(Position(2, 18));
+	game.PlacePiece(Position(1, 20));
+	game.PlacePiece(Position(2, 22));
+	game.PlacePiece(Position(4, 23));
+	game.CreateLink(Position(1, 0), Position(2, 2));
+	game.CreateLink(Position(2, 2), Position(1, 4));
+	game.CreateLink(Position(1, 4), Position(2, 6));
+	game.CreateLink(Position(2, 6), Position(1, 8));
+	game.CreateLink(Position(1, 8), Position(2, 10));
+	game.CreateLink(Position(2, 10), Position(1, 12));
+	game.CreateLink(Position(1, 12), Position(2, 14));
+	game.CreateLink(Position(2, 14), Position(1, 16));
+	game.CreateLink(Position(1, 16), Position(2, 18));
+	game.CreateLink(Position(2, 18), Position(1, 20));
+	game.CreateLink(Position(1, 20), Position(2, 22));
+	game.CreateLink(Position(2, 22), Position(4, 23));
+}
