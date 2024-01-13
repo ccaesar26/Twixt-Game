@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "GameException.h"
 #include "Board.h"
+#include "Peg.h"
 
 TEST(PlayerTests, CreatePlayer)
 {
@@ -13,7 +14,7 @@ TEST(PlayerTests, CreatePlayer)
 	if (b.lock())
 	{
 		std::string name = "Vlad";
-		Player player(EColor::Black, name, b);
+		Player player(EColor::Black, name, b,50,50);
 		EXPECT_EQ(player.GetName(), name);
 	}
 }
@@ -26,7 +27,7 @@ TEST(PlayerTests, CreatePlayer2)
 	if (b.lock())
 	{
 		std::string name = "Vlad";
-		IPlayerPtr player = Player::CreatePlayer(EColor::Black, name, b);
+		IPlayerPtr player = Player::CreatePlayer(EColor::Black, name, b, 50, 50);
 		EXPECT_EQ(player->GetColor(), EColor::Black);
 	}
 }
@@ -39,9 +40,11 @@ TEST(PlayerTests, AddPeg)
 	if (b.lock())
 	{
 		std::string name = "Vlad";
-		Player player(EColor::Black, name, b);
-		player.AddPeg(Position(1, 1));
-		player.AddPeg(Position(2, 1));
+		Player player(EColor::Black, name, b, 50, 50);
+		IPiecePtr peg1 = IPiece::Produce(EColor::Black, Position(1, 1));
+		IPiecePtr peg2 = IPiece::Produce(EColor::Black, Position(2, 1));
+		player.AddPeg(peg1);
+		player.AddPeg(peg2);
 		EXPECT_EQ(player.GetPegs().size(), 2);
 	}
 }
@@ -54,10 +57,11 @@ TEST(PlayerTests, AddLink)
 		if (b.lock())
 		{
 		std::string name = "Vlad";
-		Player player(EColor::Black, name, b);
-		player.AddPeg(Position(1, 1));
-		player.AddPeg(Position(2, 3));
-		player.AddLink(Position(1, 1));
+		Player player(EColor::Black, name, b, 50, 50);
+		IPiecePtr peg1 = IPiece::Produce(EColor::Black, Position(1, 1));
+		IPiecePtr peg2 = IPiece::Produce(EColor::Black, Position(2, 3));
+		ILinkPtr link = ILink::Produce(peg1, peg2, EColor::Black);
+		player.AddLink(link);
 		EXPECT_EQ(player.GetLinks().size(), 1);
 	    }
 }
@@ -70,11 +74,12 @@ TEST(PlayerTests, RemoveLink)
 	if (b.lock())
 	{
 		std::string name = "Vlad";
-		Player player(EColor::Black, name, b);
-		player.AddPeg(Position(1, 1));
-		player.AddPeg(Position(2, 3));
-		player.AddLink(Position(1, 1));
-		player.RemoveLink(Position(1, 1));
+		Player player(EColor::Black, name, b, 50, 50);
+		IPiecePtr peg1 = IPiece::Produce(EColor::Black, Position(1, 1));
+		IPiecePtr peg2 = IPiece::Produce(EColor::Black, Position(2, 3));
+		ILinkPtr link = ILink::Produce(peg1, peg2, EColor::Black);
+		player.AddLink(link);
+		player.RemoveLink(link);
 		EXPECT_EQ(player.GetLinks().size(), 0);
 	}
 }

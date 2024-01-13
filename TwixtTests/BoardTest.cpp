@@ -307,3 +307,8 @@ TEST_F(BoardTest, TestOperator)
     EXPECT_EQ(b2.At(Position(1, 1))->GetColor(), EColor::Black);
 }
 
+TEST_F(BoardTest, TestCopyConstructor)
+{
+	Board b2(b1);
+	EXPECT_EQ(b2.At(Position(1, 1))->GetColor(), EColor::Black);
+}
