@@ -59,6 +59,12 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 		throw GameException("Player 2 has no links left");
 	}
 
+	//check if either piece is a null piece
+	if (m_board->At(pos1) == nullptr || m_board->At(pos2) == nullptr)
+	{
+		throw GameException("Either one of the pieces is null");
+	}
+
 	//check if the player's color coincides with the pieces at pos1 and pos2
 	if(m_board->At(pos1)->GetColor() != m_turn || m_board->At(pos2)->GetColor() != m_turn)
 	{
