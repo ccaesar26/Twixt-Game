@@ -114,3 +114,20 @@ TEST(OnLinkPlaced, IllegalLinkPlace2)
 	{
 	}
 }
+
+TEST(OnLinkRemoved, LegalLinkRemove1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+	game.PlacePiece(Position(1, 1));
+	game.PlacePiece(Position(2, 3));
+	game.CreateLink(Position(1, 1), Position(2, 3));
+	EXPECT_CALL(*listener, OnLinkRemoved(Position(1, 1), Position(2, 3)))
+		.Times(1);
+	game.RemoveLink(Position(1, 1), Position(2, 3));
+}
+
