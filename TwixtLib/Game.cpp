@@ -340,8 +340,8 @@ void Game::InitializeGame()
 	m_board = IBoard::CreateBoard();
 	m_turn = EColor::Red;
 	m_state = EGameState::Playing;
-	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 2);
-	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 1);
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
 }
 
 void Game::InitializeGame(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)

@@ -52,8 +52,11 @@ private:
     void OnDrawRequested(EColor current_player) override;
 
     // UI initializations
+    void InitializeUI();
+
     void InitializeTitleLabel();
 	void InitializeCurrentPlayerLabel();
+    void InitializeErrorLabel();
     void InitializeHintLabel();
 	void InitializeGameControlButtons();
     void InitializeGameActionsButtons();
@@ -61,6 +64,7 @@ private:
 
     // UI Update methods
     void UpdateCurrentPlayerLabel();
+    void UpdateErrorLabel(QString error);
 
     // Style methods
     void SetFont();
@@ -69,6 +73,7 @@ private:
 private:
     QSharedPointer<QLabel> m_titleLabel;
     QSharedPointer<QLabel> m_currentPlayerLabel;
+    QSharedPointer<QLabel> m_errorLabel;
     QSharedPointer<QLabel> m_hintLabel;
 
     QSharedPointer<QWidget> m_controlButtonsContainer;

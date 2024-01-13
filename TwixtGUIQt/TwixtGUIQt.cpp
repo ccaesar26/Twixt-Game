@@ -20,12 +20,7 @@ TwixtGUIQt::TwixtGUIQt(QWidget* parent)
 	const auto mainWidget = new QWidget{};
 	m_mainGridLayout = QSharedPointer<QGridLayout>{new QGridLayout{}};
 
-	InitializeTitleLabel();
-	InitializeGameControlButtons();
-	InitializeGameActionsButtons();
-	InitializeCurrentPlayerLabel();
-	InitializeHintLabel();
-	InitializeBoard();
+	InitializeUI();
 
 	mainWidget->setLayout(m_mainGridLayout.data());
 
@@ -183,36 +178,56 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 		return;
 	}
 
+	enum class Action
+	{
+		None,
+		PlacePeg,
+		PlaceLink,
+	};
+
+	auto action = Action::None;
+
 	try
 	{
-		m_clickCount++;
-
-		if (m_clickCount == 1)
+		if (m_clickCount == 0)
 		{
+			action = Action::PlacePeg;
 			m_gameLogic->PlacePiece(pos);
 		}
-		else if (m_clickCount == 2)
+		else if (m_clickCount == 1)
 		{
 			m_firstClick = pos;
 		}
-		else if (m_clickCount == 3)
+		else if (m_clickCount == 2)
 		{
 			m_secondClick = pos;
-
+			action = Action::PlaceLink;
 			m_gameLogic->CreateLink(m_firstClick, m_secondClick);
-
-			m_clickCount = 1;
 		}
+
+		m_clickCount++;
 	}
-	catch (const GameException&)
+	catch (const GameException& e)
 	{
-		m_clickCount--;
+		UpdateErrorLabel(e.what());
+		switch (action)
+		{
+		case Action::PlacePeg:
+			m_clickCount = 0;
+			break;
+		case Action::PlaceLink:
+			m_clickCount = 1;
+			break;
+		default:
+			break;
+		}
 	}
 	catch (...)
 	{
 		throw std::runtime_error("Unknown exception");
 	}
 }
+
 
 void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 {
@@ -223,13 +238,11 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 
 	try
 	{
-		m_clickCount++;
-
-		if (m_clickCount == 2)
+		if (m_clickCount == 1)
 		{
 			m_firstClick = pos;
 		}
-		else if (m_clickCount == 3)
+		else if (m_clickCount == 2)
 		{
 			m_secondClick = pos;
 
@@ -237,6 +250,8 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 
 			m_clickCount = 1;
 		}
+
+		m_clickCount++;
 	}
 	catch (const GameException&)
 	{
@@ -247,6 +262,7 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 		throw std::runtime_error("Unknown exception");
 	}
 }
+
 
 void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 {
@@ -398,12 +414,22 @@ void TwixtGUIQt::OnDrawRequested(EColor current_player)
 	}
 }
 
+void TwixtGUIQt::InitializeUI()
+{
+	InitializeTitleLabel();
+	InitializeGameControlButtons();
+	InitializeGameActionsButtons();
+	InitializeCurrentPlayerLabel();
+	InitializeErrorLabel();
+	InitializeHintLabel();
+	InitializeBoard();
+}
+
 void TwixtGUIQt::InitializeTitleLabel()
 {
 	m_titleLabel = QSharedPointer<QLabel>{new QLabel{}};
 	m_titleLabel->setText("Twixt");
 
-	// TODO: setAlignment, setStyleSheet
 	m_titleLabel->setObjectName("titleLabel");
 	SetStyle(m_titleLabel.data(), "stylesheets/TitleLabel.css");
 
@@ -415,17 +441,27 @@ void TwixtGUIQt::InitializeCurrentPlayerLabel()
 	m_currentPlayerLabel = QSharedPointer<QLabel>{new QLabel{}};
 	m_currentPlayerLabel->setText("Current player\nRed");
 
-	// TODO: setAlignment, setStyleSheet
 	m_currentPlayerLabel->setObjectName("currentPlayerLabel");
 	SetStyle(m_currentPlayerLabel.data(), "stylesheets/Label.css");
 
 	m_mainGridLayout->addWidget(m_currentPlayerLabel.data(), 0, 2, 1, 1);
 }
 
+void TwixtGUIQt::InitializeErrorLabel()
+{
+	m_errorLabel = QSharedPointer<QLabel>{new QLabel{}};
+	m_errorLabel->setText("");
+
+	m_errorLabel->setObjectName("errorLabel");
+	SetStyle(m_errorLabel.data(), "stylesheets/Label.css");
+
+	m_mainGridLayout->addWidget(m_errorLabel.data(), 1, 0, 1, 1);
+}
+
 void TwixtGUIQt::InitializeHintLabel()
 {
 	m_hintLabel = QSharedPointer<QLabel>{new QLabel{}};
-	m_hintLabel->setText("");
+	m_hintLabel->setText("hint");
 
 	// TODO: setAlignment, setStyleSheet
 
@@ -532,6 +568,11 @@ void TwixtGUIQt::UpdateCurrentPlayerLabel()
 {
 	m_currentPlayerLabel->setText(
 		"Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
+}
+
+void TwixtGUIQt::UpdateErrorLabel(QString error)
+{
+	m_errorLabel->setText(error);
 }
 
 void TwixtGUIQt::SetFont()

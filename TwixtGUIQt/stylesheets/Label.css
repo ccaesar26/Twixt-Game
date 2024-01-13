@@ -5,3 +5,14 @@ QLabel#currentPlayerLabel {
     margin: 0;
     padding: 5px;
 }
+
+QLabel#errorLabel {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    color: #FF5050; /* Red color for error messages */
+    margin: 0;
+    padding: 5px;
+    background-color: #F8F8F8; /* Light gray background */
+    border: 1px solid #E0E0E0; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+}
