@@ -318,3 +318,10 @@ TEST_F(BoardTest, TestMoveConstructor)
 	Board b2(std::move(b1));
 	EXPECT_EQ(b2.At(Position(1, 1))->GetColor(), EColor::Black);
 }
+
+TEST_F(BoardTest, TestMoveOperator)
+{
+	Board b2;
+	b2 = std::move(b1);
+	EXPECT_EQ(b2.At(Position(1, 1))->GetColor(), EColor::Black);
+}
