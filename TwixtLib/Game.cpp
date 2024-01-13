@@ -406,3 +406,56 @@ IPiecePtr Game::GetPiecePtr(const Position& pos) const
 {
 	return m_board->At(pos);
 }
+
+int Game::GetPegsLimitNumber(EColor playerColor)
+{
+	if (playerColor == m_player1->GetColor())
+	{
+		return m_player1->GetLimitPegs();
+	}
+	else
+	{
+		return m_player2->GetLimitPegs();
+	}
+}
+
+int Game::GetLinksLimitNumber(EColor playerColor)
+{
+	if (playerColor == m_player1->GetColor())
+	{
+		return m_player1->GetLimitLinks();
+	}
+	else
+	{
+		return m_player2->GetLimitLinks();
+	}
+}
+
+int Game::GetAvailableLinksNumber(EColor playerColor) const
+{
+	if (playerColor == m_player1->GetColor())
+	{
+		return m_player1->GetAvailableLinks();
+	}
+	else
+	{
+		return m_player2->GetAvailableLinks();
+	}
+}
+
+int Game::GetAvailablePegsNumber(EColor playerColor) const
+{
+	if (playerColor == m_player1->GetColor())
+	{
+		return m_player1->GetAvailablePegs();
+	}
+	else
+	{
+		return m_player2->GetAvailablePegs();
+	}
+}
+
+int Game::GetBoardSize() const
+{
+	return m_board->GetSize();
+}

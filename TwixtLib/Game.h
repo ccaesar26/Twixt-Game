@@ -33,6 +33,11 @@ public:
 	void RemoveListener(IGameListener* listener) override;
 	[[nodiscard]] EColor GetCurrentPlayerColor() const override;
 	[[nodiscard]] IPiecePtr GetPiecePtr(const Position& pos) const override;
+	[[nodiscard]] int GetPegsLimitNumber(EColor playerColor) override;
+	[[nodiscard]] int GetLinksLimitNumber(EColor playerColor) override;
+	[[nodiscard]] int GetAvailablePegsNumber(EColor playerColor) const override;
+	[[nodiscard]] int GetAvailableLinksNumber(EColor playerColor) const override;
+	[[nodiscard]] int GetBoardSize() const override;
 	[[nodiscard]] bool IsGameOver() const override;
 	[[nodiscard]] bool IsDraw() const override;
 	[[nodiscard]] bool IsWon() const override;
