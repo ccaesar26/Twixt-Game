@@ -109,5 +109,7 @@ private:
     Position m_firstClick;
     Position m_secondClick;
 
+    QVector<Position> m_hint = {};
+
     bool m_isFirstTurn;
 };

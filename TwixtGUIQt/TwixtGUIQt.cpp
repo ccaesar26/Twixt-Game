@@ -152,14 +152,12 @@ void TwixtGUIQt::OnRequestDrawButtonClicked()
 		return;
 	}
 
-	QMessageBox::StandardButton reply = QMessageBox::question(
+	if (const QMessageBox::StandardButton reply = QMessageBox::question(
 		this,
 		"Draw Request",
 		"Do you both want a draw?",
 		QMessageBox::Yes | QMessageBox::No
-	);
-
-	if (reply == QMessageBox::Yes)
+	); reply == QMessageBox::Yes)
 	{
 		m_gameLogic->EndInDraw();
 	}
@@ -361,6 +359,13 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 		return lines;
 	};
 
+	for (const auto& position : m_hint)
+	{
+		const auto center = m_board[position.row][position.col]->GetCenter();
+		painter.setPen(QPen{ Qt::blue, 12 });
+		painter.drawEllipse(center, 6, 6);
+	}
+
 	for (const auto& [line, color] : getLines())
 	{
 		painter.setPen(QPen{color, 2});
@@ -371,7 +376,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	{
 		painter.setPen(QPen{colorConverter(color), 8});
 		painter.drawLine(line);
-	}
+	}	
 }
 
 void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
