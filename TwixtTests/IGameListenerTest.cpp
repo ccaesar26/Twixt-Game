@@ -92,3 +92,25 @@ TEST(OnLinkPlaced, IllegalLinkPlace1)
 	{
 	}
 }
+
+TEST(OnLinkPlaced, IllegalLinkPlace2)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+	game.PlacePiece(Position(1, 1));
+	game.SwitchTurn();
+	game.PlacePiece(Position(2, 3));
+	EXPECT_CALL(*listener, OnLinkPlaced(Position(1, 1), Position(2, 3)))
+		.Times(0);
+	try
+	{
+		EXPECT_THROW(game.CreateLink(Position(1, 1), Position(2, 3)), GameException);
+	}
+	catch (const GameException& e)
+	{
+	}
+}
