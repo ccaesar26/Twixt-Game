@@ -35,3 +35,24 @@ TEST(OnPiecePlaced, LegalMove1)
 }
 
 
+TEST(OnPiecePlaced, IllegalMove1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnPiecePlaced(Position(1, 1)))
+		.Times(1);
+
+	game.PlacePiece(Position(1, 1));
+	try
+	{
+		EXPECT_THROW(game.PlacePiece(Position(1, 1)), GameException);
+	}
+	catch (const GameException& e)
+	{
+	}
+
+}
