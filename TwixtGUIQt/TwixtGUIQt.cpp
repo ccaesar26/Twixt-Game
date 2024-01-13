@@ -206,6 +206,7 @@ void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
 	auto action = Action::None;
 
 	UpdateErrorLabel("");
+	UpdateHintLabel("");
 
 	try
 	{
