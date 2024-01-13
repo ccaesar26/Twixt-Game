@@ -6,7 +6,7 @@ class Link final
 	: public ILink 
 {
 public:
-	Link(const IPiecePtr& piece1, const IPiecePtr& piece2, EColor color);
+	Link(IPiecePtr piece1, IPiecePtr piece2, EColor color);
 	Link(const Link& other) = default;
 	[[nodiscard]] IPiecePtr GetPiece1() const override;
 	[[nodiscard]] IPiecePtr GetPiece2() const override;

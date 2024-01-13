@@ -17,8 +17,9 @@ IBoardPtr IBoard::CreateBoard(int size)
 	return std::make_shared<Board>(size);
 }
 
-IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size, const std::
-                              function<void(const Position pos1, const Position pos2, const EColor color)>&
+IBoardPtr IBoard::CreateBoard(const std::string& config, const std::string& playerOneLinks,
+                              const std::string& playerTwoLinks, int size, const std::
+                              function<void(Position pos1, Position pos2, EColor color)>&
                               notificationCallback)
 {
 	return std::make_shared<Board>(config, playerOneLinks, playerTwoLinks, size, notificationCallback);
@@ -37,8 +38,9 @@ Board::Board(const int size) : m_size(size)
 	}
 }
 
-Board::Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, int size, const std::
-	function<void(Position pos1, Position pos2, EColor color)>& notificationCallback)
+Board::Board(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks,
+             int size, const std::
+             function<void(Position pos1, Position pos2, EColor color)>& notificationCallback)
 {
 	int pos = 0;
 	m_board.resize(size);
@@ -168,7 +170,7 @@ std::string Board::ToString() const
 			}
 		}
 	}
-	
+
 	return result;
 }
 
@@ -178,11 +180,14 @@ std::string Board::LinksToString(EColor playerColor) const
 	//the string will be in the format: "row1 col1 row2 col2 row3 col3 row4 col4 ... \n"
 
 	std::string result;
-	for(const auto& link : m_links)
+	for (const auto& link : m_links)
 	{
 		if (link->GetColor() == playerColor)
 		{
-			result += std::to_string(link->GetPiece1()->GetPosition().row) + " " + std::to_string(link->GetPiece1()->GetPosition().col) + " " + std::to_string(link->GetPiece2()->GetPosition().row) + " " + std::to_string(link->GetPiece2()->GetPosition().col) + " ";
+			result += std::to_string(link->GetPiece1()->GetPosition().row) + " " +
+				std::to_string(link->GetPiece1()->GetPosition().col) + " " +
+				std::to_string(link->GetPiece2()->GetPosition().row) + " " + std::to_string(
+					link->GetPiece2()->GetPosition().col) + " ";
 		}
 	}
 
@@ -205,17 +210,18 @@ void Board::PlacePiece(const Position pos, const EColor color)
 	{
 		throw GameException("Position is already occupied");
 	}
-	
-	if ((pos.row == 0 && pos.col == 0) || (pos.row == 0 && pos.col == m_size - 1) || (pos.row == m_size - 1 && pos.col == 0) || (pos.row == m_size - 1 && pos.col == m_size - 1))
+
+	if ((pos.row == 0 && pos.col == 0) || (pos.row == 0 && pos.col == m_size - 1) || (pos.row == m_size - 1 && pos.col
+		== 0) || (pos.row == m_size - 1 && pos.col == m_size - 1))
 	{
 		throw GameException("Invalid position");
 	}
-	
+
 	if ((pos.row == 0 || pos.row == m_size - 1) && color == EColor::Black)
 	{
 		throw GameException("Invalid position");
 	}
-	
+
 	if ((pos.col == 0 || pos.col == m_size - 1) && color == EColor::Red)
 	{
 		throw GameException("Invalid position");
@@ -237,32 +243,58 @@ std::vector<Position> Board::GetPotentialNeighbours(const Position& pos)
 {
 	std::vector<Position> result;
 	//we check all the positions that are a chess knight move away from the given position
-	result.emplace_back(Position(pos.row - 2, pos.col - 1));
-	result.emplace_back(Position(pos.row - 2, pos.col + 1));
-	result.emplace_back(Position(pos.row - 1, pos.col - 2));
-	result.emplace_back(Position(pos.row - 1, pos.col + 2));
-	result.emplace_back(Position(pos.row + 1, pos.col - 2));
-	result.emplace_back(Position(pos.row + 1, pos.col + 2));
-	result.emplace_back(Position(pos.row + 2, pos.col - 1));
-	result.emplace_back(Position(pos.row + 2, pos.col + 1));
+	result.emplace_back(pos.row - 2, pos.col - 1);
+	result.emplace_back(pos.row - 2, pos.col + 1);
+	result.emplace_back(pos.row - 1, pos.col - 2);
+	result.emplace_back(pos.row - 1, pos.col + 2);
+	result.emplace_back(pos.row + 1, pos.col - 2);
+	result.emplace_back(pos.row + 1, pos.col + 2);
+	result.emplace_back(pos.row + 2, pos.col - 1);
+	result.emplace_back(pos.row + 2, pos.col + 1);
+
+	//get the color of the piece at the given position
+	const EColor color = m_board[pos.row][pos.col]->GetColor();
+
+	//based on the color of the piece, we sort the positions in the result vector
+	//if the piece is black, we sort the positions by the criteria that they are closer to the sides of the board (left and right)
+	if (color == EColor::Black)
+	{
+		std::ranges::sort(result, [this](const Position& pos1, const Position& pos2)
+		{
+			return abs(pos1.col - m_size / 2) > abs(pos2.col - m_size / 2);
+		});
+	}
+	if (color == EColor::Red)
+	{
+		//if the piece is red, we sort the positions by the criteria that they are closer to the top and bottom of the board
+		std::ranges::sort(result, [this](const Position& pos1, const Position& pos2)
+		{
+			return abs(pos1.row - m_size / 2) > abs(pos2.row - m_size / 2);
+		});
+	}
 
 	//now we remove the positions that are outside the board
-	result.erase(std::remove_if(result.begin(), result.end(), [this](const Position& pos) {return !IsPositionValid(pos); }), result.end());
+	result.erase(std::ranges::remove_if(result, [this](const Position& pos) { return !IsPositionValid(pos); }).begin(),
+	             result.end());
 
 	//we remove the positions that are already occupied
-	result.erase(std::remove_if(result.begin(), result.end(), [this](const Position& pos) {return m_board[pos.row][pos.col] != nullptr; }), result.end());
+	result.erase(std::ranges::remove_if(result, [this](const Position& pos)
+	{
+		return m_board[pos.row][pos.col] != nullptr;
+	}).begin(), result.end());
 
 	//we remove the positions that are blocked by a link
-	result.erase(std::remove_if(result.begin(), result.end(),
-		[this, pos](const Position& pos2) {
-			return std::any_of(m_links.begin(), m_links.end(),
-			[this, pos, pos2](const ILinkPtr& link) {
-					return DoSegmentsIntersect(pos, pos2,
-					link->GetPiece1()->GetPosition(),
-					link->GetPiece2()->GetPosition());
-				});
-		}),
-		result.end());
+	std::erase_if(result,
+	              [this, pos](const Position& pos2)
+	              {
+		              return std::ranges::any_of(m_links,
+		                                         [this, pos, pos2](const ILinkPtr& link)
+		                                         {
+			                                         return DoSegmentsIntersect(pos, pos2,
+				                                         link->GetPiece1()->GetPosition(),
+				                                         link->GetPiece2()->GetPosition());
+		                                         });
+	              });
 
 	return result;
 }
@@ -338,7 +370,8 @@ bool Board::IsPositionValid(const Position& pos) const
 
 bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const
 {
-	if (!IsPositionValid(pos)) {
+	if (!IsPositionValid(pos))
+	{
 		return false;
 	}
 
@@ -351,11 +384,13 @@ bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetL
 	bool foundUpperRow = false;
 	bool foundLowerRow = false;
 
-	while (!stack.empty() && !(foundUpperRow && foundLowerRow)) {
+	while (!stack.empty() && !(foundUpperRow && foundLowerRow))
+	{
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true) {
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true)
+		{
 			continue;
 		}
 
@@ -363,16 +398,20 @@ bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetL
 
 		const IPiecePtr currentPiece = At(currentPos);
 
-		if (currentPiece && currentPiece->GetPosition().row == targetUpperRow) {
+		if (currentPiece && currentPiece->GetPosition().row == targetUpperRow)
+		{
 			foundUpperRow = true;
 		}
 
-		if (currentPiece && currentPiece->GetPosition().row == targetLowerRow) {
+		if (currentPiece && currentPiece->GetPosition().row == targetLowerRow)
+		{
 			foundLowerRow = true;
 		}
 
-		for (const auto& neighbor : currentPiece->GetNeighbors()) {
-			if (!visited.contains(neighbor->GetPosition())) {
+		for (const auto& neighbor : currentPiece->GetNeighbors())
+		{
+			if (!visited.contains(neighbor->GetPosition()))
+			{
 				stack.push(neighbor->GetPosition());
 			}
 		}
@@ -383,7 +422,8 @@ bool Board::CheckPathToRows(const Position& pos, int targetUpperRow, int targetL
 
 bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const
 {
-	if (!IsPositionValid(pos)){
+	if (!IsPositionValid(pos))
+	{
 		return false;
 	}
 
@@ -396,11 +436,13 @@ bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRi
 	bool foundLeftCol = false;
 	bool foundRightCol = false;
 
-	while (!stack.empty() && !(foundLeftCol && foundRightCol)){
+	while (!stack.empty() && !(foundLeftCol && foundRightCol))
+	{
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true){
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true)
+		{
 			continue;
 		}
 
@@ -408,16 +450,20 @@ bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRi
 
 		const IPiecePtr currentPiece = At(currentPos);
 
-		if (currentPiece && currentPiece->GetPosition().col == targetLeftCol){
+		if (currentPiece && currentPiece->GetPosition().col == targetLeftCol)
+		{
 			foundLeftCol = true;
 		}
 
-		if (currentPiece && currentPiece->GetPosition().col == targetRightCol){
+		if (currentPiece && currentPiece->GetPosition().col == targetRightCol)
+		{
 			foundRightCol = true;
 		}
 
-		for (const auto& neighbor : currentPiece->GetNeighbors()){
-			if (!visited.contains(neighbor->GetPosition())){
+		for (const auto& neighbor : currentPiece->GetNeighbors())
+		{
+			if (!visited.contains(neighbor->GetPosition()))
+			{
 				stack.push(neighbor->GetPosition());
 			}
 		}
@@ -428,7 +474,8 @@ bool Board::CheckPathToCols(const Position& pos, int targetLeftCol, int targetRi
 
 bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const
 {
-	if (!IsPositionValid(pos)) {
+	if (!IsPositionValid(pos))
+	{
 		return false;
 	}
 
@@ -440,11 +487,13 @@ bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColo
 	bool foundStart = false;
 	bool foundEnd = false;
 
-	while (!stack.empty() && !(foundStart && foundEnd)) {
+	while (!stack.empty() && !(foundStart && foundEnd))
+	{
 		Position currentPos = stack.top();
 		stack.pop();
 
-		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true) {
+		if (!IsPositionValid(currentPos) || visited.contains(currentPos) == true)
+		{
 			continue;
 		}
 
@@ -452,27 +501,35 @@ bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColo
 
 		const IPiecePtr currentPiece = At(currentPos);
 
-		if (playerColor == EColor::Red) {
-			if (currentPiece && currentPiece->GetPosition().row == targetStart) {
+		if (playerColor == EColor::Red)
+		{
+			if (currentPiece && currentPiece->GetPosition().row == targetStart)
+			{
 				foundStart = true;
 			}
 
-			if (currentPiece && currentPiece->GetPosition().row == targetEnd) {
+			if (currentPiece && currentPiece->GetPosition().row == targetEnd)
+			{
 				foundEnd = true;
 			}
 		}
-		else if (playerColor == EColor::Black) {
-			if (currentPiece && currentPiece->GetPosition().col == targetStart) {
+		else if (playerColor == EColor::Black)
+		{
+			if (currentPiece && currentPiece->GetPosition().col == targetStart)
+			{
 				foundStart = true;
 			}
 
-			if (currentPiece && currentPiece->GetPosition().col == targetEnd) {
+			if (currentPiece && currentPiece->GetPosition().col == targetEnd)
+			{
 				foundEnd = true;
 			}
 		}
 
-		for (const auto& neighbor : currentPiece->GetNeighbors()) {
-			if (!visited.contains(neighbor->GetPosition())) {
+		for (const auto& neighbor : currentPiece->GetNeighbors())
+		{
+			if (!visited.contains(neighbor->GetPosition()))
+			{
 				stack.push(neighbor->GetPosition());
 			}
 		}
@@ -496,7 +553,7 @@ std::vector<Position> Board::GetChain(const Position& start) const
 	//do a dfs and return all the positions that are connected to the start position
 	std::vector<Position> result;
 	std::stack<Position> stack;
-    std::set<Position> visited;
+	std::set<Position> visited;
 
 	stack.push(start);
 
@@ -557,7 +614,7 @@ ILinkPtr& Board::GetLinkBetween(Position pos1, Position pos2)
 	for (auto& link : m_links)
 	{
 		if ((link->GetPiece1()->GetPosition() == pos1 && link->GetPiece2()->GetPosition() == pos2) ||
-		(link->GetPiece1()->GetPosition() == pos2 && link->GetPiece2()->GetPosition() == pos1))
+			(link->GetPiece1()->GetPosition() == pos2 && link->GetPiece2()->GetPosition() == pos1))
 		{
 			return link;
 		}
@@ -591,9 +648,9 @@ std::vector<ILinkPtr> Board::GetLinks() const
 std::vector<IPiecePtr> Board::GetPieces() const
 {
 	std::vector<IPiecePtr> result;
-	for (auto row : m_board)
+	for (const auto& row : m_board)
 	{
-		for (auto piece : row)
+		for (const auto& piece : row)
 		{
 			if (piece != nullptr)
 			{
