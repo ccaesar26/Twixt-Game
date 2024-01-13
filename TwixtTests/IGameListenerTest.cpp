@@ -56,3 +56,18 @@ TEST(OnPiecePlaced, IllegalMove1)
 	}
 
 }
+
+TEST(OnLinkPlaced, LegalLinkPlace1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+	game.PlacePiece(Position(1, 1));
+	game.PlacePiece(Position(2, 3));
+	EXPECT_CALL(*listener, OnLinkPlaced(Position(1, 1), Position(2, 3)))
+		.Times(1);
+	game.CreateLink(Position(1, 1), Position(2, 3));
+}
