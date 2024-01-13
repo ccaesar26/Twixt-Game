@@ -112,12 +112,33 @@ void TwixtGUIQt::OnLoadButtonClicked()
 	{
 		m_gameLogic->LoadFromFile(fileName.toStdString());
 	}
-	catch (const GameException&)
+	catch (const GameException& e)
 	{
+		qDebug() << e.what();
 	}
 	catch (...)
 	{
-		//throw std::runtime_error("Unknown exception");
+		throw std::runtime_error("Unknown exception");
+	}
+}
+
+void TwixtGUIQt::OnRequestDrawButtonClicked()
+{
+	if (m_gameLogic->IsGameOver())
+	{
+		return;
+	}
+
+	QMessageBox::StandardButton reply = QMessageBox::question(
+		this,
+		"Draw Request",
+		"Do you both want a draw?",
+		QMessageBox::Yes | QMessageBox::No
+	);
+
+	if (reply == QMessageBox::Yes)
+	{
+		m_gameLogic->RequestDraw(m_gameLogic->GetCurrentPlayerColor());
 	}
 }
 
@@ -431,7 +452,6 @@ void TwixtGUIQt::InitializeGameControlButtons()
 	connect(m_loadButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnLoadButtonClicked);
 	connect(m_quitButton.data(), &QPushButton::clicked, qApp, &QApplication::quit);
 
-	// TODO: setStyleSheet
 	SetStyle(m_controlButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_controlButtonsContainer->setLayout(m_controlButtonsContainerLayout.data());
@@ -450,11 +470,11 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 	m_actionsButtonsContainerLayout->addWidget(m_endTurnButton.data(), 3, 0);
 
 	// TODO: connect signals and slots
+	connect(m_requestDrawButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRequestDrawButtonClicked);
 	connect(m_endTurnButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnEndTurnButtonClicked);
 
 	m_endTurnButton->setEnabled(false);
 
-	// TODO: setStyleSheet
 	SetStyle(m_actionsButtonsContainer.data(), "stylesheets/Button.css");
 
 	m_actionsButtonsContainer->setLayout(m_actionsButtonsContainerLayout.data());

@@ -32,7 +32,7 @@ public slots:
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
 
-	//void OnRequestDrawButtonClicked();
+	void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
 
 	void OnHoleButtonClicked(const Position& pos);
