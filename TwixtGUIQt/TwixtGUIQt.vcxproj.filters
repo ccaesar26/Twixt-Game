@@ -59,5 +59,8 @@
     <None Include="stylesheets\TitleLabel.css">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="stylesheets\MainWindow.css">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -273,7 +273,7 @@ bool Game::RegexValidate(const std::string& fileName) const
 	}
 }
 
-void Game::RequestDraw(EColor color) const
+void Game::RequestDraw(EColor currentPlayer) const
 {
 	if (m_state != EGameState::Playing)
 	{
