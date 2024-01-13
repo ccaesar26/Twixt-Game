@@ -1,15 +1,17 @@
 #include "Player.h"
 #include <memory>
 
-IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr board)
+IPlayerPtr IPlayer::CreatePlayer(EColor color, std::string name, IBoardWeakPtr board, int pegs, int links)
 {
-	return std::make_unique<Player>(color, name, board);
+	return std::make_unique<Player>(color, name, board, pegs, links);
 }
 
-Player::Player(EColor color, std::string name, IBoardWeakPtr board) :
+Player::Player(EColor color, std::string name, IBoardWeakPtr board, int limitPegs, int limitLinks) :
 	m_color{ color },
 	m_name{ std::move(name) },
-	m_board{ board }
+	m_board{ board },
+	m_limitPegs{ limitPegs },
+	m_limitLinks{ limitLinks }
 {}
 
 std::vector<IPiecePtr> Player::GetPegs() const
@@ -32,36 +34,40 @@ std::string Player::GetName() const
 	return m_name;
 }
 
-void Player::AddPeg(Position pos)
+void Player::AddPeg(IPiecePtr peg)
 {
-	if(const auto& board = m_board.lock())
+	if(m_limitPegs>0)
 	{
-		board->PlacePiece(pos, m_color);
-		m_pegs.push_back(board->At(pos));
+		m_pegs.push_back(std::move(peg));
+		m_limitPegs--;
 	}
 }
 
-void Player::AddLink(Position pos1, Position pos2)
+void Player::AddLink(ILinkPtr link)
 {
-	if(const auto& board = m_board.lock())
+	if (m_limitLinks > 0)
 	{
-		board->LinkPieces(pos1, pos2);
-		m_links.push_back(board->GetLinkBetween(pos1, pos2));
+		ILinkWeakPtr weakLink = link;
+		m_links.push_back(std::move(weakLink));
+		m_limitLinks--;
 	}
 }
 
-void Player::RemoveLink(Position peg1, Position peg2)
+void Player::RemoveLink(ILinkPtr link)
 {
-	if(const auto& board = m_board.lock())
-	{
-		board->UnlinkPieces(peg1, peg2);
-		erase_if(m_links, [&](const ILinkWeakPtr& link)
-		{
-			if(const auto& linkPtr = link.lock())
-			{
-				return linkPtr->GetPiece1()->GetPosition() == peg1 && linkPtr->GetPiece2()->GetPosition() == peg2;
-			}
-			return false;
-		});
-	}
+	m_limitLinks++;
+	std::erase_if(m_links, [link](const ILinkWeakPtr& linkWeak) {
+		//increase the link limit
+		return linkWeak.lock() == link;
+	});
+}
+
+int Player::GetLimitPegs() const
+{
+	return m_limitPegs;
+}
+
+int Player::GetLimitLinks() const
+{
+	return m_limitLinks;
 }

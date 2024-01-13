@@ -65,6 +65,10 @@ public:
 	void AddLink(const ILinkPtr& link);
 
 	void RemoveLink(const ILinkPtr& link);
+
+	[[nodiscard]] std::vector<ILinkPtr> GetLinks() const override;
+	
+	[[nodiscard]] std::vector<IPiecePtr> GetPieces() const override;
 private:
 	int m_size;
 	std::vector<std::vector<IPiecePtr>> m_board;

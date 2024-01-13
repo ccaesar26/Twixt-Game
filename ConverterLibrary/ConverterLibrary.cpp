@@ -9,20 +9,24 @@ const char* ColorToString(const int color, const bool capitalize)
 		{
 			return "Black";
 		}
-		else
-		{
-			return "Red";
-		}
+		return "Red";
 	}
-	else
+	if (color == 0)
 	{
-		if (color == 0)
-		{
-			return "black";
-		}
-		else
-		{
-			return "red";
-		}
+		return "black";
 	}
+	return "red";
+}
+
+const char* GameResultToString(const int result)
+{
+	if (result == 0)
+	{
+		return "Black wins";
+	}
+	if (result == 1)
+	{
+		return "Red wins";
+	}
+	return "Draw";
 }

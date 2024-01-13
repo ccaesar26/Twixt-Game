@@ -51,6 +51,7 @@ Board::Board(const std::string& boardString, const std::string& playerOneLinks, 
 		}
 		pos++;
 	}
+	m_size = size;
 	//the links are read from the file in the format: "row1 col1 row2 col2 row3 col3 row4 col4 ... \n"
 	//so we use a stringstream to read the links
 	std::stringstream ss1(playerOneLinks);
@@ -65,8 +66,6 @@ Board::Board(const std::string& boardString, const std::string& playerOneLinks, 
 	{
 		LinkPieces(Position(row1, col1), Position(row2, col2));
 	}
-
-	m_size = size;
 }
 
 Board::Board(const Board& other)
@@ -538,6 +537,27 @@ void Board::RemoveLink(const ILinkPtr& link)
 		}
 	}
 	throw GameException("Link not found");
+}
+
+std::vector<ILinkPtr> Board::GetLinks() const
+{
+	return m_links;
+}
+
+std::vector<IPiecePtr> Board::GetPieces() const
+{
+	std::vector<IPiecePtr> result;
+	for (auto row : m_board)
+	{
+		for (auto piece : row)
+		{
+			if (piece != nullptr)
+			{
+				result.push_back(piece);
+			}
+		}
+	}
+	return result;
 }
 
 bool Board::CheckIfWinningPlacement(const ILinkPtr& link) const

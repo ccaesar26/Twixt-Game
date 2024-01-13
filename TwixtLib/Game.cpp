@@ -4,6 +4,8 @@
 #include <fstream>
 #include <regex>
 
+#include "ConverterLibrary/framework.h"
+
 IGamePtr IGame::CreateGame()
 {
 	return std::make_shared<Game>();
@@ -16,7 +18,28 @@ void Game::PlacePiece(const Position& pos)
 		throw InvalidStateException("Game is not playing");
 	}
 
+	//check if the player has a piece left
+	if (m_turn == m_player1->GetColor() && m_player1->GetLimitPegs() < 1)
+	{
+		throw InvalidStateException("Player 1 has no pieces left");
+	}
+	else if (m_turn == m_player2->GetColor() && m_player2->GetLimitPegs() < 1)
+	{
+		throw InvalidStateException("Player 2 has no pieces left");
+	}
+
 	m_board->PlacePiece(pos, m_turn);
+
+	const auto& peg = m_board->At(pos);
+
+	if (m_turn == m_player1->GetColor())
+	{
+		m_player1->AddPeg(peg);
+	}
+	else
+	{
+		m_player2->AddPeg(peg);
+	}
 	NotifyPiecePlaced(pos);
 }
 
@@ -27,10 +50,28 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 		throw InvalidStateException("Game is not playing");
 	}
 
+	//check if the player has available links
+	if (m_turn == m_player1->GetColor() && m_player1->GetLimitLinks() < 1)
+	{
+		throw GameException("Player 1 has no links left");
+	}
+	else if (m_turn == m_player2->GetColor() && m_player2->GetLimitLinks() < 1)	{
+		throw GameException("Player 2 has no links left");
+	}
+
 	m_board->LinkPieces(pos1, pos2);
 	NotifyPiecesLinked(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
+	
+	if (m_turn == m_player1->GetColor())
+	{
+		m_player1->AddLink(link);
+	}
+	else
+	{
+		m_player2->AddLink(link);
+	}
 
 	if (m_board->CheckIfWinningPlacement(link))
 	{
@@ -49,6 +90,17 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 
 	m_board->UnlinkPieces(pos1, pos2);
 	NotifyLinkRemoved(pos1, pos2);
+
+	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
+
+	if (m_turn == m_player1->GetColor())
+	{
+		m_player1->RemoveLink(link);
+	}
+	else
+	{
+		m_player2->RemoveLink(link);
+	}
 }
 
 void IdentifyChainsDFS(std::vector<std::vector<Position>>& chains)
@@ -288,8 +340,8 @@ void Game::InitializeGame()
 	m_board = IBoard::CreateBoard();
 	m_turn = EColor::Red;
 	m_state = EGameState::Playing;
-	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);
-	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 2);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 1);
 }
 
 void Game::InitializeGame(const std::string& boardString, const std::string& playerOneLinks, const std::string& playerTwoLinks, const std::string& turn, const std::string& state)
@@ -297,8 +349,32 @@ void Game::InitializeGame(const std::string& boardString, const std::string& pla
 	m_board = IBoard::CreateBoard(boardString, playerOneLinks, playerTwoLinks);
 	m_turn = static_cast<EColor>(turn[0] - '0');
 	m_state = static_cast<EGameState>(state[0] - '0');
-	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board);
-	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board);
+	m_player1 = IPlayer::CreatePlayer(EColor::Red, "Player 1", m_board, 50, 50);
+	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
+	std::vector<IPiecePtr> pieces = m_board->GetPieces();
+	std::vector<ILinkPtr> links = m_board->GetLinks();
+	for (auto it = pieces.begin(); it != pieces.end(); ++it)
+	{
+		if ((*it)->GetColor() == m_player1->GetColor())
+		{
+			m_player1->AddPeg(*it);
+		}
+		else
+		{
+			m_player2->AddPeg(*it);
+		}
+	}
+	for (auto it = links.begin(); it != links.end(); ++it)
+	{
+		if ((*it)->GetColor() == m_player1->GetColor())
+		{
+			m_player1->AddLink(*it);
+		}
+		else
+		{
+			m_player2->AddLink(*it);
+		}
+	}
 }
 
 Game::Game()
