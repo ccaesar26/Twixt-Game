@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="BoardTest.cpp" />
     <ClCompile Include="GameTest.cpp" />
+    <ClCompile Include="IGameListenerTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PegTest.cpp" />
     <ClCompile Include="PlayerTest.cpp" />

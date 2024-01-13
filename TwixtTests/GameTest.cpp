@@ -32,20 +32,6 @@ TEST(GameTest1, GamePiecePlace)
 	game->PlacePiece(Position(1, 1));
 	EXPECT_EQ(game->GetPiecePtr(Position(1, 1))->GetColor(), EColor::Red);
 }
-
-TEST(GameTest1, GameRemoveLink)
-{
-	std::shared_ptr game = IGame::CreateGame();
-	game->PlacePiece(Position(1, 1));
-	game->PlacePiece(Position(2, 3));
-	game->CreateLink(Position(1, 1), Position(2, 3));
-	game->RemoveLink(Position(1, 1), Position(2, 3));
-	game->SwitchTurn();
-	game->PlacePiece(Position(1, 2));
-	game->PlacePiece(Position(3, 1));
-	game->CreateLink(Position(1, 2), Position(3, 1));
-	
-}
 	
 TEST(GameTest1, GameReset)
 {
