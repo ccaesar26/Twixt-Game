@@ -26,10 +26,16 @@ public:
 	virtual void SwitchTurn()=0;
 	[[nodiscard]] virtual EColor GetCurrentPlayerColor() const = 0;
 	[[nodiscard]] virtual IPiecePtr GetPiecePtr(const Position& pos) const = 0;
+	[[nodiscard]] virtual int GetPegsLimitNumber(EColor playerColor) = 0;
+	[[nodiscard]] virtual int GetLinksLimitNumber(EColor playerColor) = 0;
+	[[nodiscard]] virtual int GetAvailablePegsNumber(EColor playerColor) const = 0;
+	[[nodiscard]] virtual int GetAvailableLinksNumber(EColor playerColor) const = 0;
+	[[nodiscard]] virtual int GetBoardSize() const = 0;
 	[[nodiscard]] virtual bool IsGameOver() const = 0;
 	[[nodiscard]] virtual bool IsDraw() const = 0;
 	[[nodiscard]] virtual bool IsWon() const = 0;
 	virtual void LoadFromFile(const std::string& fileName) = 0;
 	virtual void SaveToFile(const std::string& fileName) const = 0;
 	virtual void RequestDraw(EColor currentPlayer) const = 0;
+	virtual void ReconfigureGame(int boardSize, int maxPegs, int maxLinks) = 0;
 };

@@ -45,6 +45,7 @@ protected:
 
 private:
     // IGameListener overrides
+    void OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) override;
     void OnPiecePlaced(const Position& pos) override;
     void OnGameOver(const EGameResult& result) override;
     void OnGameRestarted() override;
