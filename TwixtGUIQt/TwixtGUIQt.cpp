@@ -438,6 +438,8 @@ void TwixtGUIQt::OnDrawRequested(EColor current_player)
 
 void TwixtGUIQt::InitializeUI()
 {
+	SetStyle(this, "stylesheets/MainWindow.css");
+
 	InitializeTitleLabel();
 	InitializeGameControlButtons();
 	InitializeGameActionsButtons();
