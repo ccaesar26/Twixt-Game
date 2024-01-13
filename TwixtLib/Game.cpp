@@ -59,6 +59,12 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 		throw GameException("Player 2 has no links left");
 	}
 
+	//check if the player's color coincides with the pieces at pos1 and pos2
+	if(m_board->At(pos1)->GetColor() != m_turn || m_board->At(pos2)->GetColor() != m_turn)
+	{
+		throw GameException("Player's color does not coincide with the pieces at pos1 and pos2");
+	}
+
 	m_board->LinkPieces(pos1, pos2);
 	NotifyPiecesLinked(pos1, pos2);
 
