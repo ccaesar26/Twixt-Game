@@ -249,3 +249,16 @@ TEST(OnGameOver, GameOver2)
 	game.CreateLink(Position(1, 20), Position(2, 22));
 	game.CreateLink(Position(2, 22), Position(4, 23));
 }
+
+TEST(OnGameOver, GameOver3)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+	game.SwitchTurn();
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::Draw))
+		.Times(1);
+	game.RequestDraw(EColor::Black);
+}	
