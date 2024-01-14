@@ -28,11 +28,11 @@ public:
 
 public slots:
 	//// UI event handlers
-	void OnRestartButtonClicked();
+	void OnRestartButtonClicked() const;
 	void OnSaveButtonClicked();
 	void OnLoadButtonClicked();
 
-    void OnGetHintButtonClicked();
+    void OnGetHintButtonClicked() const;
 	void OnRequestDrawButtonClicked();
 	void OnEndTurnButtonClicked();
     void OnChangeConfigurationButtonClicked();
@@ -69,17 +69,17 @@ private:
     void InitializeStats();
 
     // UI Update methods
-    void UpdateCurrentPlayerLabel();
-    void UpdateErrorLabel(QString error);
-    void UpdateHintLabel(QString hint);
-    void UpdateStats();
+    void UpdateCurrentPlayerLabel() const;
+    void UpdateErrorLabel(const QString& error) const;
+    void UpdateHintLabel(const QString& hint) const;
+    void UpdateStats() const;
     void UpdateBoard();
 
     void ClearHint();
 
     // Style methods
     void SetFont();
-    void SetStyle(QWidget* widget, const QString& styleSheetPath);
+    static void SetStyle(QWidget* widget, const QString& styleSheetPath);
 
 private:
     QSharedPointer<QLabel> m_titleLabel;

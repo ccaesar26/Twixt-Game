@@ -33,12 +33,12 @@ std::vector<IPiecePtr> Peg::GetNeighbors() const
 	return m_neighbors;
 }
 
-void Peg::AddNeighbor(IPiecePtr piece)
+void Peg::AddNeighbor(const IPiecePtr piece)
 {
 	m_neighbors.push_back(piece);
 }
 
-void Peg::RemoveNeighbor(IPiecePtr piece)
+void Peg::RemoveNeighbor(const IPiecePtr piece)
 {
 	for (int i = 0; i < m_neighbors.size(); i++)
 	{

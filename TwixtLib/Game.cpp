@@ -118,7 +118,7 @@ void Game::RemoveLink(const Position& pos1, const Position& pos2)
 	NotifyLinkRemoved(pos1, pos2);
 }
 
-void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains)
+void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains) const
 {
 	// Custom comparator for sorting based on the least cumulative distance
 	auto compareChains = [this](const std::vector<Position>& chain1, const std::vector<Position>& chain2) {
@@ -597,7 +597,7 @@ void Game::InitializeGame()
 	m_player2 = IPlayer::CreatePlayer(EColor::Black, "Player 2", m_board, 50, 50);
 }
 
-void Game::InitializeGame(int boardSize, int maxPegs, int maxLinks)
+void Game::InitializeGame(const int boardSize, const int maxPegs, const int maxLinks)
 {
 	m_board = IBoard::CreateBoard(boardSize);
 	m_turn = EColor::Red;
@@ -651,7 +651,7 @@ Game::Game()
 	InitializeGame();
 }
 
-void Game::AddListener(IGameListenerPtr listener)
+void Game::AddListener(const IGameListenerPtr listener)
 {
 	m_listeners.push_back(listener);
 }
@@ -678,7 +678,7 @@ IPiecePtr Game::GetPiecePtr(const Position& pos) const
 	return m_board->At(pos);
 }
 
-int Game::GetPegsLimitNumber(EColor playerColor)
+int Game::GetPegsLimitNumber(const EColor playerColor)
 {
 	if (playerColor == m_player1->GetColor())
 	{
@@ -687,7 +687,7 @@ int Game::GetPegsLimitNumber(EColor playerColor)
 	return m_player2->GetLimitPegs();
 }
 
-int Game::GetLinksLimitNumber(EColor playerColor)
+int Game::GetLinksLimitNumber(const EColor playerColor)
 {
 	if (playerColor == m_player1->GetColor())
 	{
@@ -696,7 +696,7 @@ int Game::GetLinksLimitNumber(EColor playerColor)
 	return m_player2->GetLimitLinks();
 }
 
-int Game::GetAvailableLinksNumber(EColor playerColor) const
+int Game::GetAvailableLinksNumber(const EColor playerColor) const
 {
 	if (playerColor == m_player1->GetColor())
 	{
@@ -705,7 +705,7 @@ int Game::GetAvailableLinksNumber(EColor playerColor) const
 	return m_player2->GetAvailableLinks();
 }
 
-int Game::GetAvailablePegsNumber(EColor playerColor) const
+int Game::GetAvailablePegsNumber(const EColor playerColor) const
 {
 	if (playerColor == m_player1->GetColor())
 	{

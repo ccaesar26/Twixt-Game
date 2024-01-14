@@ -7,7 +7,7 @@ IPlayerPtr IPlayer::CreatePlayer(EColor color, const std::string& name, const IB
 	return std::make_unique<Player>(color, name, board, pegs, links);
 }
 
-Player::Player(EColor color, std::string name, IBoardWeakPtr board, int limitPegs, int limitLinks) :
+Player::Player(const EColor color, std::string name, IBoardWeakPtr board, const int limitPegs, const int limitLinks) :
 	m_color{ color },
 	m_name{ std::move(name) },
 	m_board{std::move(board)},
@@ -46,7 +46,7 @@ void Player::AddPeg(IPiecePtr peg)
 	}
 }
 
-void Player::AddLink(ILinkPtr link)
+void Player::AddLink(const ILinkPtr link)
 {
 	if (m_limitLinks > 0)
 	{
