@@ -40,11 +40,11 @@ public:
 
 	std::array<std::vector<Position>, 2> GetPotentialNeighbours(const Position& pos) override;
 
-	void LinkPieces(Position pos1, Position pos2) override;
+	void LinkPieces(const Position& pos1, const Position& pos2) override;
 
-	void UnlinkPieces(Position pos1, Position pos2) override;
+	void UnlinkPieces(const Position& pos1, const Position& pos2) override;
 
-	[[nodiscard]] IPiecePtr At(const Position pos) const override;
+	[[nodiscard]] IPiecePtr At(const Position& pos) const override;
 
 	[[nodiscard]] bool IsPositionValid(const Position& pos) const;
 
@@ -62,7 +62,7 @@ public:
 
 	[[nodiscard]] std::set<std::vector<Position>> GetChains(EColor playerColor) const override;
 
-	[[nodiscard]] ILinkPtr& GetLinkBetween(Position pos1, Position pos2) override;
+	[[nodiscard]] ILinkPtr& GetLinkBetween(const Position& pos1, const Position& pos2) override;
 
 	void AddLink(const ILinkPtr& link);
 

@@ -292,29 +292,29 @@ std::array<std::vector<Position>, 2> Board::GetPotentialNeighbours(const Positio
 		}
 
 		//now we remove the positions that are outside the board
-		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos) { return !IsPositionValid(pos); }).begin(),
+		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& position) { return !IsPositionValid(position); }).begin(),
 			resultVector.end());
 
 		//we remove the positions that are already occupied
-		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& position)
 			{
-				return m_board[pos.row][pos.col] != nullptr;
+				return m_board[position.row][position.col] != nullptr;
 			}).begin(), resultVector.end());
 
 		//for red, we remove the positions that are on the left or right side of the board
 		if (color == EColor::Red)
 		{
-			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& position)
 				{
-					return pos.col == 0 || pos.col == m_size - 1;
+					return position.col == 0 || position.col == m_size - 1;
 				}).begin(), resultVector.end());
 		}
 		else
 		{
 			//for black, we remove the positions that are on the top or bottom side of the board
-			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& position)
 				{
-					return pos.row == 0 || pos.row == m_size - 1;
+					return position.row == 0 || position.row == m_size - 1;
 				}).begin(), resultVector.end());
 		}
 
@@ -336,7 +336,7 @@ std::array<std::vector<Position>, 2> Board::GetPotentialNeighbours(const Positio
 	return result;
 }
 
-void Board::LinkPieces(Position pos1, Position pos2)
+void Board::LinkPieces(const Position& pos1, const Position& pos2)
 {
 	if (pos1.row < 0 || pos1.row >= m_size || pos1.col < 0 || pos1.col >= m_size)
 	{
@@ -382,7 +382,7 @@ void Board::LinkPieces(Position pos1, Position pos2)
 	m_board[pos2.row][pos2.col]->AddNeighbor(m_board[pos1.row][pos1.col]);
 }
 
-void Board::UnlinkPieces(Position pos1, Position pos2)
+void Board::UnlinkPieces(const Position& pos1, const Position& pos2)
 {
 	RemoveLink(GetLinkBetween(pos1, pos2));
 
@@ -391,7 +391,7 @@ void Board::UnlinkPieces(Position pos1, Position pos2)
 }
 
 
-IPiecePtr Board::At(const Position pos) const
+IPiecePtr Board::At(const Position& pos) const
 {
 	if (pos.row < 0 || pos.row >= m_size || pos.col < 0 || pos.col >= m_size)
 	{
@@ -405,7 +405,7 @@ bool Board::IsPositionValid(const Position& pos) const
 	return pos.row >= 0 && pos.row < m_size && pos.col >= 0 && pos.col < m_size;
 }
 
-bool Board::CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const
+bool Board::CheckPath(const Position& pos,const int targetStart,const int targetEnd,const EColor playerColor) const
 {
 	if (!IsPositionValid(pos))
 	{
@@ -518,7 +518,7 @@ std::vector<Position> Board::GetChain(const Position& start) const
 	return result;
 }
 
-std::set<std::vector<Position>> Board::GetChains(EColor playerColor) const
+std::set<std::vector<Position>> Board::GetChains(const EColor playerColor) const
 {
 	//return all the chains on the board
 	std::set<std::vector<Position>> result;
@@ -542,7 +542,7 @@ std::set<std::vector<Position>> Board::GetChains(EColor playerColor) const
 	return result;
 }
 
-ILinkPtr& Board::GetLinkBetween(Position pos1, Position pos2)
+ILinkPtr& Board::GetLinkBetween(const Position& pos1, const Position& pos2)
 {
 	for (auto& link : m_links)
 	{

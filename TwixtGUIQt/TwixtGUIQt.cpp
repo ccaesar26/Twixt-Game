@@ -77,7 +77,7 @@ void TwixtGUIQt::MapCoordinates()
 	}
 }
 
-void TwixtGUIQt::OnRestartButtonClicked()
+void TwixtGUIQt::OnRestartButtonClicked() const
 {
 	m_gameLogic->Reset();
 }
@@ -132,14 +132,25 @@ void TwixtGUIQt::OnLoadButtonClicked()
 	}
 }
 
-void TwixtGUIQt::OnGetHintButtonClicked()
+void TwixtGUIQt::OnGetHintButtonClicked() const
 {
 	if (m_gameLogic->IsGameOver())
 	{
 		return;
 	}
 
-	m_gameLogic->Recommend();
+	try
+	{
+		m_gameLogic->Recommend();
+	}
+	catch (const GameException& e)
+	{
+		qDebug() << e.what();
+	}
+	catch (...)
+	{
+		throw std::runtime_error("Unknown exception");
+	}
 }
 
 void TwixtGUIQt::OnRequestDrawButtonClicked()
@@ -407,7 +418,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	}
 }
 
-void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
+void TwixtGUIQt::OnBoardChanged(const int newSize, int newMaxPegs, int newMaxLinks)
 {
 	m_boardContainer->setFixedSize(m_boardSize);
 	m_board.resize(newSize);
@@ -817,23 +828,23 @@ void TwixtGUIQt::InitializeStats()
 	m_mainGridLayout->addWidget(m_statsContainer.data(), 4, 1, 1, 1);
 }
 
-void TwixtGUIQt::UpdateCurrentPlayerLabel()
+void TwixtGUIQt::UpdateCurrentPlayerLabel() const
 {
 	m_currentPlayerLabel->setText(
 		"Current player\n" + QString(ColorToString(static_cast<int>(m_gameLogic->GetCurrentPlayerColor()), true)));
 }
 
-void TwixtGUIQt::UpdateErrorLabel(QString error)
+void TwixtGUIQt::UpdateErrorLabel(const QString& error) const
 {
 	m_errorLabel->setText(error);
 }
 
-void TwixtGUIQt::UpdateHintLabel(QString hint)
+void TwixtGUIQt::UpdateHintLabel(const QString& hint) const
 {
 	m_hintLabel->setText(hint);
 }
 
-void TwixtGUIQt::UpdateStats()
+void TwixtGUIQt::UpdateStats() const
 {
 	const auto& redPegsCount = m_gameLogic->GetAvailablePegsNumber(EColor::Red);
 	const auto& blackPegsCount = m_gameLogic->GetAvailablePegsNumber(EColor::Black);

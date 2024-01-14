@@ -25,15 +25,15 @@ public:
 
 	virtual void PlacePiece(Position pos, EColor color) = 0;
 
-	virtual void LinkPieces(Position pos1, Position pos2) = 0;
+	virtual void LinkPieces(const Position& pos1, const Position& pos2) = 0;
 
-	virtual void UnlinkPieces(Position pos1, Position pos2) = 0;
+	virtual void UnlinkPieces(const Position& pos1, const Position& pos2) = 0;
 
-	[[nodiscard]] virtual IPiecePtr At(const Position pos) const = 0;
+	[[nodiscard]] virtual IPiecePtr At(const Position& pos) const = 0;
 
 	[[nodiscard]] virtual bool CheckIfWinningPlacement(const ILinkPtr& link) const = 0;
 
-	[[nodiscard]] virtual ILinkPtr& GetLinkBetween(Position pos1, Position pos2) = 0;
+	[[nodiscard]] virtual ILinkPtr& GetLinkBetween(const Position& pos1, const Position& pos2) = 0;
 
 	[[nodiscard]] virtual std::string ToString() const = 0;
 
