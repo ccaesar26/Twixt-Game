@@ -239,79 +239,99 @@ bool DoSegmentsIntersect(const Position& p1, const Position& p2, const Position&
 	return d1 * d2 < 0 && d3 * d4 < 0;
 }
 
-std::vector<Position> Board::GetPotentialNeighbours(const Position& pos)
+std::array<std::vector<Position>, 2> Board::GetPotentialNeighbours(const Position& pos)
 {
-	std::vector<Position> result;
+	std::array<std::vector<Position>, 2> result;
 	//we check all the positions that are a chess knight move away from the given position
-	result.emplace_back(pos.row - 2, pos.col - 1);
-	result.emplace_back(pos.row - 2, pos.col + 1);
-	result.emplace_back(pos.row - 1, pos.col - 2);
-	result.emplace_back(pos.row - 1, pos.col + 2);
-	result.emplace_back(pos.row + 1, pos.col - 2);
-	result.emplace_back(pos.row + 1, pos.col + 2);
-	result.emplace_back(pos.row + 2, pos.col - 1);
-	result.emplace_back(pos.row + 2, pos.col + 1);
 
-	//get the color of the piece at the given position
 	const EColor color = m_board[pos.row][pos.col]->GetColor();
 
-	//based on the color of the piece, we sort the positions in the result vector
-	//if the piece is black, we sort the positions by the criteria that they are closer to the sides of the board (left and right)
-	if (color == EColor::Black)
+	if(color == EColor::Red)
 	{
-		std::ranges::sort(result, [this](const Position& pos1, const Position& pos2)
-		{
-			return abs(pos1.col - m_size / 2) > abs(pos2.col - m_size / 2);
-		});
-	}
-	if (color == EColor::Red)
-	{
-		//if the piece is red, we sort the positions by the criteria that they are closer to the top and bottom of the board
-		std::ranges::sort(result, [this](const Position& pos1, const Position& pos2)
-		{
-			return abs(pos1.row - m_size / 2) > abs(pos2.row - m_size / 2);
-		});
-	}
-
-	//now we remove the positions that are outside the board
-	result.erase(std::ranges::remove_if(result, [this](const Position& pos) { return !IsPositionValid(pos); }).begin(),
-	             result.end());
-
-	//we remove the positions that are already occupied
-	result.erase(std::ranges::remove_if(result, [this](const Position& pos)
-	{
-		return m_board[pos.row][pos.col] != nullptr;
-	}).begin(), result.end());
-
-	//for red, we remove the positions that are on the left or right side of the board
-	if (color == EColor::Red)
-	{
-		result.erase(std::ranges::remove_if(result, [this](const Position& pos)
-		{
-			return pos.col == 0 || pos.col == m_size - 1;
-		}).begin(), result.end());
+		result[0].emplace_back(pos.row - 2, pos.col - 1);
+		result[0].emplace_back(pos.row - 2, pos.col + 1);
+		result[0].emplace_back(pos.row + 2, pos.col - 1);
+		result[0].emplace_back(pos.row + 2, pos.col + 1);
+		result[1].emplace_back(pos.row - 1, pos.col - 2);
+		result[1].emplace_back(pos.row - 1, pos.col + 2);
+		result[1].emplace_back(pos.row + 1, pos.col - 2);
+		result[1].emplace_back(pos.row + 1, pos.col + 2);
 	}
 	else
 	{
-		//for black, we remove the positions that are on the top or bottom side of the board
-		result.erase(std::ranges::remove_if(result, [this](const Position& pos)
-		{
-			return pos.row == 0 || pos.row == m_size - 1;
-		}).begin(), result.end());
+		result[1].emplace_back(pos.row - 2, pos.col - 1);
+		result[1].emplace_back(pos.row - 2, pos.col + 1);
+		result[1].emplace_back(pos.row + 2, pos.col - 1);
+		result[1].emplace_back(pos.row + 2, pos.col + 1);
+		result[0].emplace_back(pos.row - 1, pos.col - 2);
+		result[0].emplace_back(pos.row - 1, pos.col + 2);
+		result[0].emplace_back(pos.row + 1, pos.col - 2);
+		result[0].emplace_back(pos.row + 1, pos.col + 2);
 	}
 
-	//we remove the positions that are blocked by a link
-	std::erase_if(result,
-	              [this, pos](const Position& pos2)
-	              {
-		              return std::ranges::any_of(m_links,
-		                                         [this, pos, pos2](const ILinkPtr& link)
-		                                         {
-			                                         return DoSegmentsIntersect(pos, pos2,
-				                                         link->GetPiece1()->GetPosition(),
-				                                         link->GetPiece2()->GetPosition());
-		                                         });
-	              });
+	//get the color of the piece at the given position
+
+	//based on the color of the piece, we sort the positions in the result vector
+	//if the piece is black, we sort the positions by the criteria that they are closer to the sides of the board (left and right)
+	for(auto& resultVector : result)
+	{
+		if (color == EColor::Black)
+		{
+			std::ranges::sort(resultVector, [this](const Position& pos1, const Position& pos2)
+				{
+					return abs(pos1.col - m_size / 2) > abs(pos2.col - m_size / 2);
+				});
+		}
+		if (color == EColor::Red)
+		{
+			//if the piece is red, we sort the positions by the criteria that they are closer to the top and bottom of the board
+			std::ranges::sort(resultVector, [this](const Position& pos1, const Position& pos2)
+				{
+					return abs(pos1.row - m_size / 2) > abs(pos2.row - m_size / 2);
+				});
+		}
+
+		//now we remove the positions that are outside the board
+		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos) { return !IsPositionValid(pos); }).begin(),
+			resultVector.end());
+
+		//we remove the positions that are already occupied
+		resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+			{
+				return m_board[pos.row][pos.col] != nullptr;
+			}).begin(), resultVector.end());
+
+		//for red, we remove the positions that are on the left or right side of the board
+		if (color == EColor::Red)
+		{
+			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+				{
+					return pos.col == 0 || pos.col == m_size - 1;
+				}).begin(), resultVector.end());
+		}
+		else
+		{
+			//for black, we remove the positions that are on the top or bottom side of the board
+			resultVector.erase(std::ranges::remove_if(resultVector, [this](const Position& pos)
+				{
+					return pos.row == 0 || pos.row == m_size - 1;
+				}).begin(), resultVector.end());
+		}
+
+		//we remove the positions that are blocked by a link
+		std::erase_if(resultVector,
+			[this, pos](const Position& pos2)
+			{
+				return std::ranges::any_of(m_links,
+				[this, pos, pos2](const ILinkPtr& link)
+					{
+						return DoSegmentsIntersect(pos, pos2,
+						link->GetPiece1()->GetPosition(),
+						link->GetPiece2()->GetPosition());
+					});
+			});
+	}
+	
 
 	return result;
 }
