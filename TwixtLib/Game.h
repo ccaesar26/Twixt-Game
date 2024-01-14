@@ -51,6 +51,7 @@ public:
 	int CalculateMinCumulativeDistance(const std::vector<Position>& chain);
 	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains);
 	void GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces);
+	void GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2);
 	void Reset() override;
 	void Restore(const GameConfig& config);
 	void SaveToFile(const std::string& fileName) const override;
