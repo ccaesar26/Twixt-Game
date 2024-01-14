@@ -22,7 +22,8 @@ public:
 	MOCK_METHOD(void, OnGameLoaded, (), (override));
 	MOCK_METHOD(void, OnDrawRequested, (EColor current_player), (override));
 	MOCK_METHOD(void, OnBoardChanged, (int newSize, int newMaxPegs, int newMaxLinks), (override));
-	MOCK_METHOD(void, OnHintRecommended, (std::pair<Position, Position> link), (override));
+	MOCK_METHOD(void, OnHintRecommended, ((const std::pair<Position, Position>& link)), (override));
+
 };
 
 TEST(OnPiecePlaced, LegalMove1)
@@ -280,4 +281,32 @@ TEST(OnGameRestarted, GameRestarted1)
 	EXPECT_CALL(*listener, OnGameRestarted())
 		.Times(1);
 	game.Reset();
+}
+
+TEST(OnGameLoaded, GameLoaded1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+	game.SwitchTurn();
+	EXPECT_CALL(*listener, OnGameLoaded())
+		.Times(1);
+	game.LoadFromFile("TestInput.txt");
+}
+
+using ::testing::_;
+
+TEST(OnHintRecommended, HintRecommended1)
+{
+	Game game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+	game.SwitchTurn();
+	EXPECT_CALL(*listener, OnHintRecommended(_))
+		.Times(1);
+	game.Recommend();
 }
