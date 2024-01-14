@@ -53,7 +53,7 @@ private:
     void OnLinkPlaced(const Position& pos1, const Position& pos2) override;
     void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
     void OnDrawRequested(EColor current_player) override;
-    void OnHintRecommended(std::pair<Position, Position> link) override;
+    void OnHintRecommended(const std::pair<Position, Position>& link) override;
     void OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) override;
 
     // UI initializations

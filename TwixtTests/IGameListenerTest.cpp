@@ -4,6 +4,8 @@
 #include "IGameListener.h"
 #include "Game.h"
 #include "GameException.h"
+#include "Position.h"
+#include <utility>
 
 using ::testing::InSequence;
 using ::testing::_;
@@ -17,7 +19,10 @@ public:
 	MOCK_METHOD(void, OnLinkRemoved, (const Position& pos1, const Position& pos2), (override));
 	MOCK_METHOD(void, OnGameOver, (const EGameResult& result), (override));
 	MOCK_METHOD(void, OnGameRestarted, (), (override));
+	MOCK_METHOD(void, OnGameLoaded, (), (override));
 	MOCK_METHOD(void, OnDrawRequested, (EColor current_player), (override));
+	MOCK_METHOD(void, OnBoardChanged, (int newSize, int newMaxPegs, int newMaxLinks), (override));
+	MOCK_METHOD(void, OnHintRecommended, (std::pair<Position, Position> link), (override));
 };
 
 TEST(OnPiecePlaced, LegalMove1)
