@@ -326,7 +326,7 @@ void Game::Recommend()
 
 void Game::Reset()
 {
-	InitializeGame();
+	InitializeGame(m_board->GetSize(), m_player1->GetLimitPegs(), m_player1->GetLimitLinks());
 	NotifyGameRestarted();
 }
 
