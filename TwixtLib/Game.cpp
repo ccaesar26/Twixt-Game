@@ -73,7 +73,6 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	}
 
 	m_board->LinkPieces(pos1, pos2);
-	NotifyPiecesLinked(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
 
@@ -85,6 +84,8 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	{
 		m_player2->AddLink(link);
 	}
+
+	NotifyPiecesLinked(pos1, pos2);
 
 	if (m_board->CheckIfWinningPlacement(link))
 	{
