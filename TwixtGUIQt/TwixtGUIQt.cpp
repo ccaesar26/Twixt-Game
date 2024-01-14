@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <ranges>
 
+#include "ConfigurationDialog.h"
 #include "GameException.h"
 #include "ConverterLibrary.h"
 
@@ -202,6 +203,17 @@ void TwixtGUIQt::OnChangeConfigurationButtonClicked()
 	{
 		return;
 	}
+
+	ConfigurationDialog dialog{this};
+
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		const auto boardSize = dialog.GetBoardSize();
+		const auto maxPegs = dialog.GetMaxPegs();
+		const auto maxLinks = dialog.GetMaxLinks();
+
+		m_gameLogic->ReconfigureGame(boardSize, maxPegs, maxLinks);
+	}
 }
 
 void TwixtGUIQt::OnHoleButtonClicked(const Position& pos)
@@ -276,8 +288,17 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 		return;
 	}
 
+	if (m_clickCount > 2)
+	{
+		m_clickCount = 1;
+	}
+
 	try
 	{
+		if (m_clickCount == 0)
+		{
+			throw GameException("You must place a peg first");
+		}
 		if (m_clickCount == 1)
 		{
 			m_firstClick = pos;
@@ -293,9 +314,17 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 
 		m_clickCount++;
 	}
-	catch (const GameException&)
+	catch (const GameException& e)
 	{
-		m_clickCount = 1;
+		if (m_clickCount == 0)
+		{
+			UpdateErrorLabel(e.what());
+		}
+		else
+		{
+			UpdateErrorLabel("");
+			m_clickCount = 1;
+		}
 	}
 	catch (...)
 	{
@@ -326,6 +355,8 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 			throw std::runtime_error("Unknown color");
 		}
 	};
+
+	MapCoordinates();
 
 	const auto& board = m_board;
 	auto getLines = [board]() -> QVector<QPair<QLine, QColor>>
@@ -360,7 +391,7 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	for (const auto& position : m_hint)
 	{
 		const auto center = m_board[position.row][position.col]->GetCenter();
-		painter.setPen(QPen{ Qt::cyan, 12 });
+		painter.setPen(QPen{Qt::cyan, 12});
 		painter.drawEllipse(center, 6, 6);
 	}
 
@@ -374,17 +405,60 @@ void TwixtGUIQt::paintEvent(QPaintEvent* event)
 	{
 		painter.setPen(QPen{colorConverter(color), 8});
 		painter.drawLine(line);
-	}	
+	}
 }
 
 void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
 {
-	//TODO: implement
+	m_boardContainer->setFixedSize(m_boardSize);
+	m_board.resize(newSize);
+
+	const auto size = m_board.size();
+	auto isCorner = [size](const int i, const int j) -> bool
+		{
+			return (i == 0 && j == 0) || (i == 0 && j == size - 1) || (i == size - 1 && j == 0) || (i == size - 1 && j ==
+				size - 1);
+		};
+
+	for (int i = 0; i < m_board.size(); ++i)
+	{
+		m_board[i].resize(newSize);
+
+		for (int j = 0; j < m_board[i].size(); ++j)
+		{
+			if (isCorner(i, j))
+			{
+				m_board[i][j] = nullptr;
+			}
+			else
+			{
+				m_board[i][j] = QSharedPointer<HoleButton>::create(Position{ i, j });
+				m_boardContainerLayout->addWidget(m_board[i][j].data(), i, j);
+
+				if (m_gameLogic != nullptr && m_gameLogic->GetPiecePtr(Position{ i, j }) != nullptr)
+				{
+					m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{ i, j })->GetColor());
+				}
+
+				m_board[i][j]->UpdatePeg();
+			}
+			connect(m_board[i][j].data(), &HoleButton::Clicked, this, &TwixtGUIQt::OnHoleButtonClicked);
+			connect(m_board[i][j].data(), &HoleButton::RightClicked, this, &TwixtGUIQt::OnHoleButtonRightClicked);
+		}
+	}
+
+	update();
+
+	MapCoordinates();
+
+	update();
 }
 
 void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 {
 	m_board[pos.row][pos.col]->SetPeg(m_gameLogic->GetCurrentPlayerColor());
+
+	UpdateStats();
 
 	m_endTurnButton->setEnabled(true);
 	m_getHintButton->setEnabled(false);
@@ -393,7 +467,7 @@ void TwixtGUIQt::OnPiecePlaced(const Position& pos)
 	{
 		m_hint.pop_back();
 	}
-	
+
 	update();
 }
 
@@ -440,10 +514,15 @@ void TwixtGUIQt::OnGameRestarted()
 
 	m_links.clear();
 
+	update();
+
 	m_clickCount = 0;
 	m_isFirstTurn = true;
 
 	UpdateCurrentPlayerLabel();
+	UpdateStats();
+	UpdateHintLabel("");
+	UpdateErrorLabel("");
 }
 
 void TwixtGUIQt::OnGameLoaded()
@@ -470,7 +549,9 @@ void TwixtGUIQt::OnGameLoaded()
 		}
 	}
 
-	m_clickCount = 0;
+	m_clickCount = 1;
+
+	m_endTurnButton->setEnabled(true);
 
 	UpdateCurrentPlayerLabel();
 }
@@ -483,6 +564,8 @@ void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
 	m_links.emplaceBack(QLine{center1, center2}, m_gameLogic->GetCurrentPlayerColor());
 
 	ClearHint();
+
+	UpdateStats();
 
 	update();
 }
@@ -501,6 +584,8 @@ void TwixtGUIQt::OnLinkRemoved(const Position& pos1, const Position& pos2)
 
 	const auto it = std::remove_if(m_links.begin(), m_links.end(), predicate);
 	m_links.erase(it, m_links.end());
+
+	UpdateStats();
 
 	update();
 }
@@ -656,7 +741,7 @@ void TwixtGUIQt::InitializeGameActionsButtons()
 	// TODO: connect signals and slots
 	connect(m_getHintButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnGetHintButtonClicked);
 	connect(m_requestDrawButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnRequestDrawButtonClicked);
-
+	connect(m_changeConfiguration.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnChangeConfigurationButtonClicked);
 	connect(m_endTurnButton.data(), &QPushButton::clicked, this, &TwixtGUIQt::OnEndTurnButtonClicked);
 
 	m_endTurnButton->setEnabled(false);
@@ -708,10 +793,10 @@ void TwixtGUIQt::InitializeBoard()
 		}
 	}
 
-	//m_boardContainer->setFixedSize(760, 760);
-
 	m_boardContainer->setLayout(m_boardContainerLayout.data());
 	m_mainGridLayout->addWidget(m_boardContainer.data(), 0, 1, 4, 1);
+
+	m_boardSize = m_boardContainer->sizeHint();
 }
 
 void TwixtGUIQt::InitializeStats()
@@ -750,6 +835,65 @@ void TwixtGUIQt::UpdateErrorLabel(QString error)
 void TwixtGUIQt::UpdateHintLabel(QString hint)
 {
 	m_hintLabel->setText(hint);
+}
+
+void TwixtGUIQt::UpdateStats()
+{
+	const auto& redPegsCount = m_gameLogic->GetAvailablePegsNumber(EColor::Red);
+	const auto& blackPegsCount = m_gameLogic->GetAvailablePegsNumber(EColor::Black);
+
+	const auto& redLinksCount = m_gameLogic->GetAvailableLinksNumber(EColor::Red);
+	const auto& blackLinksCount = m_gameLogic->GetAvailableLinksNumber(EColor::Black);
+
+	const auto& redPegsLimit = m_gameLogic->GetPegsLimitNumber(EColor::Red);
+	const auto& blackPegsLimit = m_gameLogic->GetPegsLimitNumber(EColor::Black);
+
+	const auto& redLinksLimit = m_gameLogic->GetLinksLimitNumber(EColor::Red);
+	const auto& blackLinksLimit = m_gameLogic->GetLinksLimitNumber(EColor::Black);
+
+	const auto pegsString = ConcatenateStrings(
+		"Red pegs:\t", std::to_string(redPegsCount), " / ", std::to_string(redPegsLimit), "\t\t\t",
+		"Black pegs:\t", std::to_string(blackPegsCount), " / ", std::to_string(blackPegsLimit)
+	);
+
+	const auto linksString = ConcatenateStrings(
+		"Red links:\t", std::to_string(redLinksCount), " / ", std::to_string(redLinksLimit), "\t\t\t",
+		"Black links:\t", std::to_string(blackLinksCount), " / ", std::to_string(blackLinksLimit)
+	);
+
+	m_statsLabel->setText(QString::fromStdString(ConcatenateStrings(
+		pegsString,
+		"\n",
+		linksString
+	)));
+}
+
+void TwixtGUIQt::UpdateBoard()
+{
+	for (int i = 0; i < m_board.size(); ++i)
+	{
+		for (int j = 0; j < m_board.size(); ++j)
+		{
+			if (i == 0 && j == 0 || i == m_board.size() - 1 && j == 0
+				|| i == 0 && j == m_board.size() - 1 || i == m_board.size() - 1 && j == m_board.size() - 1)
+			{
+				continue;
+			}
+
+			if (m_gameLogic->GetPiecePtr(Position{i, j}) != nullptr)
+			{
+				m_board[i][j]->SetPeg(m_gameLogic->GetPiecePtr(Position{i, j})->GetColor());
+			}
+			else
+			{
+				m_board[i][j]->ResetPeg();
+			}
+		}
+	}
+
+	m_links.clear();
+
+	update();
 }
 
 void TwixtGUIQt::ClearHint()

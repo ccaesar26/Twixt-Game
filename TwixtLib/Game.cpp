@@ -409,6 +409,8 @@ void Game::NotifyDrawRequested() const
 void Game::ReconfigureGame(const int boardSize, const int maxPegs, const int maxLinks)
 {
 	InitializeGame(boardSize, maxPegs, maxLinks);
+	NotifyBoardChanged(boardSize, maxPegs, maxLinks);
+	NotifyGameRestarted();
 }
 
 void Game::SaveToFile(const std::string& fileName) const

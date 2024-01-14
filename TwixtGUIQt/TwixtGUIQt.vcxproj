@@ -116,6 +116,7 @@
     <QtRcc Include="TwixtGUIQt.qrc" />
     <QtUic Include="TwixtGUIQt.ui" />
     <QtMoc Include="TwixtGUIQt.h" />
+    <ClCompile Include="ConfigurationDialog.cpp" />
     <ClCompile Include="HoleButton.cpp" />
     <ClCompile Include="TwixtGUIQt.cpp" />
     <ClCompile Include="main.cpp" />
@@ -128,6 +129,9 @@
     <None Include="stylesheets\Label.css" />
     <None Include="stylesheets\MainWindow.css" />
     <None Include="stylesheets\TitleLabel.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ConfigurationDialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

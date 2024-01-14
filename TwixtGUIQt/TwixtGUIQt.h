@@ -46,7 +46,6 @@ protected:
 
 private:
     // IGameListener overrides
-    void OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) override;
     void OnPiecePlaced(const Position& pos) override;
     void OnGameOver(const EGameResult& result) override;
     void OnGameRestarted() override;
@@ -55,6 +54,7 @@ private:
     void OnLinkRemoved(const Position& pos1, const Position& pos2) override;
     void OnDrawRequested(EColor current_player) override;
     void OnHintRecommended(std::pair<Position, Position> link) override;
+    void OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks) override;
 
     // UI initializations
     void InitializeUI();
@@ -72,6 +72,8 @@ private:
     void UpdateCurrentPlayerLabel();
     void UpdateErrorLabel(QString error);
     void UpdateHintLabel(QString hint);
+    void UpdateStats();
+    void UpdateBoard();
 
     void ClearHint();
 
@@ -102,6 +104,7 @@ private:
     QSharedPointer<QWidget> m_boardContainer;
     QSharedPointer<QGridLayout> m_boardContainerLayout;
     QVector<QVector<QSharedPointer<HoleButton>>> m_board;
+    QSize m_boardSize;
 
     QSharedPointer<QWidget> m_statsContainer;
     QSharedPointer<QGridLayout> m_statsContainerLayout;
