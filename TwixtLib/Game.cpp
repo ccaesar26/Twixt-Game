@@ -122,8 +122,8 @@ void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, 
 {
 	// Custom comparator for sorting based on the least cumulative distance
 	auto compareChains = [this](const std::vector<Position>& chain1, const std::vector<Position>& chain2) {
-		int minDistanceChain1 = CalculateMinCumulativeDistance(chain1);
-		int minDistanceChain2 = CalculateMinCumulativeDistance(chain2);
+		const int minDistanceChain1 = CalculateMinCumulativeDistance(chain1);
+		const int minDistanceChain2 = CalculateMinCumulativeDistance(chain2);
 		return minDistanceChain1 < minDistanceChain2;
 		};
 
@@ -132,7 +132,7 @@ void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, 
 	std::sort(sortedChains.begin(), sortedChains.end(), compareChains);
 }
 
-void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces)
+void Game::GetExtremePieces(const std::vector<Position>& chain, std::array<std::vector<Position>, 2>& extremePieces) const
 {
 	// Determine extreme pieces based on the current player's color
 	if (m_turn == EColor::Red)
@@ -155,9 +155,12 @@ void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Posi
 
 		for (const auto& position : chain)
 		{
-			if (position.row == minRow || position.row == maxRow)
+			if (position.row == minRow)
 			{
-				extremePieces.push_back(position);
+				extremePieces[0].emplace_back(position);
+			}
+			else if (position.row == maxRow){
+				extremePieces[1].emplace_back(position);
 			}
 		}
 	}
@@ -181,15 +184,19 @@ void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Posi
 
 		for (const auto& position : chain)
 		{
-			if (position.col == minCol || position.col == maxCol)
+			if (position.col == minCol)
 			{
-				extremePieces.push_back(position);
+				extremePieces[0].emplace_back(position);
+			}
+			else if (position.col == maxCol)
+			{
+				extremePieces[1].emplace_back(position);
 			}
 		}
 	}
 }
 
-void Game::GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2)
+void Game::GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2) const
 {
 	if (chain.empty()) {
 		// Handle the case when the chain is empty
@@ -256,64 +263,105 @@ std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprov
 	for (const auto& chain : sortedChains)
 	{
 		// Get all extreme pieces of the chain based on the current player's color
-		std::vector<Position> extremePieces;
-		GetExtremePieces(chain, extremePieces);
+		std::array<std::vector<Position>, 2> extremePiecesSided;
+		GetExtremePieces(chain, extremePiecesSided);
 
 		// Check if any of the extreme pieces have potential neighbors that can be added to the chain
-		for (const auto& extreme : extremePieces)
+		for(int i=0; i<2; ++i)
 		{
-			std::vector<Position> potentialNeighbors = m_board->GetPotentialNeighbours(extreme);
-
-			//from the potential neighbors, remove the ones that do not improve the length of the chain (vertical or horizontal depending on m_turn)
-			//meaning we only keep the ones that are closer to either the top or the bottom (or left or right) of the board than the extreme piece
-
-			if (m_turn == EColor::Red)
+			std::vector<Position>& extremePieces = extremePiecesSided[i];
+			for (const auto& extreme : extremePieces)
 			{
-				//if the extreme piece is closer to the top of the board than the bottom, remove the potential neighbors that are closer to the bottom than the extreme piece
-				if (extreme.row < m_board->GetSize() - extreme.row)
+				std::array<std::vector<Position>, 2> potentialNeighborsPair = m_board->GetPotentialNeighbours(extreme);
+
+				//from the potential neighbors, remove the ones that do not improve the length of the chain (vertical or horizontal depending on m_turn)
+				//meaning we only keep the ones that are closer to either the top or the bottom (or left or right) of the board than the extreme piece
+
+				for (auto& potentialNeighbors : potentialNeighborsPair)
 				{
-					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.row > extreme.row; }), potentialNeighbors.end());
-				}
-				//if the extreme piece is closer to the bottom of the board than the top, remove the potential neighbors that are closer to the top than the extreme piece
-				else
-				{
-					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.row < extreme.row; }), potentialNeighbors.end());
-				}
-			}
-			else
-			{
-				//if the extreme piece is closer to the left of the board than the right, remove the potential neighbors that are closer to the right than the extreme piece
-				if (extreme.col < m_board->GetSize() - extreme.col)
-				{
-					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.col > extreme.col; }), potentialNeighbors.end());
-				}
-				//if the extreme piece is closer to the right of the board than the left, remove the potential neighbors that are closer to the left than the extreme piece
-				else
-				{
-					potentialNeighbors.erase(std::remove_if(potentialNeighbors.begin(), potentialNeighbors.end(), [extreme](const Position& pos) { return pos.col < extreme.col; }), potentialNeighbors.end());
-				}
-			}
+					// Shuffle the potential neighbors vector
+					std::random_device rd;
+					std::default_random_engine rng(rd());
+					std::ranges::shuffle(potentialNeighbors, rng);
+					if (m_turn == EColor::Red)
+					{
+						//if the extreme piece is closer to the top of the board than the bottom, remove the potential neighbors that are closer to the bottom than the extreme piece
+						if (i == 0)
+						{
+							std::erase_if(potentialNeighbors, [extreme](const Position& pos) { return pos.row > extreme.row; });
+						}
+						//if the extreme piece is closer to the bottom of the board than the top, remove the potential neighbors that are closer to the top than the extreme piece
+						else
+						{
+							std::erase_if(potentialNeighbors, [extreme](const Position& pos) { return pos.row < extreme.row; });
+						}
+					}
+					else
+					{
+						//if the extreme piece is closer to the left of the board than the right, remove the potential neighbors that are closer to the right than the extreme piece
+						if (i == 0)
+						{
+							std::erase_if(potentialNeighbors, [extreme](const Position& pos) { return pos.col > extreme.col; });
+						}
+						//if the extreme piece is closer to the right of the board than the left, remove the potential neighbors that are closer to the left than the extreme piece
+						else
+						{
+							std::erase_if(potentialNeighbors, [extreme](const Position& pos) { return pos.col < extreme.col; });
+						}
+					}
 
 
-			for (const auto& potentialNeighbor : potentialNeighbors)
-			{
-				if (std::find(chain.begin(), chain.end(), potentialNeighbor) == chain.end())
-				{
-					// Potential neighbor is not already part of the chain, so it can be added
-					return std::make_pair(chain, std::make_pair(extreme, potentialNeighbor)); // This chain can be improved
+					for (const auto& potentialNeighbor : potentialNeighbors)
+					{
+						if (std::ranges::find(chain, potentialNeighbor) == chain.end())
+						{
+							// Potential neighbor is not already part of the chain, so it can be added
+							return std::make_pair(chain, std::make_pair(extreme, potentialNeighbor)); // This chain can be improved
+						}
+					}
 				}
 			}
 		}
 	}
 
-	// No improvable chain found
-	return std::make_pair(std::vector<Position>(), std::make_pair(Position(), Position()));
+	// No improvable chain found, so return a random chain and a random link
+	if (!sortedChains.empty())
+	{
+		std::random_device rd;
+		std::default_random_engine rng(rd());
+
+		const auto& randomChain = sortedChains[std::uniform_int_distribution<size_t>(0, sortedChains.size() - 1)(rng)];
+
+		// Select a random piece from the randomChain
+		const auto& randomPiece = randomChain.empty() ? Position() : randomChain[std::uniform_int_distribution<size_t>(0, randomChain.size() - 1)(rng)];
+
+		// Get potential neighbors for the random piece
+		std::array<std::vector<Position>, 2> randomNeighborsPair = m_board->GetPotentialNeighbours(randomPiece);
+
+		//concatenate the two vectors
+		randomNeighborsPair[0].insert(randomNeighborsPair[0].end(), randomNeighborsPair[1].begin(), randomNeighborsPair[1].end());
+
+		// Shuffle the potential neighbors vector
+		std::ranges::shuffle(randomNeighborsPair[0], rng);
+
+		// Select a random neighbor from each priority
+		const auto& randomNeighbor1 = randomNeighborsPair[0].empty() ? Position() : randomNeighborsPair[0][0];
+
+		// Random link for the selected piece and neighbor
+		const auto& randomLink = std::make_pair(randomPiece, randomNeighbor1);
+
+		return std::make_pair(randomChain, randomLink);
+	}
+	else
+	{
+		return std::make_pair(std::vector<Position>(), std::make_pair(Position(), Position()));
+	}
 }
 
 void Game::Recommend()
 {
 	// 1. DFS to Identify Chains
-	std::set<std::vector<Position>> chains = m_board->GetChains(m_turn);
+	const std::set<std::vector<Position>> chains = m_board->GetChains(m_turn);
 
 	std::vector<std::vector<Position>> sortedChains;
 	EvaluateAndSortChains(chains, sortedChains);

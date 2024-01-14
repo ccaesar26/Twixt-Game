@@ -47,5 +47,6 @@ public:
 
 	[[nodiscard]] virtual int GetSize() const = 0;
 
-	[[nodiscard]] virtual std::vector<Position> GetPotentialNeighbours(const Position& pos) = 0;
+	[[nodiscard]] virtual std::array<std::vector<Position>, 2> GetPotentialNeighbours(
+		const Position& pos) = 0;
 };

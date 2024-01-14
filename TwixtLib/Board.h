@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <array>
 
 class Board final :
 	public IBoard
@@ -37,7 +38,7 @@ public:
 
 	void PlacePiece(Position pos, EColor color) override;
 
-	std::vector<Position> GetPotentialNeighbours(const Position& pos) override;
+	std::array<std::vector<Position>, 2> GetPotentialNeighbours(const Position& pos) override;
 
 	void LinkPieces(Position pos1, Position pos2) override;
 

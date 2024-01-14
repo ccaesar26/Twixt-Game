@@ -10,6 +10,9 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <random>
+#include <array>
 
 class Game final
 	: public IGame
@@ -50,8 +53,8 @@ public:
 	void EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains);
 	int CalculateMinCumulativeDistance(const std::vector<Position>& chain);
 	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains);
-	void GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces);
-	void GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2);
+	void GetExtremePieces(const std::vector<Position>& chain, std::array<std::vector<Position>, 2>& extremePieces) const;
+	void GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2) const;
 	void Reset() override;
 	void Restore(const GameConfig& config);
 	void SaveToFile(const std::string& fileName) const override;
