@@ -129,7 +129,7 @@ void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, 
 
 	// Copy chains to a vector and sort them using the custom comparator
 	sortedChains.assign(chains.begin(), chains.end());
-	std::sort(sortedChains.begin(), sortedChains.end(), compareChains);
+	std::ranges::sort(sortedChains, compareChains);
 }
 
 void Game::GetExtremePieces(const std::vector<Position>& chain, std::array<std::vector<Position>, 2>& extremePieces) const
@@ -233,7 +233,7 @@ void Game::GetExtremePositions(const std::vector<Position>& chain, Position& ext
 	}
 }
 
-int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain)
+int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain) const
 {
 	int distance;
 
@@ -258,7 +258,7 @@ int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain)
 	return distance;
 }
 
-std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains)
+std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains) const
 {
 	for (const auto& chain : sortedChains)
 	{

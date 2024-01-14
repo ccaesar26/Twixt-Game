@@ -51,8 +51,8 @@ public:
 	void RemoveLink(const Position& pos1, const Position& pos2) override;
 	void Recommend() override;
 	void EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, std::vector<std::vector<Position>>& sortedChains);
-	int CalculateMinCumulativeDistance(const std::vector<Position>& chain);
-	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains);
+	int CalculateMinCumulativeDistance(const std::vector<Position>& chain) const;
+	std::pair<std::vector<Position>, std::pair<Position, Position>> FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains) const;
 	void GetExtremePieces(const std::vector<Position>& chain, std::array<std::vector<Position>, 2>& extremePieces) const;
 	void GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2) const;
 	void Reset() override;
