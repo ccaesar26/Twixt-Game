@@ -283,6 +283,23 @@ std::vector<Position> Board::GetPotentialNeighbours(const Position& pos)
 		return m_board[pos.row][pos.col] != nullptr;
 	}).begin(), result.end());
 
+	//for red, we remove the positions that are on the left or right side of the board
+	if (color == EColor::Red)
+	{
+		result.erase(std::ranges::remove_if(result, [this](const Position& pos)
+		{
+			return pos.col == 0 || pos.col == m_size - 1;
+		}).begin(), result.end());
+	}
+	else
+	{
+		//for black, we remove the positions that are on the top or bottom side of the board
+		result.erase(std::ranges::remove_if(result, [this](const Position& pos)
+		{
+			return pos.row == 0 || pos.row == m_size - 1;
+		}).begin(), result.end());
+	}
+
 	//we remove the positions that are blocked by a link
 	std::erase_if(result,
 	              [this, pos](const Position& pos2)

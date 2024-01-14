@@ -73,7 +73,6 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	}
 
 	m_board->LinkPieces(pos1, pos2);
-	NotifyPiecesLinked(pos1, pos2);
 
 	const ILinkPtr link = m_board->GetLinkBetween(pos1, pos2);
 
@@ -85,6 +84,8 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	{
 		m_player2->AddLink(link);
 	}
+
+	NotifyPiecesLinked(pos1, pos2);
 
 	if (m_board->CheckIfWinningPlacement(link))
 	{
@@ -131,34 +132,123 @@ void Game::EvaluateAndSortChains(const std::set<std::vector<Position>>& chains, 
 	std::sort(sortedChains.begin(), sortedChains.end(), compareChains);
 }
 
-int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain)
+void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces)
 {
-	// Calculate and return the minimum cumulative distance for a given chain
-	int minCummulatedDistance = INT_MAX;
+	// Determine extreme pieces based on the current player's color
+	if (m_turn == EColor::Red)
+	{
+		int minRow = INT_MAX;
+		int maxRow = -1;
+
+		for (const auto& position : chain)
+		{
+			if (position.row < minRow)
+			{
+				minRow = position.row;
+			}
+
+			if (position.row > maxRow)
+			{
+				maxRow = position.row;
+			}
+		}
+
+		for (const auto& position : chain)
+		{
+			if (position.row == minRow || position.row == maxRow)
+			{
+				extremePieces.push_back(position);
+			}
+		}
+	}
+	else
+	{
+		int minCol = INT_MAX;
+		int maxCol = -1;
+
+		for (const auto& position : chain)
+		{
+			if (position.col < minCol)
+			{
+				minCol = position.col;
+			}
+
+			if (position.col > maxCol)
+			{
+				maxCol = position.col;
+			}
+		}
+
+		for (const auto& position : chain)
+		{
+			if (position.col == minCol || position.col == maxCol)
+			{
+				extremePieces.push_back(position);
+			}
+		}
+	}
+}
+
+void Game::GetExtremePositions(const std::vector<Position>& chain, Position& extreme1, Position& extreme2)
+{
+	if (chain.empty()) {
+		// Handle the case when the chain is empty
+		extreme1 = Position();
+		extreme2 = Position();
+		return;
+	}
+
+	// Initialize extremes with the first position in the chain
+	extreme1 = chain.front();
+	extreme2 = chain.front();
 
 	for (const auto& position : chain)
 	{
-		int distance;
+		// Update extremes based on the current player's color
 		if (m_turn == EColor::Red)
 		{
-			const int topDifference = position.row;
-			const int bottomDifference = m_board->GetSize() - position.row;
-			distance = topDifference + bottomDifference;
+			if (position.row < extreme1.row) {
+				extreme1 = position;
+			}
+			if (position.row > extreme2.row) {
+				extreme2 = position;
+			}
 		}
 		else
 		{
-			const int leftDifference = position.col;
-			const int rightDifference = m_board->GetSize() - position.col;
-			distance = leftDifference + rightDifference;
-		}
-
-		if (distance < minCummulatedDistance)
-		{
-			minCummulatedDistance = distance;
+			if (position.col < extreme1.col) {
+				extreme1 = position;
+			}
+			if (position.col > extreme2.col) {
+				extreme2 = position;
+			}
 		}
 	}
+}
 
-	return minCummulatedDistance;
+int Game::CalculateMinCumulativeDistance(const std::vector<Position>& chain)
+{
+	int distance;
+
+	// Determine extreme positions based on the current player's color
+	Position extreme1, extreme2;
+	GetExtremePositions(chain, extreme1, extreme2);
+
+	// Calculate and return the minimum cumulative distance for the given extremes
+	if (m_turn == EColor::Red)
+	{
+		const int topDifference = extreme1.row;
+		const int bottomDifference = m_board->GetSize() - extreme2.row;
+		distance = topDifference + bottomDifference;
+	}
+	else
+	{
+		const int leftDifference = extreme1.col;
+		const int rightDifference = m_board->GetSize() - extreme2.col;
+		distance = leftDifference + rightDifference;
+	}
+
+	return distance;
 }
 
 std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprovableChain(const std::vector<std::vector<Position>>& sortedChains)
@@ -218,62 +308,6 @@ std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprov
 
 	// No improvable chain found
 	return std::make_pair(std::vector<Position>(), std::make_pair(Position(), Position()));
-}
-void Game::GetExtremePieces(const std::vector<Position>& chain, std::vector<Position>& extremePieces)
-{
-	// Determine extreme pieces based on the current player's color
-	if (m_turn == EColor::Red)
-	{
-		int minRow = INT_MAX;
-		int maxRow = -1;
-
-		for (const auto& position : chain)
-		{
-			if (position.row < minRow)
-			{
-				minRow = position.row;
-			}
-
-			if (position.row > maxRow)
-			{
-				maxRow = position.row;
-			}
-		}
-
-		for (const auto& position : chain)
-		{
-			if (position.row == minRow || position.row == maxRow)
-			{
-				extremePieces.push_back(position);
-			}
-		}
-	}
-	else
-	{
-		int minCol = INT_MAX;
-		int maxCol = -1;
-
-		for (const auto& position : chain)
-		{
-			if (position.col < minCol)
-			{
-				minCol = position.col;
-			}
-
-			if (position.col > maxCol)
-			{
-				maxCol = position.col;
-			}
-		}
-
-		for (const auto& position : chain)
-		{
-			if (position.col == minCol || position.col == maxCol)
-			{
-				extremePieces.push_back(position);
-			}
-		}
-	}
 }
 
 void Game::Recommend()
@@ -377,7 +411,9 @@ bool Game::IsFileValid(const std::string& fileName) const
 
 bool Game::RegexValidate(const std::string& fileName) const
 {
-	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
+	const int size = m_board->GetSize();
+	const int totalSize = size * size;
+	const std::regex regexPattern("^[01\\s]{" + std::to_string(totalSize) + "}[01][0123]$");
 	if (std::regex_match(fileName, regexPattern))
 	{
 		return true;
@@ -408,6 +444,12 @@ void Game::NotifyDrawRequested() const
 
 void Game::ReconfigureGame(const int boardSize, const int maxPegs, const int maxLinks)
 {
+	//throw exception if the boardSize is bigger than 40
+	if (boardSize > 40)
+	{
+		throw GameException("Board size is too big");
+	}
+
 	InitializeGame(boardSize, maxPegs, maxLinks);
 	NotifyBoardChanged(boardSize, maxPegs, maxLinks);
 	NotifyGameRestarted();
