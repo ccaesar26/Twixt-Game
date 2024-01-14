@@ -354,7 +354,7 @@ std::pair<std::vector<Position>, std::pair<Position, Position>> Game::FindImprov
 	}
 	else
 	{
-		return std::make_pair(std::vector<Position>(), std::make_pair(Position(), Position()));
+		throw::GameException("No chains found");
 	}
 }
 

@@ -54,11 +54,7 @@ public:
 
 	[[nodiscard]] std::string ToString() const override;
 
-	[[nodiscard]] std::string LinksToString(EColor playerColor) const;
-
-	[[deprecated]] bool CheckPathToRows(const Position& pos, int targetUpperRow, int targetLowerRow) const;
-
-	[[deprecated]] bool CheckPathToCols(const Position& pos, int targetLeftCol, int targetRightCol) const;
+	[[nodiscard]] std::string LinksToString(EColor playerColor) const override;
 
 	[[nodiscard]] bool CheckPath(const Position& pos, int targetStart, int targetEnd, EColor playerColor) const;
 
