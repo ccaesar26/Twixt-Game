@@ -335,7 +335,6 @@ void TwixtGUIQt::OnHoleButtonRightClicked(const Position& pos)
 
 void TwixtGUIQt::resizeEvent(QResizeEvent* event)
 {
-	MapCoordinates();
 	QMainWindow::resizeEvent(event);
 }
 
@@ -446,10 +445,6 @@ void TwixtGUIQt::OnBoardChanged(int newSize, int newMaxPegs, int newMaxLinks)
 			connect(m_board[i][j].data(), &HoleButton::RightClicked, this, &TwixtGUIQt::OnHoleButtonRightClicked);
 		}
 	}
-
-	update();
-
-	MapCoordinates();
 
 	update();
 }
