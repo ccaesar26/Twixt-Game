@@ -378,7 +378,9 @@ bool Game::IsFileValid(const std::string& fileName) const
 
 bool Game::RegexValidate(const std::string& fileName) const
 {
-	std::regex regexPattern("^[01\\s]{256}[01][0123]$");
+	const int size = m_board->GetSize();
+	const int totalSize = size * size;
+	const std::regex regexPattern("^[01\\s]{" + std::to_string(totalSize) + "}[01][0123]$");
 	if (std::regex_match(fileName, regexPattern))
 	{
 		return true;
@@ -409,6 +411,12 @@ void Game::NotifyDrawRequested() const
 
 void Game::ReconfigureGame(const int boardSize, const int maxPegs, const int maxLinks)
 {
+	//throw exception if the boardSize is bigger than 40
+	if (boardSize > 40)
+	{
+		throw GameException("Board size is too big");
+	}
+
 	InitializeGame(boardSize, maxPegs, maxLinks);
 	NotifyBoardChanged(boardSize, maxPegs, maxLinks);
 	NotifyGameRestarted();
