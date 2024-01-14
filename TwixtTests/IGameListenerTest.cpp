@@ -305,7 +305,7 @@ TEST(OnHintRecommended, HintRecommended1)
 	auto listener = std::make_shared<MockListener>();
 
 	game.AddListener(listener);
-	game.SwitchTurn();
+	game.PlacePiece(Position(1, 1));
 	EXPECT_CALL(*listener, OnHintRecommended(_))
 		.Times(1);
 	game.Recommend();

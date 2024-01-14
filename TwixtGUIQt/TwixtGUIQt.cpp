@@ -549,6 +549,7 @@ void TwixtGUIQt::OnGameLoaded()
 	m_endTurnButton->setEnabled(true);
 
 	UpdateCurrentPlayerLabel();
+	UpdateStats();
 }
 
 void TwixtGUIQt::OnLinkPlaced(const Position& pos1, const Position& pos2)
