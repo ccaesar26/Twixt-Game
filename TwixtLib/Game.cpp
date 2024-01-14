@@ -395,6 +395,11 @@ bool Game::IsWon() const
 
 void Game::LoadFromFile(const std::string& fileName)
 {
+	if(!IsFileValid(fileName))
+	{
+		throw GameException("Invalid file");
+	}
+
 	const GameConfig gameConfig(fileName);
 
 	NotifyGameRestarted();
@@ -453,6 +458,7 @@ bool Game::IsFileValid(const std::string& fileName) const
 	}
 
 	std::getline(file, config);
+	std::getline(file, config);
 
 	return RegexValidate(config);
 }
@@ -461,7 +467,7 @@ bool Game::RegexValidate(const std::string& fileName) const
 {
 	const int size = m_board->GetSize();
 	const int totalSize = size * size;
-	const std::regex regexPattern("^[01\\s]{" + std::to_string(totalSize) + "}[01][0123]$");
+	const std::regex regexPattern("^[01\\s]{" + std::to_string(totalSize) + "}$");
 	if (std::regex_match(fileName, regexPattern))
 	{
 		return true;
