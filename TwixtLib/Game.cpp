@@ -19,11 +19,11 @@ void Game::PlacePiece(const Position& pos)
 	}
 
 	//check if the player has a piece left
-	if (m_turn == m_player1->GetColor() && m_player1->GetLimitPegs() < 1)
+	if (m_turn == m_player1->GetColor() && m_player1->GetAvailablePegs() < 1)
 	{
 		throw InvalidStateException("Player 1 has no pieces left");
 	}
-	if (m_turn == m_player2->GetColor() && m_player2->GetLimitPegs() < 1)
+	if (m_turn == m_player2->GetColor() && m_player2->GetAvailablePegs() < 1)
 	{
 		throw InvalidStateException("Player 2 has no pieces left");
 	}
@@ -51,11 +51,11 @@ void Game::CreateLink(const Position& pos1, const Position& pos2)
 	}
 
 	//check if the player has available links
-	if (m_turn == m_player1->GetColor() && m_player1->GetLimitLinks() < 1)
+	if (m_turn == m_player1->GetColor() && m_player1->GetAvailableLinks() < 1)
 	{
 		throw GameException("Player 1 has no links left");
 	}
-	if (m_turn == m_player2->GetColor() && m_player2->GetLimitLinks() < 1)
+	if (m_turn == m_player2->GetColor() && m_player2->GetAvailableLinks() < 1)
 	{
 		throw GameException("Player 2 has no links left");
 	}

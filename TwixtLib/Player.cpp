@@ -39,7 +39,7 @@ std::string Player::GetName() const
 
 void Player::AddPeg(IPiecePtr peg)
 {
-	if(m_limitPegs>0)
+	if(m_availablePegs>0)
 	{
 		m_pegs.push_back(std::move(peg));
 		m_availablePegs--;
@@ -48,7 +48,7 @@ void Player::AddPeg(IPiecePtr peg)
 
 void Player::AddLink(const ILinkPtr link)
 {
-	if (m_limitLinks > 0)
+	if (m_availableLinks > 0)
 	{
 		ILinkWeakPtr weakLink = link;
 		m_links.push_back(std::move(weakLink));
